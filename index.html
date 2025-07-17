@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Bahman Reshadi | بهمن رشادی | Software Engineer, Open-Source Advocate</title>
+
+    <meta name="description" content="Bahman Reshadi (بهمن رشادی) — Software engineer, open-source advocate, and founder of 1DES, Ushtak, Kavosh.club, DolfinFaro, Trippinoo, Voidloop, and other innovative projects.">
+
+    <meta name="keywords" content="Bahman Reshadi, بهمن رشادی, Open Source, Blockchain, Tech Founder, Software Engineer, 1DES, Ushtak, Kavosh.club, DolfinFaro, Trippinoo, Voidloop, Music Therapy">
+
+    <meta name="author" content="Bahman Reshadi">
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:title" content="Bahman Reshadi | Software Engineer & Open-Source Advocate">
+    <meta property="og:description" content="Discover the projects, fintech innovations, and personal explorations of Bahman Reshadi — a software engineer passionate about open-source and blockchain technology.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://25mordad.com/images/bahman.png">
+    <meta property="og:url" content="https://25mordad.com">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Bahman Reshadi | Software Engineer & Open-Source Advocate">
+    <meta name="twitter:description" content="Founder of 1DES, Ushtak, Kavosh.club, DolfinFaro, Trippinoo, and more. Passionate about open-source and building innovative projects.">
+    <meta name="twitter:image" content="https://25mordad.com/images/infinity.gif">
+
+    <link rel="canonical" href="https://25mordad.com">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/b4878587d2.js" crossorigin="anonymous"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes floating {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(10px, -10px); }
+            50% { transform: translate(-10px, 10px); }
+            75% { transform: translate(10px, 10px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .floating-emoji {
+            position: fixed; /* Keeps them floating only in the background */
+            animation: floating 10s infinite ease-in-out; /* Slowed down */
+            font-size: 1.5rem;
+            opacity: 0.1;
+            pointer-events: none; /* Prevents interaction */
+            z-index: -1; /* Ensures they stay in the background */
+        }
+
+        .fade-in {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .vazir {
+          font-family: "Vazir", tahoma;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font/dist/font-face.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="bg-[#212529] text-white flex flex-col items-center justify-center min-h-screen px-6 sm:px-12 md:px-24 relative">
+
+    <!-- Floating Emoji Animation -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          const emojis = ['🤔', '🦦', '💡', '🗿', '😛', '🦥', '🍻', '☕', '🍦', '🍄', '🤿', '🥾', '🧬', '🏊‍♂️', '🚴‍♂️', '♾️', '🧐' , '🧠', '🎭', '🎵' , '🪄', '🚀', '🏔️', '🧭', '🏝️', '🛶', '🍵', '☯️' , '🎧', '📚', '🪶'];
+          const body = document.body;
+
+          const isMobile = window.innerWidth < 768; // Adjust breakpoint if needed
+
+          emojis.forEach((emoji) => {
+              const span = document.createElement("span");
+              span.textContent = emoji;
+              span.classList.add("floating-emoji");
+
+              const randomSide = Math.random() > 0.5 ? 'left' : 'right';
+              const topPosition = Math.random() * 80 + "vh";
+
+              // Different positioning for mobile and desktop
+              if (isMobile) {
+                  span.style[randomSide] = Math.random() * 5 + "vw"; // 5% for mobile
+              } else {
+                  span.style[randomSide] = Math.random() * 25 + "vw"; // 25% for desktop
+              }
+
+              span.style.top = topPosition;
+
+              // Vary animation duration slightly
+              span.style.animationDuration = (8 + Math.random() * 5) + "s";
+
+              body.appendChild(span);
+          });
+      });
+
+    </script>
+
+    <!-- Header -->
+    <header class="text-center p-6 fade-in w-full max-w-3xl">
+        <p class="flex justify-center"><img src="images/bahman.png" alt="Bahman" class="rounded-full w-32 h-32 object-cover border-4 border-gray-200 shadow-lg"></p>
+        <h1 class="text-3xl md:text-4xl font-bold">Bahman <span class="vazir">بهمن</span></h1>
+        <h2 class="text-sm md:text-base">Reshadi <span class="vazir">رشادی</span></h2>
+        <p class="text-lg mt-2">A solution finder, a lazy hunter, and a loop lover</p>
+        <p class="flex justify-center"><img src="images/infinity.gif" class="img-fluid" alt="infinity"></p>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="text-center max-w-xl p-6 fade-in w-full">
+      <p class="text-lg md:text-xl">I believe in the wisdom of the open-source and blockchain philosophy.</p>
+      <p class="text-base md:text-lg">Free to act, wise to consequences, prepared for results.</p>
+        <p class="mt-4 text-gray-400">Initiator | Visionary | Lead</p>
+        <div class="mt-4 flex flex-wrap justify-center gap-4">
+            <a href="/projects#fintech" class="bg-purple-600 px-4 py-2 rounded hover:bg-gray-700 transition-all text-sm md:text-base">1DES</a>
+            <a href="/projects#science" class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-500 transition-all text-sm md:text-base">Kavosh</a>
+            <a href="/projects#fintech" class="bg-purple-600 px-4 py-2 rounded hover:bg-gray-700 transition-all text-sm md:text-base">Ushtak</a>
+            <a href="/projects#travel" class="bg-red-600 px-4 py-2 rounded hover:bg-red-500 transition-all text-sm md:text-base">DolfinFaro</a>
+            <a href="/projects#science" class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-500 transition-all text-sm md:text-base">Audioloop Adventures</a>
+            <a href="/projects#selfexperience" class="bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition-all text-sm md:text-base">Music Therapy</a>
+            <a href="/projects#news" class="bg-green-600 px-4 py-2 rounded hover:bg-green-500 transition-all text-sm md:text-base">Che-Khabar</a>
+            <a href="/projects#travel" class="bg-red-600 px-4 py-2 rounded hover:bg-red-500 transition-all text-sm md:text-base">Trippinoo</a>
+            <a href="/projects#it" class="bg-gray-800 px-4 py-2 rounded hover:bg-gray-500 transition-all text-sm md:text-base">VoidLoop</a>
+            <a href="/projects#science" class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-500 transition-all text-sm md:text-base">Fluke</a>
+        </div>
+        <p class="flex justify-center mt-8">
+            <img src="images/siddhasana.png" alt="Bahman-relax" class="w-80 h-90 object-cover">
+        </p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-10 text-center text-gray-400 text-sm fade-in w-full max-w-3xl">
+        <p class="text-lg">"Open your <span class="text-red-500">source</span>, open your <span class="text-yellow-500">mind</span>"</p>
+        <div class="mt-4 flex gap-6 justify-center text-xl">
+            <a href="https://x.com/25mordad" target="_blank" class="text-black hover:text-gray-700 transition-all"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://www.instagram.com/25mordad" target="_blank" class="text-pink-600 hover:text-pink-500 transition-all"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/in/25mordad" target="_blank" class="text-blue-700 hover:text-blue-600 transition-all"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="https://github.com/25mordad" target="_blank" class="text-gray-100 hover:text-gray-300 transition-all"><i class="fa-brands fa-github"></i></a>
+            <a href="https://t.me/Xoaan" target="_blank" class="text-blue-500 hover:text-blue-400 transition-all"><i class="fa-brands fa-telegram"></i></a>
+            <a href="mailto:25mordad@gmail.com?subject=Hey, Quick Question&body=Hi," target="_blank" class="text-red-600 hover:text-red-500 transition-all"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+        <p class="mt-6">No Pain, No Gain</p>
+        <p class="mt-1 vazir">نابرده رنج گنج میسر نمی‌شود</p>
+    </footer>
+</body>
+</html>
