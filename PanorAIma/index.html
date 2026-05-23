@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
+
+  <title>PanorAIma | 25mordad</title>
+  <meta name="description" content="PanorAIma by 25mordad: full-picture writing with AI assistance, shared in English and Farsi on separate article pages.">
+  <meta name="keywords" content="PanorAIma, 25mordad, AI writing, full picture analysis, Persian English articles">
+  <meta name="author" content="25mordad | Bahman Reshadipour">
+
+  <meta property="og:title" content="PanorAIma | Full-Picture Journal">
+  <meta property="og:description" content="I like seeing the full picture. With AI I can see it better, and I share it here.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://25mordad.com/images/bahman.png">
+  <meta property="og:url" content="https://25mordad.com/PanorAIma">
+
+  <link rel="canonical" href="https://25mordad.com/PanorAIma">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="manifest" href="/images/site.webmanifest">
+  <link rel="stylesheet" href="/assets/tailwind.css">
+  <script src="https://kit.fontawesome.com/b4878587d2.js" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-1: #1b2129;
+      --bg-2: #111722;
+      --line: rgba(148, 163, 184, 0.28);
+      --panel: rgba(15, 23, 42, 0.74);
+      --ink: #e5e7eb;
+    }
+
+    body {
+      font-family: "Space Grotesk", sans-serif;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(34, 211, 238, 0.15), transparent 38%),
+        radial-gradient(circle at 85% 0%, rgba(59, 130, 246, 0.18), transparent 40%),
+        linear-gradient(160deg, var(--bg-1), var(--bg-2));
+    }
+
+    .fa-text {
+      font-family: "Vazirmatn", "Vazir", tahoma, sans-serif;
+    }
+
+    .frame-card {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.16), rgba(37, 99, 235, 0.14));
+      border: 1px solid var(--line);
+      border-radius: 1.6rem;
+      backdrop-filter: blur(5px);
+    }
+
+    .post-card {
+      background: var(--panel);
+      border: 1px solid rgba(203, 213, 225, 0.7);
+      border-radius: 1.6rem;
+      box-shadow: 0 20px 60px rgba(3, 9, 19, 0.35);
+    }
+
+    .title-glow {
+      text-shadow: 0 0 20px rgba(34, 211, 238, 0.25);
+    }
+
+    .chip {
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.45);
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.85rem;
+      margin-top: 1rem;
+      color: #cbd5e1;
+      font-size: 0.95rem;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.42);
+      border-radius: 999px;
+      padding: 0.38rem 0.7rem;
+    }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .fa-preview {
+      margin-top: 2rem;
+      padding-top: 1.4rem;
+      border-top: 1px dashed rgba(148, 163, 184, 0.3);
+      direction: rtl;
+      text-align: right;
+      border-inline-start: 3px solid rgba(34, 211, 238, 0.55);
+      padding-inline-start: 1rem;
+    }
+
+    .lang-actions {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: stretch;
+    }
+
+    .lang-actions a {
+      border-radius: 0.7rem;
+      padding: 0.82rem 1rem;
+      font-size: 0.95rem;
+      line-height: 1.1;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      min-width: 170px;
+    }
+
+    .lang-actions small {
+      opacity: 0.88;
+      font-size: 0.78em;
+    }
+
+    .lang-actions a span {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.3rem;
+    }
+  </style>
+</head>
+<body class="text-white min-h-screen px-6 sm:px-12 md:px-24 py-10">
+  <header class="text-center w-full max-w-4xl mx-auto">
+    <p class="text-xs uppercase tracking-[0.35em] text-gray-400 mb-3">25mordad</p>
+    <p class="flex justify-center"><a href="/"><img src="/images/bahman.png" alt="Bahman" class="rounded-full w-32 h-32 object-cover border-4 border-gray-200 shadow-lg"></a></p>
+    <h1 class="text-4xl md:text-5xl font-bold mt-5 title-glow">PanorAIma <span class="fa-text">فراتر از قاب</span></h1>
+    <p class="text-base md:text-lg mt-4 text-gray-300">A full-picture lens, amplified by AI.</p>
+    <div class="mt-5">
+      <a href="/" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm bg-gray-800 rounded hover:bg-gray-700 transition-all"><i class="fa-solid fa-house"></i> Home</a>
+    </div>
+  </header>
+
+  <main class="w-full max-w-6xl mx-auto mt-10 space-y-8">
+    <section class="frame-card p-8 sm:p-10 md:p-12">
+      <p class="text-sm md:text-base text-gray-200 leading-8">
+        <span class="font-bold text-cyan-300">PanorAIma</span>
+        <span class="fa-text text-blue-200">| فراتر از قاب</span>
+      </p>
+
+      <p class="mt-6 text-gray-100 leading-8 text-base md:text-xl">
+        I like to see the full picture of events, not just isolated headlines.
+        With AI, I can connect more dots, test more scenarios, and see the landscape with better clarity.
+        This is where I share that view with you.
+      </p>
+
+      <p class="mt-7 text-gray-100 leading-9 text-base md:text-2xl fa-text" dir="rtl" lang="fa">
+        من دوست دارم واقعیت را فراتر از قاب خبرهای روز ببینم.
+        حالا با کمک هوش مصنوعی می‌توانم نشانه‌های پراکنده را دقیق‌تر کنار هم بگذارم،
+        سناریوهای بیشتری را مقایسه کنم و تصویر روشن‌تری از آینده بسازم.
+        اینجا همان نگاه را با شما به اشتراک می‌گذارم.
+      </p>
+    </section>
+
+    <section class="post-card p-8 sm:p-10 md:p-12">
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="chip text-xs uppercase tracking-[0.25em] text-gray-300 px-3 py-1 rounded-full"><i class="fa-solid fa-feather-pointed mr-1"></i> Feature Essay</span>
+        <span class="chip text-xs text-gray-300 px-3 py-1 rounded-full fa-text"><i class="fa-solid fa-feather-pointed ml-1"></i> تحلیل ویژه</span>
+        <span class="chip text-xs text-cyan-200 px-3 py-1 rounded-full fa-text"><i class="fa-solid fa-sparkles ml-1"></i> تحلیل با هوش مصنوعی</span>
+        <span class="chip text-xs uppercase tracking-[0.2em] text-cyan-200 px-3 py-1 rounded-full"><i class="fa-solid fa-sparkles mr-1"></i> AI-Assisted</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-pill"><i class="fa-regular fa-calendar"></i> May 23, 2026</span>
+        <span class="meta-pill fa-text" dir="rtl"><i class="fa-regular fa-calendar"></i> ۲ خرداد ۱۴۰۵</span>
+      </div>
+
+      <h2 class="text-3xl md:text-4xl font-bold mt-6">Iran in a Compressed Historical Moment</h2>
+      <p class="text-gray-300 mt-3 text-lg leading-7">Between 1953, 1979, and the scenarios ahead.</p>
+
+      <div class="fa-preview fa-text" dir="rtl" lang="fa">
+        <h3 class="text-2xl md:text-3xl font-extrabold"><i class="fa-solid fa-pen-nib ml-2"></i>ایران در لحظه‌ای فشرده از تاریخ</h3>
+        <p class="text-gray-200 mt-3 text-lg md:text-xl leading-9">
+          روایتی کلان از پیوند ۱۳۳۲، ۱۳۵۷ و مسیرهای محتمل پیش رو؛
+          وقتی فشار خارجی، فرسایش اقتصادی و شکاف اجتماعی در یک قاب واحد دیده می‌شوند.
+        </p>
+      </div>
+
+      <div class="lang-actions">
+        <a href="/PanorAIma/iran-compressed-historical-moment-en" class="icon-btn bg-blue-600 hover:bg-blue-500 transition-all">
+          <i class="fa-solid fa-language"></i>
+          <span>English <small>Version</small></span>
+        </a>
+        <a href="/PanorAIma/iran-lahzeye-feshordeh-tarikh-fa" class="icon-btn bg-teal-600 hover:bg-teal-500 transition-all fa-text" dir="rtl">
+          <i class="fa-solid fa-language"></i>
+          <span>نسخه <small>فارسی</small></span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="mt-12 text-center text-gray-400 text-sm w-full max-w-3xl mx-auto">
+    <div class="mt-4 flex gap-6 justify-center text-xl">
+      <a href="https://x.com/25mordad" target="_blank" class="text-black hover:text-gray-700 transition-all"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="https://www.instagram.com/25mordad" target="_blank" class="text-pink-600 hover:text-pink-500 transition-all"><i class="fa-brands fa-instagram"></i></a>
+      <a href="https://www.linkedin.com/in/25mordad" target="_blank" class="text-blue-700 hover:text-blue-600 transition-all"><i class="fa-brands fa-linkedin-in"></i></a>
+      <a href="https://github.com/25mordad" target="_blank" class="text-gray-100 hover:text-gray-300 transition-all"><i class="fa-brands fa-github"></i></a>
+      <a href="https://t.me/Xoaan" target="_blank" class="text-blue-500 hover:text-blue-400 transition-all"><i class="fa-brands fa-telegram"></i></a>
+      <a href="mailto:25mordad@gmail.com?subject=Hey, Quick Question&body=Hi," target="_blank" class="text-red-600 hover:text-red-500 transition-all"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+  </footer>
+</body>
+</html>

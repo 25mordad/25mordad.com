@@ -1,13 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://25mordad.com/</loc>
+    <lastmod>2026-05-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://25mordad.com/projects</loc>
+    <lastmod>2026-05-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://25mordad.com/PanorAIma</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://25mordad.com/PanorAIma/iran-compressed-historical-moment-en</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://25mordad.com/PanorAIma/iran-compressed-historical-moment-en" />
+    <xhtml:link rel="alternate" hreflang="fa" href="https://25mordad.com/PanorAIma/iran-lahzeye-feshordeh-tarikh-fa" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://25mordad.com/PanorAIma/iran-compressed-historical-moment-en" />
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://25mordad.com/PanorAIma/iran-lahzeye-feshordeh-tarikh-fa</loc>
+    <xhtml:link rel="alternate" hreflang="fa" href="https://25mordad.com/PanorAIma/iran-lahzeye-feshordeh-tarikh-fa" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://25mordad.com/PanorAIma/iran-compressed-historical-moment-en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://25mordad.com/PanorAIma/iran-lahzeye-feshordeh-tarikh-fa" />
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>
