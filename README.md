@@ -31,6 +31,8 @@ Current structure:
 ```text
 PanorAIma/
   index.html
+  next/                                     ← permanent "coming next" teaser slot
+    index.html
   iran-compressed-historical-moment-en/
     index.html
   iran-lahzeye-feshordeh-tarikh-fa/
@@ -40,7 +42,8 @@ PanorAIma/
 Notes:
 
 - `/writings` currently redirects to `/PanorAIma` for backward compatibility.
-- Landing page (`PanorAIma/index.html`) contains the featured post card and links to both language versions.
+- Landing page (`PanorAIma/index.html`) contains all post cards — teaser card (dashed border) at the top, published articles below.
+- `PanorAIma/next/` is a permanent slot — always updated to preview the upcoming article. When a new article is announced, update the title, dates, description, and feature image (`images/soon.jpg` or new image).
 
 ## Adding a New Post (EN + FA)
 

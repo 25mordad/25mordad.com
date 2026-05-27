@@ -20,6 +20,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://25mordad.com/PanorAIma/next</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://25mordad.com/PanorAIma/iran-compressed-historical-moment-en</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://25mordad.com/PanorAIma/iran-compressed-historical-moment-en" />
     <xhtml:link rel="alternate" hreflang="fa" href="https://25mordad.com/PanorAIma/iran-lahzeye-feshordeh-tarikh-fa" />
