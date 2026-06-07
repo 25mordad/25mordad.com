@@ -57,7 +57,7 @@ Work in this order. Each phase depends on the previous.
 1. Write the long FA draft → `files/PanorAIma/<slug>/<slug>-fa.md` (section headings + body + `[n]` citations + `## منابع` list).
 2. Write the short FA draft → `<slug>-fa-short.md` (same sections + same refs, compressed to ~1–3 paragraphs per section — see **Short and Long Versions**).
 3. Translate long FA → long EN draft → `<slug>-en.md` (preserve all `[n]` inline citations).
-4. Write short EN draft → `<slug>-en-short.md` mirroring the FA short (same sections + refs).
+   - **No short EN version** — the EN article always uses the long draft only.
 
 #### Phase 2 — Image assets
 
@@ -65,15 +65,19 @@ Work in this order. Each phase depends on the previous.
 6. Write `card-texts.md` — one `## <n> — <section-slug>` block per section (label, title, body, ref, cta, music). See **Instagram Story Card Deck** for field rules.
 7. Copy `gen_section_cards.py` from the previous article, update `OUTPUT_DIR` slug → run → 16 story cards in `images/PanorAIma/<slug>/stories/`.
 8. Copy `gen_hero_images.py` from the previous article, update `OUTPUT_DIR` slug → run → 16 hero images in `images/PanorAIma/<slug>/heroes/`. See **Hero Images**.
-9. Create `test-cover-d.html` (copy from previous article, update title + subtitle + tagline) → render → save as `images/PanorAIma/<slug>/cover.jpg`. See **Cover / Feature Image**.
+9. Create covers — two files, two renders. See **Cover / Feature Image**:
+   - FA cover: `test-cover-d.html` → `images/PanorAIma/<slug>/cover.jpg` (Vazirmatn, RTL, FA text)
+   - EN cover: `test-cover-en.html` → `images/PanorAIma/<slug>/cover-en.jpg` (Space Grotesk, LTR, EN text)
 
 #### Phase 3 — HTML pages
 
 10. `mkdir -p PanorAIma/<slug>-fa && cp PanorAIma/iran-lahzeye-feshordeh-tarikh-fa/index.html PanorAIma/<slug>-fa/index.html`
-11. In the FA page update: `<title>`, meta description/keywords, all OG/Twitter tags, canonical, hreflang (FA↔EN + x-default), JSON-LD `BlogPosting` (`headline`, `datePublished`, `dateModified`, `url`, `inLanguage: "fa-IR"`). Replace article body with FA content. Add `تحلیل با هوش‌واره` chip.
-12. Embed hero images: after each `<h2>` section heading add `<figure><img src="/images/PanorAIma/<slug>/heroes/<section-slug>.jpg" alt="<section title in FA>"></figure>`.
-13. `mkdir -p PanorAIma/<slug>-en && cp PanorAIma/iran-compressed-historical-moment-en/index.html PanorAIma/<slug>-en/index.html`
-14. In the EN page update all the same fields (inLanguage: `"en"`). Replace article body with EN content. Add `AI-Assisted` chip. Embed hero images with English alt text.
+11. In the FA page update: `<title>`, meta description/keywords, all OG/Twitter tags (OG image → `cover.jpg`), canonical, hreflang (FA↔EN + x-default), JSON-LD `BlogPosting` (`headline`, `datePublished`, `dateModified`, `url`, `inLanguage: "fa-IR"`, `image: cover.jpg`). Replace article body with FA content. Add `تحلیل با هوش‌واره` chip.
+12. Embed hero images in FA page: after each `<h2>` heading add `<figure><img src="/images/PanorAIma/<slug>/heroes/<section-slug>.jpg" alt="<section title in FA>"></figure>`.
+13. `mkdir -p PanorAIma/<slug>-en && cp PanorAIma/peoples-of-iran-en/index.html PanorAIma/<slug>-en/index.html`
+14. In the EN page update all the same fields (inLanguage: `"en"`, OG image → `cover-en.jpg`). Replace article body with **long EN content only** (no short version). Add `AI-Assisted` chip.
+    - **No per-section hero images in the EN page.** Place only the EN cover at the top of the article body (inside `.cover-image` div, `border-radius: 1rem`).
+    - EN page template to copy: `PanorAIma/peoples-of-iran-en/index.html` (has ToC, superscript citations, `.refs` section, `.cover-image` div).
 
 #### Phase 4 — Publish
 
@@ -182,46 +186,58 @@ Each article ships with **square hero images** — one per section — embedded 
 
 ### Cover / Feature Image
 
-Each article has **one cover image** — used as the listing card thumbnail, OG image, and Twitter card. It shows only the article title, subtitle, a one-line tagline, and the author. No section label, no body paragraphs, no CTA.
+Each article has **two cover images** — one FA, one EN. Both use the same layout but different language, font, and direction. The FA cover is used on the listing card (`PanorAIma/index.html`) and the FA article page. The EN cover is used only on the EN article page.
+
+| File | Used by | Language | Font | Direction |
+|------|---------|----------|------|-----------|
+| `images/PanorAIma/<slug>/cover.jpg` | Listing card, FA page OG | FA | Vazirmatn | RTL |
+| `images/PanorAIma/<slug>/cover-en.jpg` | EN page OG + body cover | EN | Space Grotesk | LTR |
 
 **To create for a new article:**
 
-1. Copy `test-cover-d.html` from the previous article into `files/PanorAIma/<new-slug>/`.
-2. Update three things hardcoded in the HTML:
-   - `<h1 class="article-title">` — the article's main title
-   - `<p class="article-subtitle">` — the article's subtitle
-   - `<p class="tagline">` — a single punchy line describing what the article is about (write fresh, not from card-texts.md)
-3. Render and preview, then save final as `images/PanorAIma/<new-slug>/cover.jpg`.
+1. Copy `test-cover-d.html` from the previous article (`peoples-of-iran`) into `files/PanorAIma/<new-slug>/`.
+2. Update three things hardcoded in the FA HTML:
+   - `<h1 class="article-title">` — FA title
+   - `<p class="article-subtitle">` — FA subtitle
+   - `<p class="tagline">` — one punchy RTL Persian line (write fresh)
+3. Render → `images/PanorAIma/<new-slug>/cover.jpg`.
+4. Copy `test-cover-en.html` from `peoples-of-iran` into `files/PanorAIma/<new-slug>/`.
+5. Update the three equivalent EN fields.
+6. Render → `images/PanorAIma/<new-slug>/cover-en.jpg`.
 
-**Layout (top to bottom inside the card):**
+**Layout (same for both covers, top to bottom inside the card):**
 ```
 ✦  (ornament, gold, faint)
-article title  (large bold white, auto-scales)
+article title  (large bold white, auto-scales down to 36px min)
 article subtitle  (muted white, lighter weight)
 ──◆──  (gold divider)
-tagline  (one line, muted white, 32px)
+tagline  (one line, muted white)
 ```
 Footer sits outside the card, absolutely positioned at bottom:
 ```
-بهمن رشادی  (gold, 26px, medium weight)
-25Mordad.com  (gold, 30px, bold, LTR)
-✦ فراتر از قاب ✦  (dim gold, 22px, light)
+FA: بهمن رشادی  /  EN: Bahman Reshadipour  (gold, 26px, medium)
+25Mordad.com  (gold, 30px, bold)
+FA: ✦ فراتر از قاب ✦  /  EN: ✦ Beyond The Frame ✦  (dim gold, 22px, light)
 ```
 
 **Rules:**
-- **Author:** always `بهمن رشادی` (two-part, not full surname, not first name only)
-- **Tagline:** write fresh per article — one line, RTL Persian, captures the article's core question or tension
 - **Background:** always `bg-d.png` (dark) — do not randomise the cover
 - **Format:** 1200×1200 px JPEG `quality=98`
-- **Output path:** `images/PanorAIma/<slug>/cover.jpg`
+- **FA author:** always `بهمن رشادی`; **EN author:** always `Bahman Reshadipour`
+- **Tagline:** write fresh per article and per language — captures the article's core question or tension
 
-**Render snippet (inline, no script needed):**
+**Render snippet (run once per cover file):**
 ```python
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
+# FA cover
 html_file = Path("files/PanorAIma/<slug>/test-cover-d.html").resolve()
 out = Path("images/PanorAIma/<slug>/cover.jpg")
+
+# EN cover — change both paths:
+# html_file = Path("files/PanorAIma/<slug>/test-cover-en.html").resolve()
+# out = Path("images/PanorAIma/<slug>/cover-en.jpg")
 
 with sync_playwright() as p:
     browser = p.chromium.launch()
