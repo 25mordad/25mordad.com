@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Hero — بخش اول (bg-d.png)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1200px;
+      height: 1200px;
+      font-family: 'Vazirmatn', sans-serif;
+      direction: rtl;
+      overflow: hidden;
+      position: relative;
+      background-image: url('bg-d.png');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .card {
+      position: absolute;
+      inset: 80px;
+      background: rgba(14, 11, 8, 0.82);
+      border: 1.5px solid rgba(201, 168, 76, 0.55);
+      border-radius: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 56px 72px 48px;
+    }
+
+    .section-icon {
+      font-size: 26px;
+      color: rgba(201, 168, 76, 0.45);
+      margin-bottom: 14px;
+    }
+
+    .section-label {
+      font-size: 30px;
+      font-weight: 500;
+      color: #c9a84c;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 70px;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.28;
+      margin-bottom: 32px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      width: 65%;
+      margin-bottom: 36px;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(201, 168, 76, 0.45);
+    }
+
+    .divider-dot { font-size: 14px; color: #c9a84c; }
+
+    .section-body {
+      font-size: 36px;
+      font-weight: 400;
+      color: #ede5d5;
+      line-height: 2.0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .body-quote {
+      font-size: 28px;
+      color: rgba(201, 168, 76, 0.35);
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .section-ref {
+      font-size: 22px;
+      font-weight: 300;
+      color: rgba(201, 168, 76, 0.5);
+      margin-top: 20px;
+      line-height: 1.7;
+    }
+
+    .footer {
+      width: 100%;
+      border-top: 1px solid rgba(201, 168, 76, 0.25);
+      padding-top: 24px;
+      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .footer-site {
+      font-size: 34px;
+      font-weight: 700;
+      color: #c9a84c;
+      letter-spacing: 0.06em;
+      direction: ltr;
+    }
+
+    .footer-tagline {
+      font-size: 24px;
+      font-weight: 300;
+      color: #7a7060;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="section-icon">✦</div>
+    <div class="section-label">بخش اول</div>
+    <h1 class="section-title">هرکس از مردم<br>خودش حرف می‌زند</h1>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-dot">◆</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <p class="section-body">
+      <span class="body-quote">❝</span>
+      همه از «مردم» حرف می‌زنند؛<br>
+      مردم می‌خواهند، مردم خسته‌اند.<br>
+      اما هیچ‌کس همه‌ی مردم را نمی‌بیند.<br>
+      هرکس فقط بخشی را می‌بیند<br>
+      که برایش آشناست —<br>
+      و همان را جای کل می‌گذارد.
+    </p>
+
+    <div class="footer">
+      <div class="footer-site">25Mordad.com</div>
+      <div class="footer-tagline">✦ فراتر از قاب ✦</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const title = document.querySelector('.section-title');
+      const targetLines = title.innerHTML.split(/<br[\s/]*>/i).length;
+      let size = 70;
+      title.style.fontSize = size + 'px';
+      while (title.scrollHeight > size * 1.28 * targetLines + 8 && size > 32) {
+        size -= 1;
+        title.style.fontSize = size + 'px';
+      }
+    })();
+  </script>
+</body>
+</html>

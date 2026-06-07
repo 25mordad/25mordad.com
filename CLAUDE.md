@@ -28,7 +28,10 @@ After any HTML change that uses new Tailwind utility classes, rebuild CSS. The T
 | `PanorAIma/next/index.html` | Permanent "coming next" teaser slot — always points to the upcoming article |
 | `PanorAIma/<slug>/index.html` | Individual published article pages |
 | `sitemap.xml` | Must be updated manually with every new page |
-| `images/PanorAIma/` | Feature images for PanorAIma pages — named after the article slug (e.g. `iran-lahzeye-feshordeh-tarikh.jpg`) or `soon.jpg` for the teaser |
+| `images/PanorAIma/<slug>/cover.jpg` | Cover / feature image for the article listing card — generated from `test-cover-d.html` |
+| `images/PanorAIma/<slug>/heroes/<section-slug>.jpg` | Square hero images (1200×1200) — one per section, embedded in article body |
+| `images/PanorAIma/<slug>/stories/<section-slug>.jpg` | Vertical Instagram story cards (941×1672) — one per section |
+| `images/PanorAIma/soon.jpg` | Placeholder feature image used on the teaser page before the cover is ready |
 | `images/site.webmanifest` | PWA manifest (icon paths are `/images/…`) |
 
 ## PanorAIma (Writing Section)
@@ -41,12 +44,38 @@ Slug convention:
 
 ### Adding a New Article — Checklist
 
-1. Copy the existing EN and FA article files as starting templates.
-2. In **both** files update: `<title>`, `meta description`, `meta keywords`, all OG/Twitter tags, `<link rel="canonical">`, `hreflang` alternates (EN↔FA + `x-default`), and the JSON-LD `BlogPosting` block (`headline`, `datePublished`, `dateModified`, `url`, `inLanguage`).
-3. Add an AI-tag chip to the article header (English: `AI-Assisted`, Farsi: `تحلیل با هوش مصنوعی`).
-4. Add the new post card to `PanorAIma/index.html` (follow the `.post-card` pattern with `.meta-pill` date, `.lang-actions` links, and a `.fa-preview` block for the Farsi subtitle).
-5. Add both EN and FA URLs to `sitemap.xml` with `xhtml:link` alternates and `lastmod`.
-6. Run `npm run build:css`.
+Work in this order. Each phase depends on the previous.
+
+#### Phase 1 — Drafts
+
+1. Write the long FA draft → `files/PanorAIma/<slug>/<slug>-fa.md` (section headings + body + `[n]` citations + `## منابع` list).
+2. Write the short FA draft → `<slug>-fa-short.md` (same sections + same refs, compressed to ~1–3 paragraphs per section — see **Short and Long Versions**).
+3. Translate long FA → long EN draft → `<slug>-en.md` (preserve all `[n]` inline citations).
+4. Write short EN draft → `<slug>-en-short.md` mirroring the FA short (same sections + refs).
+
+#### Phase 2 — Image assets
+
+5. Place background images `bg-d.png` (dark, preferred) and `bg.png` (light) in `files/PanorAIma/<slug>/`.
+6. Write `card-texts.md` — one `## <n> — <section-slug>` block per section (label, title, body, ref, cta, music). See **Instagram Story Card Deck** for field rules.
+7. Copy `gen_section_cards.py` from the previous article, update `OUTPUT_DIR` slug → run → 16 story cards in `images/PanorAIma/<slug>/stories/`.
+8. Copy `gen_hero_images.py` from the previous article, update `OUTPUT_DIR` slug → run → 16 hero images in `images/PanorAIma/<slug>/heroes/`. See **Hero Images**.
+9. Create `test-cover-d.html` (copy from previous article, update title + subtitle + tagline) → render → save as `images/PanorAIma/<slug>/cover.jpg`. See **Cover / Feature Image**.
+
+#### Phase 3 — HTML pages
+
+10. `mkdir -p PanorAIma/<slug>-fa && cp PanorAIma/iran-lahzeye-feshordeh-tarikh-fa/index.html PanorAIma/<slug>-fa/index.html`
+11. In the FA page update: `<title>`, meta description/keywords, all OG/Twitter tags, canonical, hreflang (FA↔EN + x-default), JSON-LD `BlogPosting` (`headline`, `datePublished`, `dateModified`, `url`, `inLanguage: "fa-IR"`). Replace article body with FA content. Add `تحلیل با هوش مصنوعی` chip.
+12. Embed hero images: after each `<h2>` section heading add `<figure><img src="/images/PanorAIma/<slug>/heroes/<section-slug>.jpg" alt="<section title in FA>"></figure>`.
+13. `mkdir -p PanorAIma/<slug>-en && cp PanorAIma/iran-compressed-historical-moment-en/index.html PanorAIma/<slug>-en/index.html`
+14. In the EN page update all the same fields (inLanguage: `"en"`). Replace article body with EN content. Add `AI-Assisted` chip. Embed hero images with English alt text.
+
+#### Phase 4 — Publish
+
+15. Add post card to `PanorAIma/index.html` above the teaser card (`.post-card` pattern: `.meta-pill` date in both EN and FA calendar, `.lang-actions` EN/FA links, `.fa-preview` block for FA subtitle).
+16. Add both EN and FA URLs to `sitemap.xml` with `xhtml:link` alternates and `lastmod`.
+17. Update `PanorAIma/next/index.html` to point to the next upcoming article.
+18. Run `npm run build:css`.
+19. Commit and push.
 
 ### Short and Long Versions
 
@@ -121,6 +150,82 @@ Technical decisions (locked in — replicate for every article):
 - **Skip logic:** already-generated files are skipped automatically. Delete a file to re-render it.
 - **Running:** `python3 gen_section_cards.py` (all sections) or
   `python3 gen_section_cards.py <slug>` (one section).
+
+### Hero Images
+
+Each article ships with **square hero images** — one per section — embedded inside the article HTML body after each `<h2>` heading. Same visual design as story cards (gold-bordered dark panel over full-bleed bg photo) but square and no CTA.
+
+**To create for a new article:**
+
+1. Copy `gen_hero_images.py` from the previous article into `files/PanorAIma/<new-slug>/`.
+2. Update the one line: `OUTPUT_DIR = REPO_ROOT / "images" / "PanorAIma" / "<new-slug>" / "heroes"`.
+3. Create `test-hero-d.html` (copy from previous article, update the hardcoded section 1 content to match the new article's first section).
+4. Render the test card to validate: `python3 gen_hero_images.py <section-1-slug>` — review the output before running all.
+5. Run all: `python3 gen_hero_images.py`.
+
+**Source data:** same `card-texts.md` as story cards. Fields used: `label`, `title`, `body`, `ref` (optional). Fields ignored: `cta`, `music`.
+
+**Technical spec (locked in — do not change):**
+- Viewport: 1200×1200 px
+- Card: `position: absolute; inset: 80px` — leaves bg visible in margins
+- Font sizes: label 30px, title 70px (auto-scales down to 32px min), body 36px, ref 22px, footer-site 34px, footer-tagline 24px
+- Background: random `bg-d.png` / `bg.png` each render — delete file to re-render with different bg
+- Output: `images/PanorAIma/<slug>/heroes/<section-slug>.jpg`, JPEG `quality=98`
+- Skip logic: already-generated files are skipped automatically
+- Running: `python3 gen_hero_images.py` (all) or `python3 gen_hero_images.py <slug>` (one section)
+
+### Cover / Feature Image
+
+Each article has **one cover image** — used as the listing card thumbnail, OG image, and Twitter card. It shows only the article title, subtitle, a one-line tagline, and the author. No section label, no body paragraphs, no CTA.
+
+**To create for a new article:**
+
+1. Copy `test-cover-d.html` from the previous article into `files/PanorAIma/<new-slug>/`.
+2. Update three things hardcoded in the HTML:
+   - `<h1 class="article-title">` — the article's main title
+   - `<p class="article-subtitle">` — the article's subtitle
+   - `<p class="tagline">` — a single punchy line describing what the article is about (write fresh, not from card-texts.md)
+3. Render and preview, then save final as `images/PanorAIma/<new-slug>/cover.jpg`.
+
+**Layout (top to bottom inside the card):**
+```
+✦  (ornament, gold, faint)
+article title  (large bold white, auto-scales)
+article subtitle  (muted white, lighter weight)
+──◆──  (gold divider)
+tagline  (one line, muted white, 32px)
+```
+Footer sits outside the card, absolutely positioned at bottom:
+```
+بهمن رشادی  (gold, 26px, medium weight)
+25Mordad.com  (gold, 30px, bold, LTR)
+✦ فراتر از قاب ✦  (dim gold, 22px, light)
+```
+
+**Rules:**
+- **Author:** always `بهمن رشادی` (two-part, not full surname, not first name only)
+- **Tagline:** write fresh per article — one line, RTL Persian, captures the article's core question or tension
+- **Background:** always `bg-d.png` (dark) — do not randomise the cover
+- **Format:** 1200×1200 px JPEG `quality=98`
+- **Output path:** `images/PanorAIma/<slug>/cover.jpg`
+
+**Render snippet (inline, no script needed):**
+```python
+from pathlib import Path
+from playwright.sync_api import sync_playwright
+
+html_file = Path("files/PanorAIma/<slug>/test-cover-d.html").resolve()
+out = Path("images/PanorAIma/<slug>/cover.jpg")
+
+with sync_playwright() as p:
+    browser = p.chromium.launch()
+    page = browser.new_page(viewport={"width": 1200, "height": 1200})
+    page.goto(f"file://{html_file}", wait_until="networkidle", timeout=30_000)
+    page.wait_for_function("document.fonts.ready")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    page.screenshot(path=str(out), clip={"x":0,"y":0,"width":1200,"height":1200}, quality=98)
+    browser.close()
+```
 
 ### Fonts and Direction
 

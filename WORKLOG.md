@@ -4,6 +4,38 @@ Reverse-chronological log of work sessions on 25mordad.com.
 
 ---
 
+## 2026-06-07 — Add peoples-of-iran post card to PanorAIma listing
+
+### What we built
+
+| Feature | Files |
+|---|---|
+| Post card for "مردمان ایران" on listing page | `PanorAIma/index.html` |
+| Cover image at top of card (full-width, height:auto) | `PanorAIma/index.html` |
+| Teaser "Coming Next" removed (article published) | `PanorAIma/index.html` |
+
+### Decisions
+
+#### 1. No max-height on cover image in card
+**Why:** The cover is a 1200×1200 square; applying max-height caused it to render visibly cropped, cutting off the design.
+**How:** Set `height:auto` with no overflow constraint — the full image renders at its natural proportions inside the card.
+
+#### 2. Hide teaser rather than delete
+**Why:** The teaser HTML is reusable for the next article announcement (P2). Deleting it means rewriting it from scratch.
+**How:** Replaced the teaser `<section>` with an HTML comment so content is preserved for P2 re-use.
+
+### Pending / TODO
+
+- [ ] Add EN + FA URLs to sitemap.xml with xhtml:link alternates and lastmod 2026-06-07
+- [ ] Translate FA long draft → peoples-of-iran-en.md (16 sections, preserve [n] citations)
+- [ ] Produce peoples-of-iran-en-short.md (short EN, same 16 sections + refs)
+- [ ] Create PanorAIma/peoples-of-iran-en/index.html from EN short draft + hero images
+- [ ] Run npm run build:css
+- [ ] Commit and push
+- [ ] P2: Decide next article topic, update next/index.html and teaser card
+
+---
+
 ## 2026-06-07 — Commit & push peoples-of-iran story card pipeline
 
 ### What we built

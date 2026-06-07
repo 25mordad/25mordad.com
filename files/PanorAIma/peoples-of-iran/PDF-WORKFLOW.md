@@ -14,6 +14,7 @@ Generate a clean RTL Persian PDF from a Markdown source file with:
 - each `##` section starting on a new page
 - a working table of contents/index linking to sections
 - Persian-friendly fonts and right-to-left layout
+- Persian digits for ordered-list markers in the index/table of contents
 
 ## Tools used
 
@@ -65,6 +66,12 @@ The generated HTML should include CSS like this:
   margin: 18mm 16mm;
 }
 
+@counter-style persian-decimal {
+  system: numeric;
+  symbols: "۰" "۱" "۲" "۳" "۴" "۵" "۶" "۷" "۸" "۹";
+  suffix: ". ";
+}
+
 html,
 body {
   direction: rtl;
@@ -79,6 +86,10 @@ body {
 
 p {
   text-align: justify;
+}
+
+ol {
+  list-style-type: persian-decimal;
 }
 
 h2 {
@@ -150,6 +161,7 @@ The last known fixed version had:
 
 - no Chrome header/footer
 - working index links
+- Persian digits in the index ordered-list numbers
 - each `##` section starting on a new page
 - 20 PDF pages
 
