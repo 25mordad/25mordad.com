@@ -4,6 +4,46 @@ Reverse-chronological log of work sessions on 25mordad.com.
 
 ---
 
+## 2026-06-07 — Publish peoples-of-iran EN page + bilingual cover pipeline
+
+### What we built
+
+| Feature | Files |
+|---|---|
+| EN article page (long draft, cover at top, ToC, citations, PDF link) | `PanorAIma/peoples-of-iran-en/index.html` |
+| EN cover image (Space Grotesk, LTR, 1200×1200, q=98) | `files/PanorAIma/peoples-of-iran/test-cover-en.html`, `images/PanorAIma/peoples-of-iran/cover-en.jpg` |
+| EN long draft staged | `files/PanorAIma/peoples-of-iran/peoples-of-iran-en.md` |
+| Sitemap entries for EN + FA with xhtml:link alternates | `sitemap.xml` |
+| hreflang x-default fix in FA page (x-default → EN slug) | `PanorAIma/peoples-of-iran-fa/index.html` |
+
+### Decisions
+
+#### 1. No short EN version
+**Why:** EN readers get the full long draft. A short version would dilute the content and add maintenance overhead for a language variant that already has fewer readers than FA.
+**How:** Removed the short EN step from Phase 1 of the article checklist. `peoples-of-iran-en.md` is the only EN draft file.
+
+#### 2. No per-section hero images in EN page
+**Why:** Hero images are Vazirmatn FA-script labels and Persian body text — they don't make sense on an English page. The EN cover (Space Grotesk, LTR) serves as the single visual anchor.
+**How:** EN page has one `.cover-image` div at the top of the article body. No `<figure>` embeds after headings.
+
+#### 3. Two covers per article (FA + EN)
+**Why:** OG/Twitter meta and the article body both need a language-appropriate cover. Using the FA cover (Vazirmatn, RTL) as the EN page's OG image looks broken to English-speaking sharers.
+**How:** `test-cover-d.html` → `cover.jpg` (FA, Vazirmatn, RTL); `test-cover-en.html` → `cover-en.jpg` (Space Grotesk, LTR). Both templates and outputs are archived in the peoples-of-iran folder as the canonical example.
+
+#### 4. x-default hreflang standardized to EN slug
+**Why:** Google's hreflang spec requires x-default to point to the same URL consistently across all language variants. The FA page had x-default → FA slug (itself), creating a mismatch with the EN page and sitemap.
+**How:** Fixed `<link rel="alternate" hreflang="x-default">` in the FA page to point to the EN slug, matching the EN page and sitemap entries.
+
+### Pending / TODO
+
+- [ ] P2: Decide next article topic
+- [ ] P2: Update `PanorAIma/next/index.html` with new title, description, and dates
+- [ ] P2: Update teaser card in `PanorAIma/index.html`
+- [ ] P2: Update memory `project_panoraima_next.md`
+- [ ] P2: Draft AI-assisted comment reply prompt template
+
+---
+
 ## 2026-06-07 — Add peoples-of-iran post card to PanorAIma listing
 
 ### What we built

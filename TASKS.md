@@ -25,6 +25,7 @@ Slug plan:
 - [x] Create `PanorAIma/peoples-of-iran-fa/index.html` — DONE (610 lines, 16 heroes embedded, correct meta)
 - [x] Verify hreflang in FA page — DONE 2026-06-07 (x-default now consistently → EN slug)
 - [x] Run `npm run build:css` — DONE 2026-06-07
+- [x] Commit and push — DONE 2026-06-07
 
 ## P2 — Teaser: announce next article after "Peoples of Iran"
 
@@ -32,6 +33,10 @@ Slug plan:
   - [ ] Brainstorm 3–5 candidate topics and pick one (note shortlist in WORKLOG)
 - [ ] Update `PanorAIma/next/index.html` with new title, description, and dates ← depends on topic
 - [ ] Update teaser card in `PanorAIma/index.html` ← depends on topic
-- [ ] Update memory: `project_panoraima_next.md`
+- [ ] Update memory: `project_panoraima_next.md` to reflect peoples-of-iran published and next topic TBD
 - [ ] Consider AI-assisted comment replies — draft a workflow or prompt template for replying to reader comments on published articles using AI
   - [ ] Draft the reply prompt template and save it under `files/` (or a memory entry) for reuse
+
+## Done
+
+- **Publish "The Peoples of Iran"** — All 18 checklist steps completed (FA + EN pages, covers, story cards, hero images, post card, sitemap, hreflang fix, build, commit/push) — 2026-06-07
