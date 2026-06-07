@@ -9,21 +9,18 @@ Slug plan:
 - FA: `PanorAIma/peoples-of-iran-fa/index.html`
 
 - [x] Read the `.odt` draft and extract full article content — DONE (FA: 16 sections in `peoples-of-iran-fa.md`)
-- [ ] Generate section image cards (HTML → PNG approach)
+- [x] Generate section image cards (HTML → PNG approach) — DONE 2026-06-07
   - ~~`gen_images.py` (OpenAI API) deprecated 2026-06-07~~ — approach changed
   - Card design: bordered panel (gold border, dark semi-transparent bg) floating over full-bleed photo; photo shows in margins ← locked 2026-06-07
   - Background: `files/PanorAIma/peoples-of-iran/bg-d.png` (dark, preferred)
-  - Output folder: `images/PanorAIma/peoples-of-iran/` (created)
-  - Output files: `images/PanorAIma/peoples-of-iran/<en-slug>.png` (16 files)
-  - [ ] Render `test-card-d.html` to PNG (Playwright at 941×1672) to validate card design before scaling up ← do first
-  - [ ] Confirm `bg-d.png` vs `bg.png` choice from the rendered test card
-  - [ ] Install/verify Playwright + chromium (`pip install playwright && playwright install chromium`) ← blocks gen_section_cards.py
-  - [ ] Write `card-texts.md` — one entry per section with: FA section label, FA title, 2–3 line FA summary, CTA text; covers both bg variants
-    - [ ] After section-1 card is approved, write `card-texts.md` sections 2–16 (mirror the section-1 block format; only section 1 exists now)
-  - [ ] Write `gen_section_cards.py` — reads `card-texts.md`, builds one HTML per section, screenshots via Playwright at 941×1672
-    - [ ] Vazirmatn via Google Fonts, RTL, already-generated files skipped
-    - [ ] Reuse the `.card`/`.section-*`/`.footer` CSS from `test-card-d.html` as the template
-  - [ ] Run script and review all 16 cards
+  - Output folder: `images/PanorAIma/peoples-of-iran/stories/` (created)
+  - Output files: `images/PanorAIma/peoples-of-iran/stories/<section-slug>.jpg` (16 JPEG cards, q=98)
+  - [x] Render `test-card-d.html` to PNG (Playwright at 941×1672) to validate card design
+  - [x] Confirm `bg-d.png` vs `bg.png` choice from the rendered test card
+  - [x] Install/verify Playwright + chromium
+  - [x] Write `card-texts.md` — all 16 sections with label, title, body, ref, cta, music
+  - [x] Write `gen_section_cards.py` — reads `card-texts.md`, JPEG q=98, skip logic, Vazirmatn, RTL
+  - [x] Run script and review all 16 cards
   - [ ] Pick best card as feature image → `images/PanorAIma/peoples-of-iran.jpg`
 - [ ] Add feature image `images/PanorAIma/peoples-of-iran.jpg`
   - [ ] Convert chosen PNG to JPG: `convert "images/PanorAIma/peoples-of-iran/<slug>.png" images/PanorAIma/peoples-of-iran.jpg`

@@ -4,6 +4,46 @@ Reverse-chronological log of work sessions on 25mordad.com.
 
 ---
 
+## 2026-06-07 — Commit & push peoples-of-iran story card pipeline
+
+### What we built
+
+| Feature | Files |
+|---|---|
+| 16 JPEG story cards (941×1672, q=98) for all article sections | `images/PanorAIma/peoples-of-iran/stories/*.jpg` |
+| Story card generator script | `files/PanorAIma/peoples-of-iran/gen_section_cards.py` |
+| Card texts source of truth | `files/PanorAIma/peoples-of-iran/card-texts.md` |
+| Background images (light + dark variants) | `files/PanorAIma/peoples-of-iran/bg-d.png`, `bg.png` |
+| HTML test card templates | `files/PanorAIma/peoples-of-iran/test-card-d.html`, `test-card.html` |
+| Updated FA long + short drafts | `files/PanorAIma/peoples-of-iran/peoples-of-iran-fa.md`, `peoples-of-iran-fa-short.md` |
+| Extended .gitignore to exclude generated outputs | `.gitignore` |
+| Pipeline documentation | `files/PanorAIma/peoples-of-iran/PDF-WORKFLOW.md` |
+
+### Decisions
+
+#### 1. Exclude generated HTML/PDF/preview PNGs from git
+**Why:** Regenerable from MD sources; 900KB+ PDFs bloat the repo history with no meaningful diff value.
+**How:** Added gitignore patterns `files/PanorAIma/**/*.pdf`, `files/PanorAIma/**/peoples-of-iran-*.html`, `files/PanorAIma/**/preview-*.png`.
+
+#### 2. Keep gen_images.py (deprecated OpenAI API approach)
+**Why:** Historical record of the old approach — useful context if the strategy ever reverts to API-generated images.
+**How:** Committed alongside the new `gen_section_cards.py` with a deprecation note in the card-texts header.
+
+### Pending / TODO
+
+- [ ] Pick one story card as feature image → copy to `images/PanorAIma/peoples-of-iran.jpg`
+- [ ] Add post card to `PanorAIma/index.html` (.post-card pattern, date ۱۶ خرداد ۱۴۰۵, EN/FA links)
+- [ ] Update `PanorAIma/next/index.html` to point to next upcoming article
+- [ ] Add both URLs to `sitemap.xml` with `xhtml:link` alternates and `lastmod 2026-06-07`
+- [ ] Extract/translate EN article body to `peoples-of-iran-en.md` from FA draft
+- [ ] Produce EN short version `peoples-of-iran-en-short.md`
+- [ ] Create `PanorAIma/peoples-of-iran-en/index.html` (copy from iran-compressed-historical-moment-en)
+- [ ] Create `PanorAIma/peoples-of-iran-fa/index.html` (copy from iran-lahzeye-feshordeh-tarikh-fa)
+- [ ] Run `npm run build:css`
+- [ ] Final commit and push
+
+---
+
 ## 2026-06-06 — Organize article files and plan image generation
 
 ### What we built
