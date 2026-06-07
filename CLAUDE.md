@@ -77,7 +77,8 @@ Work in this order. Each phase depends on the previous.
 13. `mkdir -p PanorAIma/<slug>-en && cp PanorAIma/peoples-of-iran-en/index.html PanorAIma/<slug>-en/index.html`
 14. In the EN page update all the same fields (inLanguage: `"en"`, OG image → `cover-en.jpg`). Replace article body with **long EN content only** (no short version). Add `AI-Assisted` chip.
     - **No per-section hero images in the EN page.** Place only the EN cover at the top of the article body (inside `.cover-image` div, `border-radius: 1rem`).
-    - EN page template to copy: `PanorAIma/peoples-of-iran-en/index.html` (has ToC, superscript citations, `.refs` section, `.cover-image` div).
+    - Add PDF download link (`.versions-block`) after the byline: `<a href="/files/PanorAIma/<slug>/<slug>-en.pdf">Full version</a>`.
+    - EN page template to copy: `PanorAIma/peoples-of-iran-en/index.html` (has ToC, superscript citations, `.refs` section, `.cover-image` div, `.versions-block`).
 
 #### Phase 4 — Publish
 
