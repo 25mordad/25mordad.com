@@ -29,6 +29,7 @@ Slug plan:
   - [ ] Write `gen_hero_images.py` — reads same `card-texts.md`, skips `cta` field, outputs square JPEG q=98 to `images/PanorAIma/peoples-of-iran/heroes/<section-slug>.jpg`
   - [ ] Run script and review all 16 hero images
   - [ ] Pick one hero image as article feature image → `images/PanorAIma/peoples-of-iran.jpg`
+  - NOTE 2026-06-07: gen_hero_images.py + test-hero-d.html already created; all 16 heroes generated to `images/PanorAIma/peoples-of-iran/heroes/`. Cover image rendered at `images/PanorAIma/peoples-of-iran/cover.jpg` (from test-cover-d.html) — post card and FA OG tag already reference this path; `peoples-of-iran.jpg` flat path may be obsolete.
 - [ ] Add feature image `images/PanorAIma/peoples-of-iran.jpg`
   - [ ] Copy chosen hero: `cp images/PanorAIma/peoples-of-iran/heroes/<slug>.jpg images/PanorAIma/peoples-of-iran.jpg`
   - [ ] If none ready, use `soon.jpg` as placeholder
@@ -38,23 +39,23 @@ Slug plan:
   - [x] Cover image full-width, height:auto (no max-height — square cover was cropped otherwise)
   - [x] Teaser "Coming Next" hidden via HTML comment (preserved for P2 re-use)
 - [ ] Update `PanorAIma/next/index.html` to point to next upcoming article ← depends on [P2 topic]
-- [ ] Add both EN + FA URLs to `sitemap.xml` with `xhtml:link` alternates and `lastmod 2026-06-07`
-  - [ ] Keep `next/` entry with `changefreq: weekly`
-- [ ] Extract/translate EN article body to `peoples-of-iran-en.md` from the FA draft ← blocks EN page
-  - [ ] Read `files/PanorAIma/peoples-of-iran/peoples-of-iran-fa.md` (16 sections, confirm count)
-  - [ ] Translate each section heading + body to English; preserve all `[n]` inline citations
-  - [ ] Produce EN short version `peoples-of-iran-en-short.md` mirroring the FA short (same 16 sections + refs, compressed)
-- [ ] Create `PanorAIma/peoples-of-iran-en/index.html` from EN article template ← depends on EN translation
-  - [ ] `mkdir -p PanorAIma/peoples-of-iran-en && cp PanorAIma/iran-compressed-historical-moment-en/index.html PanorAIma/peoples-of-iran-en/index.html`
-  - [ ] Update all meta/OG/Twitter/JSON-LD/canonical/hreflang fields
-  - [ ] Replace article body with EN content; add `AI-Assisted` chip
-  - [ ] Embed section images (`<figure>` after each `<h2>`, alt = section title)
+- [x] Add both EN + FA URLs to `sitemap.xml` with `xhtml:link` alternates and `lastmod 2026-06-07` — DONE
+  - [x] `next/` entry with `changefreq: weekly` preserved
+- [x] Extract/translate EN article body to `peoples-of-iran-en.md` from the FA draft — DONE
+  - [x] `peoples-of-iran-en.md` exists (380 lines, 16 sections, all [n] citations preserved)
+  - No short EN version — decision 2026-06-07
+- [x] Create `PanorAIma/peoples-of-iran-en/index.html` — DONE 2026-06-07
+  - [x] Built from EN template; cover image at top (no per-section heroes)
+  - [x] All meta/OG/Twitter/JSON-LD/canonical/hreflang fields updated
+  - [x] Long EN content with ToC, superscript citations, references section; `AI-Assisted` chip
 - [ ] Create `PanorAIma/peoples-of-iran-fa/index.html` from FA article template ← depends on FA draft
   - [ ] `mkdir -p PanorAIma/peoples-of-iran-fa && cp PanorAIma/iran-lahzeye-feshordeh-tarikh-fa/index.html PanorAIma/peoples-of-iran-fa/index.html`
   - [ ] Update all meta/OG/Twitter/JSON-LD/canonical/hreflang fields (slug: `peoples-of-iran-fa`, lang: `fa`, inLanguage: `fa-IR`)
-  - [ ] Replace article body with FA content from `peoples-of-iran-fa.md`; add `تحلیل با هوش مصنوعی` chip
+  - [ ] Replace article body with FA content from `peoples-of-iran-fa.md`; add `تحلیل با هوش‌واره` chip
   - [ ] Embed section images (`<figure>` after each `<h2>`, alt = section title in FA)
-- [ ] Run `npm run build:css`
+  - NOTE 2026-06-07: FA page already exists at `PanorAIma/peoples-of-iran-fa/index.html` (610 lines, correct meta, 16 heroes embedded) — verify hreflang points to EN slug once EN page is created
+  - [ ] Verify hreflang in FA page: confirm `href="https://25mordad.com/PanorAIma/peoples-of-iran-en"` and `x-default` are correct after EN page is live
+- [x] Run `npm run build:css` — DONE 2026-06-07
 - [ ] Commit and push
 
 ## P2 — Teaser: announce next article after "Peoples of Iran"

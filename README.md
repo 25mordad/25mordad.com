@@ -45,6 +45,12 @@ Notes:
 - Landing page (`PanorAIma/index.html`) contains all post cards — teaser card (dashed border) at the top, published articles below.
 - `PanorAIma/next/` is a permanent slot — always updated to preview the upcoming article. When a new article is announced, update the title, dates, description, and feature image (`images/soon.jpg` or new image).
 
+## Terminology
+
+- In Persian copy, use `هوش‌واره` as the project’s preferred Persian word for AI / AI-assisted work.
+- Keep the spelling with the zero-width non-joiner: `هوش‌واره`.
+- For Persian PanorAIma tags/chips, use `تحلیل با هوش‌واره`.
+
 ## Adding a New Post (EN + FA)
 
 Use this workflow for every new article:
@@ -67,7 +73,7 @@ Use this workflow for every new article:
 - JSON-LD (`BlogPosting`: headline, datePublished, dateModified, url, inLanguage)
 
 4. Add/update callouts and tags inside article content:
-- Keep AI tag visible (e.g. `AI-Assisted` / `تحلیل با هوش مصنوعی`)
+- Keep AI tag visible (e.g. `AI-Assisted` / `تحلیل با هوش‌واره`)
 - Keep icon-based callouts for editorial style consistency
 
 5. Add the new post card/link to `PanorAIma/index.html`.

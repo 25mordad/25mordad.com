@@ -42,6 +42,12 @@ Slug convention:
 - English: `PanorAIma/your-post-slug-en/index.html`
 - Farsi: `PanorAIma/your-post-slug-fa/index.html`
 
+### Terminology
+
+- In Persian site copy and metadata, use `هوش‌واره` as the project’s preferred Persian word for AI / AI-assisted work.
+- Keep the spelling with the zero-width non-joiner: `هوش‌واره`.
+- Persian PanorAIma chips should use `تحلیل با هوش‌واره`.
+
 ### Adding a New Article — Checklist
 
 Work in this order. Each phase depends on the previous.
@@ -64,7 +70,7 @@ Work in this order. Each phase depends on the previous.
 #### Phase 3 — HTML pages
 
 10. `mkdir -p PanorAIma/<slug>-fa && cp PanorAIma/iran-lahzeye-feshordeh-tarikh-fa/index.html PanorAIma/<slug>-fa/index.html`
-11. In the FA page update: `<title>`, meta description/keywords, all OG/Twitter tags, canonical, hreflang (FA↔EN + x-default), JSON-LD `BlogPosting` (`headline`, `datePublished`, `dateModified`, `url`, `inLanguage: "fa-IR"`). Replace article body with FA content. Add `تحلیل با هوش مصنوعی` chip.
+11. In the FA page update: `<title>`, meta description/keywords, all OG/Twitter tags, canonical, hreflang (FA↔EN + x-default), JSON-LD `BlogPosting` (`headline`, `datePublished`, `dateModified`, `url`, `inLanguage: "fa-IR"`). Replace article body with FA content. Add `تحلیل با هوش‌واره` chip.
 12. Embed hero images: after each `<h2>` section heading add `<figure><img src="/images/PanorAIma/<slug>/heroes/<section-slug>.jpg" alt="<section title in FA>"></figure>`.
 13. `mkdir -p PanorAIma/<slug>-en && cp PanorAIma/iran-compressed-historical-moment-en/index.html PanorAIma/<slug>-en/index.html`
 14. In the EN page update all the same fields (inLanguage: `"en"`). Replace article body with EN content. Add `AI-Assisted` chip. Embed hero images with English alt text.
