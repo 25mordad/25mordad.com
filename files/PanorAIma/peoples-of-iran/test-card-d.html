@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Card — بخش اول (bg-d.png)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 941px;
+      height: 1672px;
+      font-family: 'Vazirmatn', sans-serif;
+      direction: rtl;
+      overflow: hidden;
+      position: relative;
+      background-image: url('bg-d.png');
+      background-size: cover;
+      background-position: center top;
+    }
+
+    .card {
+      position: absolute;
+      inset: 136px 88px;
+      background: rgba(14, 11, 8, 0.82);
+      border: 1.5px solid rgba(201, 168, 76, 0.55);
+      border-radius: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 66px 64px 52px;
+    }
+
+    .section-label {
+      font-size: 32px;
+      font-weight: 500;
+      color: #c9a84c;
+      letter-spacing: 0.05em;
+      margin-bottom: 22px;
+    }
+
+    .section-title {
+      font-size: 76px;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.28;
+      margin-bottom: 40px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      width: 70%;
+      margin-bottom: 48px;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(201, 168, 76, 0.45);
+    }
+
+    .divider-dot { font-size: 14px; color: #c9a84c; }
+
+    .section-body {
+      font-size: 40px;
+      font-weight: 400;
+      color: #ede5d5;
+      line-height: 2.0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .footer {
+      width: 100%;
+      border-top: 1px solid rgba(201, 168, 76, 0.25);
+      padding-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-site {
+      font-size: 38px;
+      font-weight: 700;
+      color: #c9a84c;
+      letter-spacing: 0.06em;
+      direction: ltr;
+    }
+
+    .footer-tagline {
+      font-size: 27px;
+      font-weight: 300;
+      color: #7a7060;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="section-label">بخش اول</div>
+    <h1 class="section-title">هرکس از مردم<br>خودش حرف می‌زند</h1>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-dot">◆</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <p class="section-body">
+      همه از «مردم» حرف می‌زنند؛<br>
+      مردم می‌خواهند، مردم خسته‌اند.<br>
+      اما هیچ‌کس همه‌ی مردم را نمی‌بیند.<br>
+      هرکس فقط بخشی را می‌بیند<br>
+      که برایش آشناست —<br>
+      و همان را جای کل می‌گذارد.
+    </p>
+
+    <div class="footer">
+      <div class="footer-site">25Mordad.com</div>
+      <div class="footer-tagline">فراتر از قاب</div>
+    </div>
+  </div>
+</body>
+</html>
