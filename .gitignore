@@ -4,6 +4,7 @@ node_modules/
 *.lock
 
 # Generated outputs — rebuilt from markdown sources on demand
+# PDFs for download live in assets/pdf/ (committed) not files/ (excluded)
 files/PanorAIma/**/*.pdf
 files/PanorAIma/**/peoples-of-iran-*.html
 files/PanorAIma/**/preview-*.png

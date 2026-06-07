@@ -28,6 +28,8 @@ After any HTML change that uses new Tailwind utility classes, rebuild CSS. The T
 | `PanorAIma/next/index.html` | Permanent "coming next" teaser slot — always points to the upcoming article |
 | `PanorAIma/<slug>/index.html` | Individual published article pages |
 | `sitemap.xml` | Must be updated manually with every new page |
+| `assets/pdf/PanorAIma/<slug>/<slug>-fa.pdf` | FA article PDF — committed and served; source in `files/` is gitignored |
+| `assets/pdf/PanorAIma/<slug>/<slug>-en.pdf` | EN article PDF — same pattern |
 | `images/PanorAIma/<slug>/cover.jpg` | Cover / feature image for the article listing card — generated from `test-cover-d.html` |
 | `images/PanorAIma/<slug>/heroes/<section-slug>.jpg` | Square hero images (1200×1200) — one per section, embedded in article body |
 | `images/PanorAIma/<slug>/stories/<section-slug>.jpg` | Vertical Instagram story cards (941×1672) — one per section |
@@ -77,14 +79,15 @@ Work in this order. Each phase depends on the previous.
 13. `mkdir -p PanorAIma/<slug>-en && cp PanorAIma/peoples-of-iran-en/index.html PanorAIma/<slug>-en/index.html`
 14. In the EN page update all the same fields (inLanguage: `"en"`, OG image → `cover-en.jpg`). Replace article body with **long EN content only** (no short version). Add `AI-Assisted` chip.
     - **No per-section hero images in the EN page.** Place only the EN cover at the top of the article body (inside `.cover-image` div, `border-radius: 1rem`).
-    - Add PDF download link (`.versions-block`) after the byline: `<a href="/files/PanorAIma/<slug>/<slug>-en.pdf">Full version</a>`.
+    - Add PDF download link (`.versions-block`) after the byline: `<a href="/assets/pdf/PanorAIma/<slug>/<slug>-en.pdf">Full version</a>`.
     - EN page template to copy: `PanorAIma/peoples-of-iran-en/index.html` (has ToC, superscript citations, `.refs` section, `.cover-image` div, `.versions-block`).
 
 #### Phase 4 — Publish
 
-15. Add post card to `PanorAIma/index.html` above the teaser card (`.post-card` pattern: `.meta-pill` date in both EN and FA calendar, `.lang-actions` EN/FA links, `.fa-preview` block for FA subtitle).
-16. Add both EN and FA URLs to `sitemap.xml` with `xhtml:link` alternates and `lastmod`.
-17. Update `PanorAIma/next/index.html` to point to the next upcoming article.
+15. Copy PDFs to committed path: `mkdir -p assets/pdf/PanorAIma/<slug> && cp files/PanorAIma/<slug>/*.pdf assets/pdf/PanorAIma/<slug>/`. PDFs in `files/` are gitignored; `assets/pdf/` is committed and served.
+16. Add post card to `PanorAIma/index.html` above the teaser card (`.post-card` pattern: `.meta-pill` date in both EN and FA calendar, `.lang-actions` EN/FA links, `.fa-preview` block for FA subtitle).
+17. Add both EN and FA URLs to `sitemap.xml` with `xhtml:link` alternates and `lastmod`.
+18. Update `PanorAIma/next/index.html` to point to the next upcoming article.
 18. Run `npm run build:css`.
 19. Commit and push.
 
