@@ -27,15 +27,45 @@ Slug plan:
 - [x] Run `npm run build:css` — DONE 2026-06-07
 - [x] Commit and push — DONE 2026-06-07
 
+## P1.5 — Fix peoples-of-iran Instagram card texts for outsider clarity
+
+Card titles and some bodies were written from an insider perspective (as if the reader already knows the article concepts). Instagram viewers haven't read the article — a title like "سبک زندگی، سطحِ نیروهای پنهان است" is cryptic to a new reader (what forces? hidden how?). All 16 cards need an outsider-clarity review.
+
+- [ ] Review all 16 titles: flag any that rely on article-internal concepts without enough standalone context
+- [ ] Rewrite flagged titles so they carry the section's idea on their own — no jargon, no assumed knowledge
+- [ ] Review bodies for the same issue (titles are higher priority)
+- [ ] Update `files/PanorAIma/peoples-of-iran/card-texts.md` with revised copy
+- [ ] Delete the story card JPEGs that changed (so gen_section_cards.py re-renders them): `rm images/PanorAIma/peoples-of-iran/stories/<slug>.jpg`
+- [ ] Run `python3 files/PanorAIma/peoples-of-iran/gen_section_cards.py` to regenerate affected cards
+- [ ] Visually verify each re-rendered card before committing
+- [ ] Commit and push
+
 ## P2 — Teaser: announce next article after "Peoples of Iran"
 
 - [ ] Decide next article topic
-  - [ ] Brainstorm 3–5 candidate topics and pick one (note shortlist in WORKLOG)
+  - [ ] Brainstorm 3–5 candidate topics aligned with PanorAIma's analytical lens (social/historical/cultural/economic Iran)
+    - [ ] Candidate A: Iranian bazaar — economic structure, guild culture, political role
+    - [ ] Candidate B: Iranian diaspora — identity, cultural negotiation, dual belonging
+    - [ ] Candidate C: Persian language — spread, survival, political uses across history
+    - [ ] Candidate D: Women in Iranian history — beyond the modern lens, pre-Islamic + Qajar + Constitutional era
+    - [ ] Candidate E: Iranian calendar and time perception — Nowruz, seasonal rhythm, cosmological worldview
+  - [ ] Cross-check shortlist against existing articles (`iran-lahzeye-feshordeh-tarikh`, `peoples-of-iran`) to avoid thematic overlap
+  - [ ] Note chosen topic + rationale in WORKLOG
+  - [ ] Derive slug plan (EN + FA slugs) and note in TASKS under new P1 block
 - [ ] Update `PanorAIma/next/index.html` with new title, description, and dates ← depends on topic
+  - [ ] Update `<title>`, meta description/keywords, og:title, og:description, twitter:title, twitter:description
+  - [ ] Update JSON-LD headline, description, and estimated publish date
+  - [ ] Update teaser body text (heading + preview paragraphs) in the article body
+  - [ ] Swap og:image / twitter:image to `images/PanorAIma/soon.jpg` (or a new teaser image if available)
 - [ ] Update teaser card in `PanorAIma/index.html` ← depends on topic
-- [ ] Update memory: `project_panoraima_next.md` to reflect peoples-of-iran published and next topic TBD
+  - [ ] Restore the commented-out teaser `<section>` block
+  - [ ] Update title, description, and `.lang-actions` links in the teaser card
+- [ ] Commit and push P2 teaser updates ← depends on above three
+- [ ] Update memory: `project_panoraima_next.md` to reflect peoples-of-iran published and new topic chosen
 - [ ] Consider AI-assisted comment replies — draft a workflow or prompt template for replying to reader comments on published articles using AI
-  - [ ] Draft the reply prompt template and save it under `files/` (or a memory entry) for reuse
+  - [ ] Clarify the comment surface (Instagram DMs, website, or both)
+  - [ ] Draft the reply prompt template (referencing article content + reader message) and save to `files/ai-reply-template.md`
+  - [ ] Test the template against a sample comment from peoples-of-iran article
 
 ## Done
 
