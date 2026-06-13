@@ -31,14 +31,22 @@ Slug plan:
 
 Card titles and some bodies were written from an insider perspective (as if the reader already knows the article concepts). Instagram viewers haven't read the article — a title like "سبک زندگی، سطحِ نیروهای پنهان است" is cryptic to a new reader (what forces? hidden how?). All 16 cards need an outsider-clarity review.
 
-- [ ] Review all 16 titles: flag any that rely on article-internal concepts without enough standalone context
-- [ ] Rewrite flagged titles so they carry the section's idea on their own — no jargon, no assumed knowledge
-- [ ] Review bodies for the same issue (titles are higher priority)
-- [ ] Update `files/PanorAIma/peoples-of-iran/card-texts.md` with revised copy
-- [ ] Delete the story card JPEGs that changed (so gen_section_cards.py re-renders them): `rm images/PanorAIma/peoples-of-iran/stories/<slug>.jpg`
-- [ ] Run `python3 files/PanorAIma/peoples-of-iran/gen_section_cards.py` to regenerate affected cards
-- [ ] Visually verify each re-rendered card before committing
-- [ ] Commit and push
+- [x] Review all 16 titles: flag any that rely on article-internal concepts without enough standalone context
+- [x] Rewrite flagged titles so they carry the section's idea on their own — no jargon, no assumed knowledge
+- [x] Review bodies for the same issue (titles are higher priority)
+- [x] Update `files/PanorAIma/peoples-of-iran/card-texts.md` with revised copy
+- [x] Delete the story card JPEGs that changed (so gen_section_cards.py re-renders them): `rm images/PanorAIma/peoples-of-iran/stories/<slug>.jpg`
+- [x] Run `python3 files/PanorAIma/peoples-of-iran/gen_section_cards.py` to regenerate affected cards
+- [x] Visually verify each re-rendered card before committing
+- [ ] Commit and push (pending — modified story cards + card-texts.md staged)
+
+## P1.6 — peoples-of-iran Instagram feed post cards
+
+- [x] Build gen_post_cards.py (Playwright, 1080×1080) — `files/PanorAIma/peoples-of-iran/gen_post_cards.py`
+- [x] Add general-caption block to card-texts.md (single caption for full carousel)
+- [x] Render all 16 feed post images — `images/PanorAIma/peoples-of-iran/posts/01-*.jpg … 16-*.jpg`
+- [x] Fix section 1 post_body (trimmed 4→2 paragraphs to match all other sections)
+- [ ] Commit gen_post_cards.py, test-post-d.html, updated card-texts.md, and all 16 post images
 
 ## P2 — Teaser: announce next article after "Peoples of Iran"
 

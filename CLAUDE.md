@@ -33,6 +33,7 @@ After any HTML change that uses new Tailwind utility classes, rebuild CSS. The T
 | `images/PanorAIma/<slug>/cover.jpg` | Cover / feature image for the article listing card — generated from `test-cover-d.html` |
 | `images/PanorAIma/<slug>/heroes/<section-slug>.jpg` | Square hero images (1200×1200) — one per section, embedded in article body |
 | `images/PanorAIma/<slug>/stories/<section-slug>.jpg` | Vertical Instagram story cards (941×1672) — one per section |
+| `images/PanorAIma/<slug>/posts/<nn>-<section-slug>.jpg` | Square Instagram feed post cards (1080×1080) — one per section, numbered 01–16 for carousel upload order |
 | `images/PanorAIma/soon.jpg` | Placeholder feature image used on the teaser page before the cover is ready |
 | `images/site.webmanifest` | PWA manifest (icon paths are `/images/…`) |
 
@@ -66,6 +67,7 @@ Work in this order. Each phase depends on the previous.
 5. Place background images `bg-d.png` (dark, preferred) and `bg.png` (light) in `files/PanorAIma/<slug>/`.
 6. Write `card-texts.md` — one `## <n> — <section-slug>` block per section (label, title, body, ref, cta, music). See **Instagram Story Card Deck** for field rules.
 7. Copy `gen_section_cards.py` from the previous article, update `OUTPUT_DIR` slug → run → 16 story cards in `images/PanorAIma/<slug>/stories/`.
+7b. Copy `gen_post_cards.py` from the previous article, update `OUTPUT_DIR` slug → add `## general-caption` to `card-texts.md` → run → 16 feed post cards in `images/PanorAIma/<slug>/posts/`. See **Instagram Feed Post Cards**.
 8. Copy `gen_hero_images.py` from the previous article, update `OUTPUT_DIR` slug → run → 16 hero images in `images/PanorAIma/<slug>/heroes/`. See **Hero Images**.
 9. Create covers — two files, two renders. See **Cover / Feature Image**:
    - FA cover: `test-cover-d.html` → `images/PanorAIma/<slug>/cover.jpg` (Vazirmatn, RTL, FA text)
@@ -164,6 +166,31 @@ Technical decisions (locked in — replicate for every article):
 - **Skip logic:** already-generated files are skipped automatically. Delete a file to re-render it.
 - **Running:** `python3 gen_section_cards.py` (all sections) or
   `python3 gen_section_cards.py <slug>` (one section).
+
+### Instagram Feed Post Cards
+
+Each article ships with a deck of **Instagram feed post cards** — one per section — posted as a single carousel (all 16 cards, one caption). Source data is the same `card-texts.md`; the script is `gen_post_cards.py`.
+
+**caption:** A single `## general-caption` block at the top of `card-texts.md` covers the whole carousel. Per-section captions are not used because Instagram only accepts one caption per carousel post.
+
+**To create for a new article:**
+
+1. Copy `gen_post_cards.py` from `files/PanorAIma/peoples-of-iran/` into `files/PanorAIma/<new-slug>/`.
+2. Update `OUTPUT_DIR` to `REPO_ROOT / "images" / "PanorAIma" / "<new-slug>" / "posts"`.
+3. Copy `test-post-d.html` from peoples-of-iran and update the hardcoded section 1 content.
+4. Add a `## general-caption` block to `card-texts.md` for the carousel.
+5. Run: `python3 gen_post_cards.py`.
+
+**Technical spec (locked in — do not change):**
+- Viewport: 1080×1080 px (Instagram feed square format)
+- Output: `images/PanorAIma/<slug>/posts/<nn>-<section-slug>.jpg` — numbered `01`–`16` for correct carousel upload order
+- Format: JPEG `quality=98`
+- Body font auto-scale: inline JS shrinks `.section-body` from 27px → 13px min until `card.scrollHeight ≤ card.clientHeight` — keeps all text visible regardless of paragraph length
+- Background: `bg-d.png` (dark) — same source file as story cards
+- Skip logic: already-generated files are skipped automatically
+- Running: `python3 gen_post_cards.py` (all) or `python3 gen_post_cards.py <slug>` (one section)
+
+**card-texts.md fields used:** `label`, `title`, `body` (`post_body` subfield), `ref` (optional). Fields ignored: `cta`, `music`, `post_caption` (replaced by `## general-caption`).
 
 ### Hero Images
 

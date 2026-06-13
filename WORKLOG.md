@@ -4,6 +4,53 @@ Reverse-chronological log of work sessions on 25mordad.com.
 
 ---
 
+## 2026-06-13 — Instagram feed post cards pipeline — peoples-of-iran
+
+### What we built
+
+| Feature | Files |
+|---|---|
+| General carousel caption block | `files/PanorAIma/peoples-of-iran/card-texts.md` |
+| Feed post card renderer (Playwright, 1080×1080) | `files/PanorAIma/peoples-of-iran/gen_post_cards.py` |
+| HTML template for feed post cards | `files/PanorAIma/peoples-of-iran/test-post-d.html` |
+| All 16 feed post images (numbered 01–16) | `images/PanorAIma/peoples-of-iran/posts/01-*.jpg … 16-*.jpg` |
+| Fixed section 1 post_body (trimmed 4→2 paragraphs) | `files/PanorAIma/peoples-of-iran/card-texts.md` |
+| 3 re-rendered story cards (outsider-clarity fix) | `images/PanorAIma/peoples-of-iran/stories/from-differences-to-knots.jpg`, `lifestyle-visible-surface.jpg`, `university-social-media-contact.jpg` |
+
+### Decisions
+
+#### 1. Single general-caption block (not per-section captions)
+**Why:** All 16 images post as one Instagram carousel (Instagram max=20), so a single caption serves the whole deck. Per-section captions would be unused and add maintenance noise.
+**How:** Stripped per-section `post_caption` fields (sections 1–13), added a `## general-caption` block at the top of `card-texts.md` with hashtags including `#هوش‌واره`.
+
+#### 2. Numbered filenames (01- through 16-)
+**Why:** Instagram requires uploading images in carousel order; numbered names make it unambiguous which card is which and avoid mis-ordering when selecting files in the upload dialog.
+**How:** `f"{s['num']:02d}-{s['slug']}.jpg"` in `gen_post_cards.py`.
+
+#### 3. Body font auto-scale (27px → 13px min)
+**Why:** `post_body` paragraphs vary in length across sections. A fixed font size would either truncate long bodies or leave short ones looking sparse. User wants all text fully visible.
+**How:** Inline JS in the rendered HTML shrinks `.section-body` font-size until `card.scrollHeight ≤ card.clientHeight`.
+
+#### 4. Caption CTA phrasing change
+**Why:** "نوشتارِ کامل از لینکِ بایو" felt promotional and indirect; user wanted something more direct that names the site.
+**How:** Changed to "نوشتار کامل در وب‌سایت ۲۵مرداد 25mordad.com"; added `#هوش‌واره` to the hashtag block.
+
+### Challenges & Solutions
+
+| Challenge | Solution |
+|---|---|
+| Section 1 had 4 paragraphs in post_body vs 2 for all others → font auto-scaled too small | Trimmed section 1 post_body to 2 paragraphs in card-texts.md |
+| Playwright chromium missing after system update | Ran `playwright install chromium` |
+| post_closing/ref cut off in first render | Body auto-scale JS fixed the overflow |
+
+### Pending / TODO
+
+- [ ] Commit gen_post_cards.py, updated card-texts.md, and all 16 post images
+- [ ] P1.5: commit remaining story card fixes (4 re-rendered stories already committed in fae56cd)
+- [ ] P2: decide next article topic, update PanorAIma/next/index.html and teaser card
+
+---
+
 ## 2026-06-07 — Publish peoples-of-iran EN page + bilingual cover pipeline
 
 ### What we built
