@@ -61,6 +61,21 @@ Paragraphs separated by `¶` — replace with actual line breaks before pasting 
 
 ---
 
+## -1 — title-card
+*(Cover card — first in carousel. Large article title, subtitle, author name. No section label, no CTA, no body text.)*
+- **title:** مردمان ایران
+- **subtitle:** چند جامعه زیر یک نام
+- **author:** بهمن رشادی
+
+---
+
+## 0 — dedication
+*(Dedication card — second in carousel, before sections begin. Full dedication text, centered, no section label, no CTA.)*
+- **body:**
+  پیش از هر چیز، این نوشته را به یاد کسانی آغاز می‌کنم که در سال‌های دور و نزدیک، سهمی از زندگی خود را برای آزادی، کرامت و امکان زیستن در ایران گذاشتند؛ آن‌هایی که نامشان را می‌دانیم، آن‌هایی که نامشان در حافظه‌ی جمعی گم شده، و آن‌هایی که هنوز در زندگی روزمره‌ی ما ادامه دارند. این متن، اگر قرار است از «مردمان ایران» حرف بزند، ناچار باید از همین‌جا شروع کند: از احترام به جان‌هایی که پیش از ما، بار معنای ایران را بر دوش کشیده‌اند.
+
+---
+
 ## 1 — everyone-their-own-people
 - **label:** بخش اول
 - **title:** هرکس از مردم<br>خودش حرف می‌زند

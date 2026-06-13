@@ -4,6 +4,53 @@ Reverse-chronological log of work sessions on 25mordad.com.
 
 ---
 
+## 2026-06-13 — Intro post cards + outsider-clarity documentation
+
+### What we built
+
+| Feature | Files |
+|---|---|
+| Title card HTML template (no panel, full-bleed vignette) | `files/PanorAIma/peoples-of-iran/test-post-title.html` |
+| Dedication card HTML template (solemn dark overlay, gold rules) | `files/PanorAIma/peoples-of-iran/test-post-dedication.html` |
+| Rendered title card (1080×1080, q=98) | `images/PanorAIma/peoples-of-iran/posts/00a-title-card.jpg` |
+| Rendered dedication card (1080×1080, q=98) | `images/PanorAIma/peoples-of-iran/posts/00b-dedication.jpg` |
+| card-texts.md blocks for slots -1 and 0 | `files/PanorAIma/peoples-of-iran/card-texts.md` |
+| Outsider-clarity rule + 18-card carousel structure | `CLAUDE.md`, `memory/project_story_card_pipeline.md`, `memory/project_feed_post_pipeline.md` |
+
+### Decisions
+
+#### 1. Title card design: no bordered panel, full-bleed vignette
+**Why:** The title card is a cover/intro — it should feel like a movie poster, not a section card. A gold-bordered panel would make it look identical to the 16 section cards, losing the visual hierarchy that tells viewers "this is the beginning."
+**How:** Full-bleed background photo with a centered dark vignette overlay, text centered directly on photo. No gold border box, no label, no CTA.
+
+#### 2. Dedication card design: solemn dark, two gold gradient rules
+**Why:** The dedication is personal and memorial — it needs quiet gravitas, not the card's usual design language (label, body, CTA). A heavy dark overlay and minimal gold accents respect the tone.
+**How:** Heavy dark overlay, two thin gold gradient rules bracketing the dedication text, faint ❝ opener. No section label, no CTA, no footer tagline.
+
+#### 3. 18-card carousel structure (slots -1, 0, 1–16)
+**Why:** Every article should open with a title card and dedication before the sections — it sets context for new viewers and mirrors the article's own opening structure.
+**How:** Slots -1 (title-card) and 0 (dedication) defined in card-texts.md. For peoples-of-iran (sections already committed as 01–16), intro cards use 00a/00b prefix so they sort before 01. Future articles use 01/02 prefix with sections 03–18. Documented in CLAUDE.md carousel structure table.
+
+#### 4. Outsider-clarity rule locked in for all future articles
+**Why:** The original peoples-of-iran cards were written from an insider perspective — the author knew the article, so shorthand felt obvious. To a new Instagram viewer who has never read the piece, titles like «این نیروها» (these forces) are opaque. Every card must stand alone.
+**How:** Rule added to CLAUDE.md story card section and both pipeline memory files. Principle: write every title and body for someone who has never read the article. If a stranger scrolling past the card wouldn't grasp the idea → rewrite it.
+
+### Challenges & Solutions
+
+| Challenge | Solution |
+|---|---|
+| Playwright chromium not installed | Ran `playwright install chromium`, then rendered successfully |
+
+### Pending / TODO
+
+- [ ] User approval of 00a-title-card.jpg and 00b-dedication.jpg designs
+- [ ] Commit test-post-title.html, test-post-dedication.html, both rendered cards, updated card-texts.md
+- [ ] P2: Decide next article topic (candidates A–E in TASKS.md)
+- [ ] P2: Update PanorAIma/next/index.html + teaser card in PanorAIma/index.html
+- [ ] Post peoples-of-iran Instagram feed post carousel (16 section cards + 2 new intro cards)
+
+---
+
 ## 2026-06-13 — Instagram feed post cards pipeline — peoples-of-iran
 
 ### What we built

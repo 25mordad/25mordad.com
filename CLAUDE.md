@@ -118,6 +118,12 @@ Purpose: each card **delivers one section's core idea on its own** (a self-conta
 not a teaser, and **not** a request for comments). A short CTA then nudges the reader to the
 full article; the actual link/sticker is added on the story afterwards, not baked into the image.
 
+**Outsider-clarity rule (always):** write every title and body for someone who has **never read
+the article** and may not know the topic. As the author, shorthand that references article
+concepts feels obvious — to a new Instagram viewer it is opaque. Every card must stand alone:
+no article-internal jargon, no floating references («این نیروها», «گره‌ها», etc.) without context.
+If a stranger scrolling past the card wouldn't grasp the idea → rewrite it.
+
 `card-texts.md` structure:
 - A header (purpose note + `## Format` + `## Shared elements`), then one `## <n> — <section-slug>` block per section.
 - Each block carries these labelled lines:
@@ -172,6 +178,21 @@ Technical decisions (locked in — replicate for every article):
 Each article ships with a deck of **Instagram feed post cards** — one per section — posted as a single carousel (all 16 cards, one caption). Source data is the same `card-texts.md`; the script is `gen_post_cards.py`.
 
 **caption:** A single `## general-caption` block at the top of `card-texts.md` covers the whole carousel. Per-section captions are not used because Instagram only accepts one caption per carousel post.
+
+**Carousel structure (18 cards total):**
+
+Every carousel has 2 intro cards before the 16 section cards:
+
+| Slot | Slug | Content | Filename |
+|------|------|---------|----------|
+| -1 | `title-card` | Article title + subtitle + author name (no body, no CTA) | `01-title-card.jpg` |
+| 0 | `dedication` | Full dedication text from article opening (no label, no CTA) | `02-dedication.jpg` |
+| 1–16 | `<section-slug>` | Section cards (label, title, body, ref, post_body, etc.) | `03-` through `18-<slug>.jpg` |
+
+For peoples-of-iran (sections already committed as `01–16`): intro cards are named `00a-title-card.jpg` and `00b-dedication.jpg` so they sort before `01-`.
+For all future articles: use `01-title-card.jpg`, `02-dedication.jpg`, sections `03-` through `18-`.
+
+The `## -1 — title-card` and `## 0 — dedication` blocks in `card-texts.md` carry the content for these two cards. Each article's dedication text comes from the article's opening paragraph (committed to `card-texts.md` when the article is first drafted).
 
 **To create for a new article:**
 

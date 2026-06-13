@@ -38,7 +38,7 @@ Card titles and some bodies were written from an insider perspective (as if the 
 - [x] Delete the story card JPEGs that changed (so gen_section_cards.py re-renders them): `rm images/PanorAIma/peoples-of-iran/stories/<slug>.jpg`
 - [x] Run `python3 files/PanorAIma/peoples-of-iran/gen_section_cards.py` to regenerate affected cards
 - [x] Visually verify each re-rendered card before committing
-- [ ] Commit and push (pending — modified story cards + card-texts.md staged)
+- [x] Commit and push — DONE 2026-06-13 (fae56cd: 4 titles rewritten, 3 story card JPEGs regenerated)
 
 ## P1.6 — peoples-of-iran Instagram feed post cards
 
@@ -46,7 +46,14 @@ Card titles and some bodies were written from an insider perspective (as if the 
 - [x] Add general-caption block to card-texts.md (single caption for full carousel)
 - [x] Render all 16 feed post images — `images/PanorAIma/peoples-of-iran/posts/01-*.jpg … 16-*.jpg`
 - [x] Fix section 1 post_body (trimmed 4→2 paragraphs to match all other sections)
-- [ ] Commit gen_post_cards.py, test-post-d.html, updated card-texts.md, and all 16 post images
+- [x] Commit gen_post_cards.py, test-post-d.html, updated card-texts.md, and all 16 post images — DONE 2026-06-13 (e7c17e6)
+- [ ] Generate 2 intro post cards for peoples-of-iran carousel:
+  - [x] Design `test-post-title.html` — title card (مردمان ایران + چند جامعه زیر یک نام + بهمن رشادی, no section label/body/CTA)
+  - [x] Design `test-post-dedication.html` — dedication card (full text, centered, RTL, no label/CTA)
+  - [x] Render `images/PanorAIma/peoples-of-iran/posts/00a-title-card.jpg` (1080×1080, q=98)
+  - [x] Render `images/PanorAIma/peoples-of-iran/posts/00b-dedication.jpg` (1080×1080, q=98)
+  - [ ] Get user approval of 00a-title-card.jpg and 00b-dedication.jpg designs
+  - [ ] Commit both new cards + updated card-texts.md (test-post-title.html, test-post-dedication.html, 00a-title-card.jpg, 00b-dedication.jpg)
 
 ## P2 — Teaser: announce next article after "Peoples of Iran"
 
@@ -70,6 +77,7 @@ Card titles and some bodies were written from an insider perspective (as if the 
   - [ ] Update title, description, and `.lang-actions` links in the teaser card
 - [ ] Commit and push P2 teaser updates ← depends on above three
 - [ ] Update memory: `project_panoraima_next.md` to reflect peoples-of-iran published and new topic chosen
+- [ ] Post peoples-of-iran Instagram feed post carousel (16 cards in `images/PanorAIma/peoples-of-iran/posts/`) — caption is in `files/PanorAIma/peoples-of-iran/card-texts.md` under `## general-caption`
 - [ ] Consider AI-assisted comment replies — draft a workflow or prompt template for replying to reader comments on published articles using AI
   - [ ] Clarify the comment surface (Instagram DMs, website, or both)
   - [ ] Draft the reply prompt template (referencing article content + reader message) and save to `files/ai-reply-template.md`
