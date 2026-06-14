@@ -52,8 +52,27 @@ Card titles and some bodies were written from an insider perspective (as if the 
   - [x] Design `test-post-dedication.html` — dedication card (full text, centered, RTL, no label/CTA)
   - [x] Render `images/PanorAIma/peoples-of-iran/posts/00a-title-card.jpg` (1080×1080, q=98)
   - [x] Render `images/PanorAIma/peoples-of-iran/posts/00b-dedication.jpg` (1080×1080, q=98)
-  - [ ] Get user approval of 00a-title-card.jpg and 00b-dedication.jpg designs
-  - [ ] Commit both new cards + updated card-texts.md (test-post-title.html, test-post-dedication.html, 00a-title-card.jpg, 00b-dedication.jpg)
+  - [x] Get user approval of 00a-title-card.jpg and 00b-dedication.jpg designs
+  - [x] Commit both new cards + updated card-texts.md (test-post-title.html, test-post-dedication.html, 00a-title-card.jpg, 00b-dedication.jpg) — DONE 2026-06-14
+  - [x] Update gen_post_cards.py to handle slots -1 (title-card) and 0 (dedication) from card-texts.md so future articles produce all 18 cards in one script run — DONE 2026-06-14
+
+## P1.7 — Redesign feed post cards: light bg + 90% fill + compact section number
+
+User feedback: text too small (doesn't fill the image), yellow-on-dark is hard to read, "بخش اول" label wastes space.
+Solution: light background, dark text, larger starting font, replace label with compact corner number badge.
+
+### 00b dedication card (do first — user approves before touching 01–16)
+
+- [x] Redesign `test-post-dedication.html` — DONE 2026-06-14
+- [x] Re-render `images/PanorAIma/peoples-of-iran/posts/00b-dedication.jpg` — DONE 2026-06-14
+- [x] User approval of redesigned 00b — DONE 2026-06-14
+
+### 01–16 section cards (after 00b approval)
+
+- [x] Redesign `test-post-d.html` — DONE 2026-06-14
+- [x] Re-render all 16 via `python3 files/PanorAIma/peoples-of-iran/gen_post_cards.py` — DONE 2026-06-14
+- [x] Visual check on 2–3 cards before committing all 16 — DONE 2026-06-14
+- [ ] Commit all redesigned templates + gen_post_cards.py + re-rendered post cards + card-texts.md
 
 ## P2 — Teaser: announce next article after "Peoples of Iran"
 

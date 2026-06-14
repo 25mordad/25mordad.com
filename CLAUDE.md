@@ -175,9 +175,9 @@ Technical decisions (locked in — replicate for every article):
 
 ### Instagram Feed Post Cards
 
-Each article ships with a deck of **Instagram feed post cards** — one per section — posted as a single carousel (all 16 cards, one caption). Source data is the same `card-texts.md`; the script is `gen_post_cards.py`.
+Each article ships with a deck of **Instagram feed post cards** — one per section — posted as a single carousel (18 cards total, one caption). Source data is `card-texts.md`; the script is `gen_post_cards.py`.
 
-**caption:** A single `## general-caption` block at the top of `card-texts.md` covers the whole carousel. Per-section captions are not used because Instagram only accepts one caption per carousel post.
+**`gen_post_cards.py` produces all 18 cards in one run** — including the two intro cards. Do not render intro cards separately with ad-hoc Python snippets.
 
 **Carousel structure (18 cards total):**
 
@@ -187,31 +187,48 @@ Every carousel has 2 intro cards before the 16 section cards:
 |------|------|---------|----------|
 | -1 | `title-card` | Article title + subtitle + author name (no body, no CTA) | `01-title-card.jpg` |
 | 0 | `dedication` | Full dedication text from article opening (no label, no CTA) | `02-dedication.jpg` |
-| 1–16 | `<section-slug>` | Section cards (label, title, body, ref, post_body, etc.) | `03-` through `18-<slug>.jpg` |
+| 1–16 | `<section-slug>` | Section cards (badge number, title, body, ref, closing) | `03-` through `18-<slug>.jpg` |
 
-For peoples-of-iran (sections already committed as `01–16`): intro cards are named `00a-title-card.jpg` and `00b-dedication.jpg` so they sort before `01-`.
-For all future articles: use `01-title-card.jpg`, `02-dedication.jpg`, sections `03-` through `18-`.
+For peoples-of-iran (legacy — sections committed as `01–16`): intro cards are `00a-title-card.jpg` and `00b-dedication.jpg`.
+For all future articles: `01-title-card.jpg`, `02-dedication.jpg`, sections `03–18`.
 
-The `## -1 — title-card` and `## 0 — dedication` blocks in `card-texts.md` carry the content for these two cards. Each article's dedication text comes from the article's opening paragraph (committed to `card-texts.md` when the article is first drafted).
+The `## -1 — title-card` and `## 0 — dedication` blocks in `card-texts.md` carry the intro card content. Each article's dedication text comes from the article's opening paragraph.
 
 **To create for a new article:**
 
 1. Copy `gen_post_cards.py` from `files/PanorAIma/peoples-of-iran/` into `files/PanorAIma/<new-slug>/`.
-2. Update `OUTPUT_DIR` to `REPO_ROOT / "images" / "PanorAIma" / "<new-slug>" / "posts"`.
-3. Copy `test-post-d.html` from peoples-of-iran and update the hardcoded section 1 content.
-4. Add a `## general-caption` block to `card-texts.md` for the carousel.
-5. Run: `python3 gen_post_cards.py`.
+2. Update the one line: `OUTPUT_DIR = REPO_ROOT / "images" / "PanorAIma" / "<new-slug>" / "posts"`.
+3. Add `## -1 — title-card`, `## 0 — dedication`, and `## general-caption` blocks to `card-texts.md`.
+4. Run: `python3 gen_post_cards.py`.
 
 **Technical spec (locked in — do not change):**
 - Viewport: 1080×1080 px (Instagram feed square format)
-- Output: `images/PanorAIma/<slug>/posts/<nn>-<section-slug>.jpg` — numbered `01`–`16` for correct carousel upload order
+- Output: `images/PanorAIma/<slug>/posts/<nn>-<section-slug>.jpg`
 - Format: JPEG `quality=98`
-- Body font auto-scale: inline JS shrinks `.section-body` from 27px → 13px min until `card.scrollHeight ≤ card.clientHeight` — keeps all text visible regardless of paragraph length
-- Background: `bg-d.png` (dark) — same source file as story cards
-- Skip logic: already-generated files are skipped automatically
-- Running: `python3 gen_post_cards.py` (all) or `python3 gen_post_cards.py <slug>` (one section)
+- **Background: `bg.png` (light) — always. Never dark, never random.** Reason: dark bg with gold text is hard to read; light bg with dark text is far more legible on Instagram.
+- **Background-position: `center center`** — shows the photo's subjects throughout the image, not cut off at top or bottom.
+- **Light card panel** (`rgba(252,248,240,0.92)`) with subtle gold border — replaces the old dark semi-transparent panel.
+- **Dark text** throughout: title/closing `#1a0c03`, body `rgba(28,16,4,0.85)`, gold accents `#8a6412`. No white or cream text on dark.
+- **Section badge replaces section label:** a small 36×36px circle in the top-left corner of the card carries the Persian section numeral (۱, ۲, …). The old "بخش اول / بخش دوم" label consumed ~40px of vertical space that is now freed for body text.
+- **Body font starts large and scales down:** `.section-body` starts at 34px → 13px min; dedication starts at 44px → 22px min. Text fills ~90% of the image. Previous default of 27px left too much empty space.
+- Title auto-scale: 60px → 36px min (unchanged).
+- Skip logic: already-generated files are skipped automatically. Delete a file to re-render it.
+- Running: `python3 gen_post_cards.py` (all 18) or `python3 gen_post_cards.py <slug>` (one card).
 
-**card-texts.md fields used:** `label`, `title`, `body` (`post_body` subfield), `ref` (optional). Fields ignored: `cta`, `music`, `post_caption` (replaced by `## general-caption`).
+**card-texts.md fields used:**
+- Title card (`-1`): `title`, `subtitle`, `author`
+- Dedication card (`0`): `body` (multi-line, indented continuation supported by parser)
+- Section cards (`1–16`): `title`, `post_body` (paragraphs separated by `¶`), `post_ref` (optional), `post_closing`
+- Ignored: `label` (replaced by auto-generated badge number), `cta`, `music`, `body` (story-only field)
+
+**Caption and first comment (`## general-caption` block):**
+- `caption` field: the FA Instagram caption for the whole carousel.
+  - Use **actual blank lines** as paragraph breaks — not `¶`. The caption is copy-pasted directly into Instagram; `¶` would appear literally.
+  - Write about the article's **substance**, not its structure. Never reference "۱۶ بخش" or the card count — that's an insider framing invisible viewers won't care about.
+  - Keep hashtags on the last line.
+- `first_comment_en` field: an English first comment for EN followers. Post this as the first comment immediately after publishing.
+  - Briefly explain what the article is about and link to the EN page.
+  - **Never use flag emojis** (🇬🇧 etc.) — house rule.
 
 ### Hero Images
 

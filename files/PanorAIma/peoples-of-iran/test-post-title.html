@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Post Card — Title Cover</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Vazirmatn', sans-serif;
+      direction: rtl;
+      overflow: hidden;
+      position: relative;
+      background-image: url('bg.png');
+      background-size: cover;
+      background-position: center center;
+    }
+
+    /* Warm cream wash — lets bg show as texture */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(252, 247, 238, 0.80);
+    }
+
+    /* All content centered on canvas */
+    .content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 110px 120px;
+    }
+
+    .ornament {
+      font-size: 34px;
+      color: rgba(160, 120, 40, 0.55);
+      margin-bottom: 36px;
+      letter-spacing: 0.2em;
+    }
+
+    .article-title {
+      font-size: 100px;
+      font-weight: 900;
+      color: #1a0c03;
+      text-align: center;
+      line-height: 1.2;
+      margin-bottom: 32px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      width: 52%;
+      margin-bottom: 30px;
+    }
+    .divider-line { flex: 1; height: 1px; background: rgba(160, 120, 40, 0.50); }
+    .divider-dot { font-size: 13px; color: #a07828; }
+
+    .article-subtitle {
+      font-size: 37px;
+      font-weight: 300;
+      color: rgba(40, 24, 6, 0.72);
+      text-align: center;
+      letter-spacing: 0.015em;
+      margin-bottom: 28px;
+    }
+
+    .author {
+      font-size: 27px;
+      font-weight: 500;
+      color: #8a6412;
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+
+    /* Footer absolutely at bottom */
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding-bottom: 26px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .footer-site {
+      font-size: 27px;
+      font-weight: 700;
+      color: #8a6412;
+      letter-spacing: 0.07em;
+      direction: ltr;
+    }
+
+    .footer-tagline {
+      font-size: 19px;
+      font-weight: 300;
+      color: rgba(138, 100, 18, 0.55);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="overlay"></div>
+
+  <div class="content">
+    <div class="ornament">✦</div>
+    <h1 class="article-title" id="title">مردمان ایران</h1>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-dot">◆</div>
+      <div class="divider-line"></div>
+    </div>
+    <p class="article-subtitle">چند جامعه زیر یک نام</p>
+    <p class="author">بهمن رشادی</p>
+  </div>
+
+  <div class="footer">
+    <div class="footer-site">25Mordad.com</div>
+    <div class="footer-tagline">✦ فراتر از قاب ✦</div>
+  </div>
+
+  <script>
+    // Auto-scale title to fit width
+    const el = document.getElementById('title');
+    const maxW = document.body.clientWidth - 220;
+    let size = 100;
+    while (el.scrollWidth > maxW && size > 54) {
+      size -= 2;
+      el.style.fontSize = size + 'px';
+    }
+  </script>
+
+</body>
+</html>

@@ -4,6 +4,64 @@ Reverse-chronological log of work sessions on 25mordad.com.
 
 ---
 
+## 2026-06-14 — Redesign feed post cards — light bg, dark text, section badge, caption rules
+
+### What we built
+
+| Feature | Files |
+|---|---|
+| Redesigned dedication card (light bg, 44px, fills 90%) | `files/PanorAIma/peoples-of-iran/test-post-dedication.html`, `images/.../posts/00b-dedication.jpg` |
+| Redesigned title card (same light treatment) | `files/PanorAIma/peoples-of-iran/test-post-title.html`, `images/.../posts/00a-title-card.jpg` |
+| Redesigned section card template (light panel, dark text, section badge) | `files/PanorAIma/peoples-of-iran/test-post-d.html` |
+| Rewrote gen_post_cards.py (all 18 cards in one run) | `files/PanorAIma/peoples-of-iran/gen_post_cards.py` |
+| Re-rendered all 18 post cards (00a, 00b, 01–16) | `images/PanorAIma/peoples-of-iran/posts/` |
+| Updated carousel caption + added first_comment_en field | `files/PanorAIma/peoples-of-iran/card-texts.md` |
+| CLAUDE.md + memory updated with new design spec | `CLAUDE.md`, `memory/project_feed_post_pipeline.md` |
+
+### Decisions
+
+#### 1. Light background (`bg.png`) always — never dark, never random
+**Why:** Dark bg + gold/yellow text was hard to read on Instagram. Light bg + dark text is far more legible for Instagram feed scrolling. The contrast ratio is dramatically better in a bright feed environment.
+**How:** Hardcoded `bg.png` in `gen_post_cards.py`; removed `BG_OPTIONS` randomness entirely.
+
+#### 2. `background-position: center center`
+**Why:** Top/bottom crops were cutting off photo subjects and showing empty sky or ground. Center anchors the most visually meaningful part of the photo throughout the card.
+**How:** CSS property updated in all 3 templates (test-post-d.html, test-post-title.html, test-post-dedication.html).
+
+#### 3. Large starting fonts (34px body, 44px dedication)
+**Why:** Previous 27px/24px starting sizes left too much blank space inside the cards — text felt lost. The auto-scale already shrinks down if needed, so starting high means text fills ~90% of the card for typical paragraph lengths.
+**How:** JS auto-scale now starts at 34px (section body) and 44px (dedication), shrinks to 13px / 22px min.
+
+#### 4. Section badge replaces "بخش اول" label
+**Why:** The old label (بخش اول، دوم، ...) consumed ~40px of vertical space without adding meaningful value for a viewer. A compact 36×36px corner circle preserves carousel tracking (which card am I on?) without eating into the body area.
+**How:** Absolute-positioned circle in top-left corner with Persian numeral (۱, ۲, …). Label field in card-texts.md is now ignored for post cards; badge number is auto-generated from section number.
+
+#### 5. gen_post_cards.py produces all 18 cards
+**Why:** The two intro cards (title, dedication) were previously rendered via ad-hoc inline Python snippets. One script is cleaner, reproducible, and ensures new article pipelines just need to copy + update one file.
+**How:** Added `html_title()` and `html_dedication()` functions; updated card-texts.md parser to handle `-1` and `0` slot numbers.
+
+#### 6. Caption uses actual blank lines (not ¶) and substance-first framing
+**Why:** `¶` as a paragraph separator would appear literally if copy-pasted into Instagram. "۱۶ بخش" framing is insider logic — new viewers don't know or care how many sections there are.
+**How:** Rewrote caption block with real newlines; restructured around article substance (what the reader learns) not article structure (how it's organized).
+
+#### 7. first_comment_en field
+**Why:** EN followers see a FA caption they can't read. A first comment in EN immediately after publishing gives them an entry point to the EN article.
+**How:** New field in `## general-caption` block in card-texts.md. Posted as the first comment manually right after publishing. No flag emojis (house rule).
+
+### Challenges & Solutions
+
+| Challenge | Solution |
+|---|---|
+| Playwright chromium not installed | Ran `playwright install chromium` |
+
+### Pending / TODO
+
+- [ ] Commit all redesigned post cards + updated templates, gen_post_cards.py, card-texts.md, CLAUDE.md
+- [ ] P2: Decide next article topic (candidates A–E in TASKS.md)
+- [ ] P2: Update `PanorAIma/next/index.html` + teaser card
+
+---
+
 ## 2026-06-13 — Intro post cards + outsider-clarity documentation
 
 ### What we built

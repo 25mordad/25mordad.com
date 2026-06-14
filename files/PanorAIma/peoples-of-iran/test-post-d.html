@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>Test Post — بخش اول (bg-d.png)</title>
+  <title>Test Post — بخش اول (bg.png)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -16,9 +16,9 @@
       direction: rtl;
       overflow: hidden;
       position: relative;
-      background-image: url('bg-d.png');
+      background-image: url('bg.png');
       background-size: cover;
-      background-position: center top;
+      background-position: center center;
     }
 
     .tagline-outer {
@@ -29,36 +29,46 @@
       text-align: center;
       font-size: 22px;
       font-weight: 300;
-      color: rgba(201, 168, 76, 0.6);
+      color: rgba(120, 85, 20, 0.60);
     }
 
+    /* Light cream card panel */
     .card {
       position: absolute;
-      inset: 68px 76px 54px;
-      background: rgba(14, 11, 8, 0.86);
-      border: 1.5px solid rgba(201, 168, 76, 0.55);
+      inset: 44px 52px 52px;
+      background: rgba(252, 248, 240, 0.92);
+      border: 1.5px solid rgba(160, 120, 40, 0.38);
       border-radius: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 44px 60px 38px;
+      padding: 36px 56px 28px;
     }
 
-    .section-label {
-      font-size: 26px;
-      font-weight: 500;
-      color: #c9a84c;
-      letter-spacing: 0.05em;
-      margin-bottom: 14px;
-      text-align: center;
+    /* Compact section number badge — top-left corner, tracking only */
+    .section-badge {
+      position: absolute;
+      top: 18px;
+      left: 20px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(160, 120, 40, 0.48);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 600;
+      color: rgba(140, 100, 30, 0.68);
+      direction: ltr;
     }
 
     .section-title {
       font-size: 60px;
       font-weight: 900;
-      color: #ffffff;
+      color: #1a0c03;
       line-height: 1.28;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       text-align: center;
     }
 
@@ -67,16 +77,16 @@
       align-items: center;
       gap: 14px;
       width: 60%;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
-    .divider-line { flex: 1; height: 1px; background: rgba(201, 168, 76, 0.45); }
-    .divider-dot { font-size: 12px; color: #c9a84c; }
+    .divider-line { flex: 1; height: 1px; background: rgba(160, 120, 40, 0.45); }
+    .divider-dot { font-size: 12px; color: #a07828; }
 
     .section-body {
-      font-size: 27px;
+      font-size: 34px;
       font-weight: 400;
-      color: #ede5d5;
+      color: rgba(28, 16, 4, 0.85);
       line-height: 1.9;
       text-align: right;
       width: 100%;
@@ -90,34 +100,34 @@
     .section-ref {
       font-size: 19px;
       font-weight: 300;
-      color: rgba(201, 168, 76, 0.55);
+      color: rgba(140, 100, 30, 0.72);
       text-align: right;
       width: 100%;
-      margin-top: 18px;
+      margin-top: 16px;
     }
 
     .closing {
-      font-size: 25px;
+      font-size: 26px;
       font-weight: 700;
-      color: #ffffff;
+      color: #1a0c03;
       text-align: right;
       width: 100%;
-      margin-top: 18px;
+      margin-top: 16px;
       line-height: 1.65;
     }
 
     .footer {
       width: 100%;
-      border-top: 1px solid rgba(201, 168, 76, 0.25);
-      padding-top: 18px;
-      margin-top: 22px;
+      border-top: 1px solid rgba(160, 120, 40, 0.28);
+      padding-top: 16px;
+      margin-top: 20px;
       text-align: center;
     }
 
     .footer-site {
       font-size: 28px;
       font-weight: 700;
-      color: #c9a84c;
+      color: #8a6412;
       letter-spacing: 0.06em;
       direction: ltr;
     }
@@ -128,7 +138,7 @@
   <div class="tagline-outer">✦ فراتر از قاب ✦</div>
 
   <div class="card">
-    <div class="section-label">بخش اول</div>
+    <div class="section-badge">۱</div>
     <h1 class="section-title">هرکس از مردم<br>خودش حرف می‌زند</h1>
 
     <div class="divider">
@@ -150,6 +160,29 @@
       <div class="footer-site">25Mordad.com</div>
     </div>
   </div>
+
+  <script>
+    (function () {
+      // Title auto-scale
+      const title = document.querySelector('.section-title');
+      const targetLines = title.innerHTML.split(/<br[\s/]*>/i).length;
+      let titleSize = 60;
+      title.style.fontSize = titleSize + 'px';
+      while (title.scrollHeight > titleSize * 1.28 * targetLines + 8 && titleSize > 36) {
+        titleSize -= 1;
+        title.style.fontSize = titleSize + 'px';
+      }
+      // Body auto-scale: shrink until all card content fits
+      const card = document.querySelector('.card');
+      const body = document.querySelector('.section-body');
+      let bodySize = 34;
+      body.style.fontSize = bodySize + 'px';
+      while (card.scrollHeight > card.clientHeight && bodySize > 13) {
+        bodySize -= 0.5;
+        body.style.fontSize = bodySize + 'px';
+      }
+    })();
+  </script>
 
 </body>
 </html>

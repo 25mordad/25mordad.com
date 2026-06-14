@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Post Card — Dedication</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      font-family: 'Vazirmatn', sans-serif;
+      direction: rtl;
+      overflow: hidden;
+      position: relative;
+      background-image: url('bg.png');
+      background-size: cover;
+      background-position: center center;
+    }
+
+    /* Warm cream overlay — keeps bg visible as texture but lightens it */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(252, 247, 238, 0.82);
+    }
+
+    /* Card area — no box, just text with gold rules */
+    .card {
+      position: absolute;
+      inset: 44px 52px 88px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 40px;
+    }
+
+    /* Decorative opening quote — top-right, subtle warm gold */
+    .quote-mark {
+      font-size: 100px;
+      font-weight: 900;
+      color: rgba(160, 120, 40, 0.20);
+      line-height: 1;
+      align-self: flex-start;
+      margin-bottom: -12px;
+    }
+
+    /* Gold gradient rule */
+    .rule {
+      width: 100%;
+      height: 1.5px;
+      background: linear-gradient(
+        to left,
+        rgba(160,120,40,0) 0%,
+        rgba(160,120,40,0.60) 20%,
+        rgba(160,120,40,0.60) 80%,
+        rgba(160,120,40,0) 100%
+      );
+    }
+
+    .rule-top { margin-bottom: 32px; }
+    .rule-bottom { margin-top: 32px; margin-bottom: 18px; }
+
+    .dedication-text {
+      font-size: 44px;
+      font-weight: 450;
+      color: rgba(18, 10, 3, 0.88);
+      line-height: 1.90;
+      text-align: right;
+      width: 100%;
+    }
+
+    .ornament-bottom {
+      font-size: 22px;
+      color: rgba(160, 120, 40, 0.50);
+      letter-spacing: 0.25em;
+    }
+
+    /* Footer */
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding-bottom: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .footer-site {
+      font-size: 26px;
+      font-weight: 700;
+      color: #8a6412;
+      letter-spacing: 0.07em;
+      direction: ltr;
+    }
+
+    .footer-tagline {
+      font-size: 18px;
+      font-weight: 300;
+      color: rgba(138, 100, 18, 0.55);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="overlay"></div>
+
+  <div class="card">
+    <div class="quote-mark">❝</div>
+    <div class="rule rule-top"></div>
+
+    <p class="dedication-text" id="ded">پیش از هر چیز، این نوشته را به یاد کسانی آغاز می‌کنم که در سال‌های دور و نزدیک، سهمی از زندگی خود را برای آزادی، کرامت و امکان زیستن در ایران گذاشتند؛ آن‌هایی که نامشان را می‌دانیم، آن‌هایی که نامشان در حافظه‌ی جمعی گم شده، و آن‌هایی که هنوز در زندگی روزمره‌ی ما ادامه دارند. این متن، اگر قرار است از «مردمان ایران» حرف بزند، ناچار باید از همین‌جا شروع کند: از احترام به جان‌هایی که پیش از ما، بار معنای ایران را بر دوش کشیده‌اند.</p>
+
+    <div class="rule rule-bottom"></div>
+    <div class="ornament-bottom">✦</div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-site">25Mordad.com</div>
+    <div class="footer-tagline">✦ فراتر از قاب ✦</div>
+  </div>
+
+  <script>
+    // Scale dedication text: start large, shrink until it fits
+    const card = document.querySelector('.card');
+    const el = document.getElementById('ded');
+    let size = 44;
+    el.style.fontSize = size + 'px';
+    while (card.scrollHeight > card.clientHeight && size > 22) {
+      size -= 0.5;
+      el.style.fontSize = size + 'px';
+    }
+  </script>
+
+</body>
+</html>

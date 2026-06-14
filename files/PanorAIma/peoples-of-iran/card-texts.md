@@ -49,15 +49,19 @@ The single Instagram caption used when posting all 16 feed post images as one ca
 Paragraphs separated by `¶` — replace with actual line breaks before pasting into Instagram.
 
 - **caption:**
-  وقتی می‌گوییم «مردمِ ایران»، از کدام مردم داریم حرف می‌زنیم؟
-  ¶
-  ۱۶ بخش، ۱۶ زاویه از یک پرسش: ایران از مردمانِ متفاوتی ساخته شده که زندگی‌هاشان به هم گره خورده. قومیت، طبقه، سبک زندگی، رسانه، زبان، خانواده، اقتصاد — هرکدام بخشی از تصویر را می‌سازند. نه یک مردمِ یکدست، نه جزیره‌هایی کاملاً جدا.
-  ¶
+  وقتی می‌گوییم «مردمِ ایران»، منظورمان کدام مردم است؟
+
+  ایران از مردمانِ متفاوتی ساخته شده که زندگی‌هاشان به هم گره خورده — نه یک مردمِ یکدست، نه جزیره‌هایی کاملاً جدا. قومیت، طبقه، سبک زندگی، زبان، خانواده، اقتصاد — هرکدام تکه‌ای از تصویرند.
+
   پرسشِ اصلی نیست که مردم چه می‌خواهند. پرسشِ مقدماتی‌تر این است: کدام مردمان؟
-  ¶
-  نوشتار کامل در وب‌سایت ۲۵مرداد — 25mordad.com
-  ¶
+
+  نوشتار کامل: 25mordad.com
+
   #مردمان_ایران #جامعه_ایران #ایران #هویت_ایرانی #فرهنگ_ایران #تحلیل #جامعه‌شناسی #هوش‌واره #فراتر_از_قاب #۲۵مرداد
+
+- **first_comment_en:**
+  For English readers — this article asks: when we say "the people of Iran," which people do we mean? Iran is built not from one unified people, but from different communities whose lives are deeply intertwined — ethnicity, class, lifestyle, language, family, economy each tell part of the story.
+  Full article in English: 25mordad.com/PanorAIma/peoples-of-iran-en/
 
 ---
 
