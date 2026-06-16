@@ -74,6 +74,23 @@ Solution: light background, dark text, larger starting font, replace label with 
 - [x] Visual check on 2–3 cards before committing all 16 — DONE 2026-06-14
 - [ ] Commit all redesigned templates + gen_post_cards.py + re-rendered post cards + card-texts.md
 
+## P1.8 — Automate Instagram story posting
+
+12-step plan to automate IG story posting for the existing story card decks (covers account setup, Meta dev app, access token, public image hosting, publish script, posting-state tracking, scheduler, credential security, token refresh, failure handling, dry-run test, pipeline integration). Prioritized as P1.8 (not P2) — user wants to start immediately.
+
+- [x] Confirm IG account is a Business/Creator profile linked to a Facebook Page (required for API publishing) — DONE 2026-06-16
+- [ ] Create a Meta developer app at developers.facebook.com, add the Instagram Graph API product
+- [ ] Generate a long-lived access token scoped with `instagram_content_publish` (+ `pages_show_list`/`instagram_basic`); try Development mode with own account as tester to avoid full App Review
+- [ ] Solve the public-URL requirement — decide whether to serve `images/PanorAIma/<slug>/stories/*.jpg` straight from `25mordad.com` or host elsewhere
+- [ ] Write the publish script (Python, `requests`): create media container (`media_type=STORIES`, `image_url=...`), then publish the container ID
+- [ ] Add posting-state tracking — manifest (e.g. `posted.json` per article) so the script knows which cards are already posted and picks the next one in order
+- [ ] Build the cadence/scheduler — cron job or GitHub Actions to run every couple of days, matching existing posting cadence
+- [ ] Secure credentials — app secret + access token as env vars / GitHub Actions secrets, never committed
+- [ ] Handle token expiry — add a refresh step or calendar reminder (IG long-lived tokens expire ~60 days)
+- [ ] Add failure handling — log/alert (push notification or email) on a failed publish call instead of silently skipping
+- [ ] Dry-run test on a throwaway/leftover story image before wiring to the live `peoples-of-iran` deck
+- [ ] Wire into the existing pipeline — decide whether new articles auto-enqueue story cards for posting or require manual trigger per article
+
 ## P2 — Teaser: announce next article after "Peoples of Iran"
 
 - [ ] Decide next article topic
@@ -83,6 +100,7 @@ Solution: light background, dark text, larger starting font, replace label with 
     - [ ] Candidate C: Persian language — spread, survival, political uses across history
     - [ ] Candidate D: Women in Iranian history — beyond the modern lens, pre-Islamic + Qajar + Constitutional era
     - [ ] Candidate E: Iranian calendar and time perception — Nowruz, seasonal rhythm, cosmological worldview
+  - [ ] For each shortlisted candidate, sanity-check source availability (academic refs reachable for `[n]` citations, similar to peoples-of-iran's sourcing)
   - [ ] Cross-check shortlist against existing articles (`iran-lahzeye-feshordeh-tarikh`, `peoples-of-iran`) to avoid thematic overlap
   - [ ] Note chosen topic + rationale in WORKLOG
   - [ ] Derive slug plan (EN + FA slugs) and note in TASKS under new P1 block
@@ -96,7 +114,10 @@ Solution: light background, dark text, larger starting font, replace label with 
   - [ ] Update title, description, and `.lang-actions` links in the teaser card
 - [ ] Commit and push P2 teaser updates ← depends on above three
 - [ ] Update memory: `project_panoraima_next.md` to reflect peoples-of-iran published and new topic chosen
-- [ ] Post peoples-of-iran Instagram feed post carousel (16 cards in `images/PanorAIma/peoples-of-iran/posts/`) — caption is in `files/PanorAIma/peoples-of-iran/card-texts.md` under `## general-caption`
+- [ ] Post peoples-of-iran Instagram feed post carousel (18 cards in `images/PanorAIma/peoples-of-iran/posts/`, numbered 00a/00b + 01–16) — caption is in `files/PanorAIma/peoples-of-iran/card-texts.md` under `## general-caption`
+  - [ ] Upload all 18 images as a single carousel in filename order (00a → 00b → 01 → … → 16)
+  - [ ] Paste the FA `caption` field from `general-caption` block as the post caption
+  - [ ] Immediately after publishing, post `first_comment_en` as the first comment (no flag emojis)
 - [ ] Consider AI-assisted comment replies — draft a workflow or prompt template for replying to reader comments on published articles using AI
   - [ ] Clarify the comment surface (Instagram DMs, website, or both)
   - [ ] Draft the reply prompt template (referencing article content + reader message) and save to `files/ai-reply-template.md`

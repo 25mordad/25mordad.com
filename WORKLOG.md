@@ -4,6 +4,34 @@ Reverse-chronological log of work sessions on 25mordad.com.
 
 ---
 
+## 2026-06-16 — Plan Instagram story automation; confirm Creator account Facebook link
+
+### What we built
+
+| Feature | Files |
+|---|---|
+| New P1.8 task block "Automate Instagram story posting" with 12 subtasks | `TASKS.md` |
+| Confirmed IG Creator account is linked to a Facebook Page (manual user action, no files) | — |
+
+### Decisions
+
+#### 1. Prioritize IG story automation as P1.8, not P2
+**Why:** User wants to start immediately rather than queue it behind the next-article-topic decision (P2).
+**How:** Added a 12-step plan covering account setup, Meta dev app, access token, public image hosting, publish script, posting-state tracking, scheduler, credential security, token refresh, failure handling, dry-run test, and pipeline integration.
+
+#### 2. Use Development mode with own account as a tester
+**Why:** Avoids the overhead of full Meta App Review, which isn't needed for self-only automation.
+**How:** Add the own Instagram account as a tester inside the Meta developer app instead of submitting the app for review.
+
+### Pending / TODO
+
+- [ ] Create Meta developer app at developers.facebook.com, add Instagram Graph API product (P1.8 task 2)
+- [ ] Generate long-lived access token with `instagram_content_publish` scope (P1.8 task 3)
+- [ ] Remaining P1.8 subtasks (image hosting, publish script, scheduler, etc.)
+- [ ] P2: Decide next article topic (still open from prior session)
+
+---
+
 ## 2026-06-14 — Redesign feed post cards — light bg, dark text, section badge, caption rules
 
 ### What we built
