@@ -2,6 +2,8 @@ node_modules/
 .DS_Store
 *.odt
 *.lock
+.env
+scripts/.venv/
 
 # Generated outputs — rebuilt from markdown sources on demand
 # PDFs for download live in assets/pdf/ (committed) not files/ (excluded)

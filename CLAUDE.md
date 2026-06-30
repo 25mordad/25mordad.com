@@ -36,6 +36,17 @@ After any HTML change that uses new Tailwind utility classes, rebuild CSS. The T
 | `images/PanorAIma/<slug>/posts/<nn>-<section-slug>.jpg` | Square Instagram feed post cards (1080×1080) — one per section, numbered 01–16 for carousel upload order |
 | `images/PanorAIma/soon.jpg` | Placeholder feature image used on the teaser page before the cover is ready |
 | `images/site.webmanifest` | PWA manifest (icon paths are `/images/…`) |
+| `scripts/` | Python automation scripts (Instagram API, etc.) — separate from the per-article Playwright generators in `files/PanorAIma/<slug>/` |
+| `scripts/.venv/` | Python virtualenv for `scripts/` — gitignored, recreate with `python3 -m venv scripts/.venv && scripts/.venv/bin/pip install -r scripts/requirements.txt` |
+| `.env` | Project-root secrets (e.g. `IG_ACCESS_TOKEN`) — gitignored, never committed. **This repo is public** — never write secret values into any tracked file, including this one |
+
+## Python Automation Scripts (`scripts/`)
+
+Run any script with the venv's interpreter directly — no need to activate first:
+```bash
+scripts/.venv/bin/python scripts/<script>.py
+```
+Scripts that need credentials load them from project-root `.env` via `python-dotenv` (see `scripts/test_ig_token.py` for the pattern). Never print/log raw secret values — this repo is public.
 
 ## PanorAIma (Writing Section)
 

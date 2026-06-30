@@ -155,6 +155,34 @@ body {
   display: block;
   margin-bottom: 18px;
 }
+
+.content-wrap {
+  flex: 1;
+  width: 100%%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.article-subtitle {
+  font-size: 34px;
+  font-weight: 300;
+  color: rgba(237, 229, 213, 0.72);
+  margin-bottom: 26px;
+}
+
+.author {
+  font-size: 28px;
+  font-weight: 500;
+  color: #c9a84c;
+  letter-spacing: 0.05em;
+}
+
+.dedication-quote {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
 """
 
 HTML_TEMPLATE = """\
@@ -206,24 +234,119 @@ HTML_TEMPLATE = """\
 </html>
 """
 
+HTML_TITLE_TEMPLATE = """\
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>{css}</style>
+</head>
+<body>
+  <div class="card">
+    <div class="content-wrap">
+      <div class="section-icon">✦</div>
+      <h1 class="section-title" id="title">{title}</h1>
+      <div class="divider">
+        <div class="divider-line"></div>
+        <div class="divider-dot">◆</div>
+        <div class="divider-line"></div>
+      </div>
+      <p class="article-subtitle">{subtitle}</p>
+      <p class="author">{author}</p>
+    </div>
+    <div class="footer">
+      <div class="footer-site">25Mordad.com</div>
+      <div class="footer-tagline">✦ فراتر از قاب ✦</div>
+    </div>
+  </div>
+  <script>
+    (function () {{
+      const title = document.getElementById('title');
+      const maxW = document.querySelector('.card').clientWidth - 128;
+      let size = 76;
+      title.style.fontSize = size + 'px';
+      while (title.scrollWidth > maxW && size > 40) {{
+        size -= 2;
+        title.style.fontSize = size + 'px';
+      }}
+    }})();
+  </script>
+</body>
+</html>
+"""
+
+HTML_DEDICATION_TEMPLATE = """\
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>{css}</style>
+</head>
+<body>
+  <div class="card">
+    <div class="content-wrap">
+      <div class="body-quote dedication-quote">❝</div>
+      <p class="section-body" id="dedication-body">{body}</p>
+    </div>
+    <div class="footer">
+      <div class="footer-site">25Mordad.com</div>
+      <div class="footer-tagline">✦ فراتر از قاب ✦</div>
+    </div>
+  </div>
+  <script>
+    (function () {{
+      const card = document.querySelector('.card');
+      const el = document.getElementById('dedication-body');
+      let size = 40;
+      el.style.fontSize = size + 'px';
+      while (card.scrollHeight > card.clientHeight && size > 22) {{
+        size -= 0.5;
+        el.style.fontSize = size + 'px';
+      }}
+    }})();
+  </script>
+</body>
+</html>
+"""
+
 
 # ── Parser ────────────────────────────────────────────────────────────────────
 
 def parse_card_texts(path: Path) -> list[dict]:
     """Return a list of section dicts parsed from card-texts.md."""
     text = path.read_text(encoding="utf-8")
-    # Split on section headers: ## <n> — <slug>
-    parts = re.split(r"\n## (\d+) — ([a-z0-9-]+)\n", text)
+    # Split on section headers: ## <n> — <slug>  (n may be negative, e.g. -1 — title-card)
+    parts = re.split(r"\n## (-?\d+) — ([a-z0-9-]+)\n", text)
     # parts = [preamble, num, slug, content, num, slug, content, ...]
     sections = []
     it = iter(parts[1:])
     for num, slug, content in zip(it, it, it):
         fields: dict = {"num": int(num), "slug": slug}
-        for line in content.splitlines():
-            # Named field on its own line: - **key:** value
-            m = re.match(r"^- \*\*(\w+):\*\* (.+)$", line.strip())
+        lines = content.splitlines()
+        i = 0
+        while i < len(lines):
+            # Named field: either on the same line, or value on indented
+            # continuation line(s) below a bare "- **key:**"
+            m = re.match(r"^- \*\*(\w+):\*\*\s*(.*)$", lines[i].strip())
             if m:
-                fields[m.group(1)] = m.group(2).strip()
+                key, val = m.group(1), m.group(2).strip()
+                if not val:
+                    parts2 = []
+                    i += 1
+                    while i < len(lines) and lines[i].startswith("  "):
+                        if lines[i].strip():
+                            parts2.append(lines[i].strip())
+                        i += 1
+                    fields[key] = " ".join(parts2)
+                    continue
+                fields[key] = val
+            i += 1
         sections.append(fields)
     return sections
 
@@ -232,6 +355,22 @@ def parse_card_texts(path: Path) -> list[dict]:
 
 def build_html(section: dict, bg: str) -> str:
     css = CSS_TEMPLATE % {"bg": bg}
+    num = section["num"]
+
+    if num == -1:
+        return HTML_TITLE_TEMPLATE.format(
+            css=css,
+            title=section.get("title", ""),
+            subtitle=section.get("subtitle", ""),
+            author=section.get("author", ""),
+        )
+
+    if num == 0:
+        return HTML_DEDICATION_TEMPLATE.format(
+            css=css,
+            body=section.get("body", ""),
+        )
+
     ref_html = (
         f'<p class="section-ref">{section["ref"]}</p>'
         if section.get("ref") else ""
