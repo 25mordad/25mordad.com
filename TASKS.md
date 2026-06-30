@@ -93,7 +93,12 @@ Solution: light background, dark text, larger starting font, replace label with 
 - [x] Write the publish script (`scripts/publish_story.py`) — takes an image URL arg, creates a media container (`media_type=STORIES`), polls status until `FINISHED`, then publishes via `media_publish` — DONE 2026-07-01
   - [x] End-to-end test: published a real Story from `peoples-of-iran/stories/everyone-their-own-people.jpg` to the live `@25mordad` account — succeeded — DONE 2026-07-01
   - Note: Instagram's Content Publishing API does **not** support attaching a music sticker — that's app-only (manual posting). Automated posts will always be music-less.
+  - Note: Stories support `user_tags` (mention accounts, added to the API July 2025) but no captions, link/poll/location/hashtag stickers — those remain app-only. Decided to skip hashtags on Stories entirely rather than fake them as baked-in image text.
+  - Note: the Comments API (`/{ig-media-id}/comments`) only applies to feed posts/Reels/carousels — Stories have no public comment thread on Instagram at all, only private DM replies (the automatic "Say something…" box, not API-controlled).
   - [ ] Add a config mapping slug → ordered list of story card filenames for the publish script to read (currently takes a single URL arg, no slug/ordering logic yet)
+- [x] Add title-card + dedication story slides to the `peoples-of-iran` deck (previously only the 16 section cards existed for Stories; now matches the 18-card post carousel structure) — `gen_section_cards.py` extended with two new dark/gold templates — DONE 2026-07-01
+- [x] Published the full 18-card story deck (title → dedication → 16 sections) live to `@25mordad` in one sitting, per user request — confirmed via `GET /me/stories` returning exactly 18 items — DONE 2026-07-01
+  - Note: this was a one-time exception to the "every couple of days" cadence for this article's launch; default back to the slower cadence for future articles unless told otherwise
 - [ ] Add posting-state tracking — manifest (e.g. `posted.json` per article) so the script knows which cards are already posted and picks the next one in order
 - [ ] Build the cadence/scheduler — cron job or GitHub Actions to run every couple of days, matching existing posting cadence
   - [ ] Decide between a local cron job vs a GitHub Actions scheduled workflow ← depends on credential security decision

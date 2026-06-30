@@ -97,6 +97,18 @@ npm run watch:css
 npm run build:css
 ```
 
+## Python Automation Scripts (`scripts/`)
+
+Used for Instagram API automation (publishing Stories, etc.), separate from the Node/Tailwind toolchain.
+
+```bash
+python3 -m venv scripts/.venv
+scripts/.venv/bin/pip install -r scripts/requirements.txt
+scripts/.venv/bin/python scripts/<script>.py
+```
+
+Requires a project-root `.env` (gitignored, not committed) with `IG_ACCESS_TOKEN=<your Instagram access token>`. This repo is public — never commit `.env` or print secret values.
+
 ## Contact
 
 - Website: https://25mordad.com

@@ -67,129 +67,50 @@ Reverse-chronological log of work sessions on 25mordad.com.
 
 ---
 
-## 2026-06-16 — Plan Instagram story automation setup
+## 2026-07-01 — Added title/dedication story cards; published full 18-card story deck; API capability research
 
 ### What we built
 
 | Feature | Files |
 |---|---|
-| Added llms.txt planning task | `TASKS.md` |
-| Guided Meta/Instagram setup path for automated story publishing | none |
+| Title-card + dedication story slides (dark/gold style, matching the 16 section cards) | `files/PanorAIma/peoples-of-iran/gen_section_cards.py` |
+| Rendered title-card.jpg, dedication.jpg | `images/PanorAIma/peoples-of-iran/stories/{title-card,dedication}.jpg` |
+| Full 18-card story deck published live to `@25mordad` | none (Instagram, ephemeral 24h) |
 
 ### Decisions
 
-#### 1. Start with manual Meta API setup before coding
-**Why:** Avoid building automation before the Page/account/token prerequisites are working.
-**How:** Create/connect the Business Portfolio, Facebook Page, Instagram Creator/Business account, then test one story publish manually.
+#### 1. Story deck gets the same title/dedication slides as the feed-post carousel
+**Why:** The story deck previously only had the 16 section cards — no opening title or dedication slide, unlike the post carousel which already had both (slots `-1` and `0` in `card-texts.md`). Brought the two decks to parity.
+**How:** Extended `gen_section_cards.py`'s parser to accept negative/zero slot numbers (`-1`, `0`) and added two new dark/gold-styled HTML templates (`HTML_TITLE_TEMPLATE`, `HTML_DEDICATION_TEMPLATE`) reusing the existing story card's CSS classes. Output: `stories/title-card.jpg`, `stories/dedication.jpg`.
 
-#### 2. Delay Business Verification unless required
-**Why:** Own-account development-mode testing may work before full verification.
-**How:** Try Development mode first; complete business verification only if Meta blocks the required permissions.
+#### 2. No hashtags on Stories
+**Why:** Confirmed via research that Stories have no `caption` field and no hashtag-sticker support in the Content Publishing API — a hashtag would have to be manually added as an app sticker after the API post, or baked into the image as non-functional decorative text. User decided to skip hashtags on Stories entirely rather than do either.
+**How:** No code change; documented as a deliberate decision, not an oversight.
+
+#### 3. Published the full 18-card deck in one sitting, not the usual every-few-days cadence
+**Why:** User explicitly asked to "go all in order" rather than spread the deck out — a one-time exception to the documented posting cadence for this article's launch.
+**How:** Looped `publish_story.py` over the deck in article order (title-card → dedication → sections 1–16). Confirmed via `GET /me/stories` that exactly 18 Stories are live.
+**Note:** this was a deliberate one-off; future articles should default back to the "every couple of days" cadence unless told otherwise.
 
 ### Challenges & Solutions
 
 | Challenge | Solution |
 |---|---|
-| No available Business Portfolio during app creation | Inspect/create/use an existing portfolio. |
-| Business portfolio creation limit reached | Delete an unused portfolio or reuse an existing one. |
-| Instagram account add failed with unknown Meta error | Verify account type/Page linkage and try Business Suite, incognito, or another portfolio. |
-| Facebook Page creation blocked temporarily | Check Account Status/Security Center, try normal Page creation, or wait/use an existing Page. |
+| Cloudflare Pages was disconnected from the GitHub repo, so the first push of title-card.jpg/dedication.jpg never deployed (404 for ~15 min) | User reconnected Cloudflare Pages to the repo; pushed an empty commit to retrigger the deploy, then confirmed both URLs returned 200 |
+| The publish loop for all 17 remaining cards hit the Bash tool's 5-minute timeout mid-run, truncating the terminal output right after `economy-practical-cooperation` | Cross-checked the live Stories via `GET /me/stories` (returned IDs + timestamps) against the script's printed `Published:` IDs to confirm that card *had* actually published before the timeout killed the process — avoided a duplicate post, then ran the 2 genuinely-missing cards (`family-kinship-forced-contact`, `intertwined-lives`) |
+
+### API capability research (Stories)
+
+- **Supported:** `image_url`/`video_url` (single media per Story), and `user_tags` (mention accounts with optional x/y placement — added to the API July 2025).
+- **Not supported via API (app-only):** captions, music stickers, link/swipe-up stickers, poll/quiz/question stickers, location stickers, hashtag stickers.
+- **The "Say something…" reply box** seen on every Story is automatic platform UI (private DM reply), not something added via API or configurable per-post.
+- **Comments API is feed/Reels/carousel only.** Stories have no public comment thread on Instagram at all — replies are always private DMs. `GET/POST /{ig-media-id}/comments` doesn't apply to Stories.
 
 ### Pending / TODO
 
-- [ ] Resolve Facebook Page creation/add restriction or use an existing Page
-- [ ] Link 25mordad Instagram Creator/Business account to a Facebook Page
-- [ ] Add Page + Instagram account to the same Business Portfolio
-- [ ] Return to Meta Developer app creation and continue Instagram publishing setup
-- [ ] Complete one manual story publish API test before writing automation
-
----
-
-## 2026-06-16 — Plan Instagram story automation; confirm Creator account Facebook link
-
-### What we built
-
-| Feature | Files |
-|---|---|
-| New P1.8 task block "Automate Instagram story posting" with 12 subtasks | `TASKS.md` |
-| Confirmed IG Creator account is linked to a Facebook Page (manual user action, no files) | — |
-
-### Decisions
-
-#### 1. Prioritize IG story automation as P1.8, not P2
-**Why:** User wants to start immediately rather than queue it behind the next-article-topic decision (P2).
-**How:** Added a 12-step plan covering account setup, Meta dev app, access token, public image hosting, publish script, posting-state tracking, scheduler, credential security, token refresh, failure handling, dry-run test, and pipeline integration.
-
-#### 2. Use Development mode with own account as a tester
-**Why:** Avoids the overhead of full Meta App Review, which isn't needed for self-only automation.
-**How:** Add the own Instagram account as a tester inside the Meta developer app instead of submitting the app for review.
-
-### Pending / TODO
-
-- [ ] Create Meta developer app at developers.facebook.com, add Instagram Graph API product (P1.8 task 2)
-- [ ] Generate long-lived access token with `instagram_content_publish` scope (P1.8 task 3)
-- [ ] Remaining P1.8 subtasks (image hosting, publish script, scheduler, etc.)
-- [ ] P2: Decide next article topic (still open from prior session)
-
----
-
-## 2026-06-14 — Redesign feed post cards — light bg, dark text, section badge, caption rules
-
-### What we built
-
-| Feature | Files |
-|---|---|
-| Redesigned dedication card (light bg, 44px, fills 90%) | `files/PanorAIma/peoples-of-iran/test-post-dedication.html`, `images/.../posts/00b-dedication.jpg` |
-| Redesigned title card (same light treatment) | `files/PanorAIma/peoples-of-iran/test-post-title.html`, `images/.../posts/00a-title-card.jpg` |
-| Redesigned section card template (light panel, dark text, section badge) | `files/PanorAIma/peoples-of-iran/test-post-d.html` |
-| Rewrote gen_post_cards.py (all 18 cards in one run) | `files/PanorAIma/peoples-of-iran/gen_post_cards.py` |
-| Re-rendered all 18 post cards (00a, 00b, 01–16) | `images/PanorAIma/peoples-of-iran/posts/` |
-| Updated carousel caption + added first_comment_en field | `files/PanorAIma/peoples-of-iran/card-texts.md` |
-| CLAUDE.md + memory updated with new design spec | `CLAUDE.md`, `memory/project_feed_post_pipeline.md` |
-
-### Decisions
-
-#### 1. Light background (`bg.png`) always — never dark, never random
-**Why:** Dark bg + gold/yellow text was hard to read on Instagram. Light bg + dark text is far more legible for Instagram feed scrolling. The contrast ratio is dramatically better in a bright feed environment.
-**How:** Hardcoded `bg.png` in `gen_post_cards.py`; removed `BG_OPTIONS` randomness entirely.
-
-#### 2. `background-position: center center`
-**Why:** Top/bottom crops were cutting off photo subjects and showing empty sky or ground. Center anchors the most visually meaningful part of the photo throughout the card.
-**How:** CSS property updated in all 3 templates (test-post-d.html, test-post-title.html, test-post-dedication.html).
-
-#### 3. Large starting fonts (34px body, 44px dedication)
-**Why:** Previous 27px/24px starting sizes left too much blank space inside the cards — text felt lost. The auto-scale already shrinks down if needed, so starting high means text fills ~90% of the card for typical paragraph lengths.
-**How:** JS auto-scale now starts at 34px (section body) and 44px (dedication), shrinks to 13px / 22px min.
-
-#### 4. Section badge replaces "بخش اول" label
-**Why:** The old label (بخش اول، دوم، ...) consumed ~40px of vertical space without adding meaningful value for a viewer. A compact 36×36px corner circle preserves carousel tracking (which card am I on?) without eating into the body area.
-**How:** Absolute-positioned circle in top-left corner with Persian numeral (۱, ۲, …). Label field in card-texts.md is now ignored for post cards; badge number is auto-generated from section number.
-
-#### 5. gen_post_cards.py produces all 18 cards
-**Why:** The two intro cards (title, dedication) were previously rendered via ad-hoc inline Python snippets. One script is cleaner, reproducible, and ensures new article pipelines just need to copy + update one file.
-**How:** Added `html_title()` and `html_dedication()` functions; updated card-texts.md parser to handle `-1` and `0` slot numbers.
-
-#### 6. Caption uses actual blank lines (not ¶) and substance-first framing
-**Why:** `¶` as a paragraph separator would appear literally if copy-pasted into Instagram. "۱۶ بخش" framing is insider logic — new viewers don't know or care how many sections there are.
-**How:** Rewrote caption block with real newlines; restructured around article substance (what the reader learns) not article structure (how it's organized).
-
-#### 7. first_comment_en field
-**Why:** EN followers see a FA caption they can't read. A first comment in EN immediately after publishing gives them an entry point to the EN article.
-**How:** New field in `## general-caption` block in card-texts.md. Posted as the first comment manually right after publishing. No flag emojis (house rule).
-
-### Challenges & Solutions
-
-| Challenge | Solution |
-|---|---|
-| Playwright chromium not installed | Ran `playwright install chromium` |
-
-### Pending / TODO
-
-- [ ] Commit all redesigned post cards + updated templates, gen_post_cards.py, card-texts.md, CLAUDE.md
-- [ ] P2: Decide next article topic (candidates A–E in TASKS.md)
-- [ ] P2: Update `PanorAIma/next/index.html` + teaser card
-
----
+- [ ] Add slug → ordered story-card-filenames config to the publish script (still single-URL-arg only)
+- [ ] Posting-state tracking, scheduler, credential security for CI, token refresh, failure handling (remaining P1.8 subtasks)
+- [ ] P2: Decide next article topic (still open)
 
 ---
 

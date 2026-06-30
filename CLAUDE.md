@@ -48,6 +48,8 @@ scripts/.venv/bin/python scripts/<script>.py
 ```
 Scripts that need credentials load them from project-root `.env` via `python-dotenv` (see `scripts/test_ig_token.py` for the pattern). Never print/log raw secret values — this repo is public.
 
+`scripts/publish_story.py <image_url>` publishes a single Instagram Story from a public image URL (container create → poll `status_code` until `FINISHED` → `media_publish`). Default posting cadence is one card every couple of days; a same-session full-deck blast is a deliberate one-off, not the default. The Stories API supports only `image_url`/`video_url` and `user_tags` (mentions) — no captions, music, link/poll/location/hashtag stickers (app-only). Comments API applies to feed/Reels/carousel posts only, never Stories.
+
 ## PanorAIma (Writing Section)
 
 Each article is **bilingual** — one EN page and one FA page, always published together.
@@ -77,8 +79,8 @@ Work in this order. Each phase depends on the previous.
 
 5. Place background images `bg-d.png` (dark, preferred) and `bg.png` (light) in `files/PanorAIma/<slug>/`.
 6. Write `card-texts.md` — one `## <n> — <section-slug>` block per section (label, title, body, ref, cta, music). See **Instagram Story Card Deck** for field rules.
-7. Copy `gen_section_cards.py` from the previous article, update `OUTPUT_DIR` slug → run → 16 story cards in `images/PanorAIma/<slug>/stories/`.
-7b. Copy `gen_post_cards.py` from the previous article, update `OUTPUT_DIR` slug → add `## general-caption` to `card-texts.md` → run → 16 feed post cards in `images/PanorAIma/<slug>/posts/`. See **Instagram Feed Post Cards**.
+7. Copy `gen_section_cards.py` from the previous article, update `OUTPUT_DIR` slug → run → 18 story cards (title, dedication, 16 sections) in `images/PanorAIma/<slug>/stories/`.
+7b. Copy `gen_post_cards.py` from the previous article, update `OUTPUT_DIR` slug → add `## general-caption` to `card-texts.md` → run → 18 feed post cards in `images/PanorAIma/<slug>/posts/`. See **Instagram Feed Post Cards**.
 8. Copy `gen_hero_images.py` from the previous article, update `OUTPUT_DIR` slug → run → 16 hero images in `images/PanorAIma/<slug>/heroes/`. See **Hero Images**.
 9. Create covers — two files, two renders. See **Cover / Feature Image**:
    - FA cover: `test-cover-d.html` → `images/PanorAIma/<slug>/cover.jpg` (Vazirmatn, RTL, FA text)
@@ -119,11 +121,21 @@ Rules for producing the short version from the long one:
 
 ### Instagram Story Card Deck
 
-Each article ships with a deck of **Instagram story cards** — one card per article section
-— to promote the piece on Instagram (posted every couple of days). Source of truth is
+Each article ships with a deck of **Instagram story cards** — a title card, a dedication
+card, then one card per article section (18 cards total, mirroring the feed-post carousel
+structure) — to promote the piece on Instagram (posted every couple of days, or as a
+one-off full-deck blast around launch — see Posting Cadence note below). Source of truth is
 `files/PanorAIma/<slug>/card-texts.md`; cards render via `gen_section_cards.py` (Playwright,
 941×1672) over a single background photo (`bg-d.png`, dark preferred), output to
-`images/PanorAIma/<slug>/stories/<section-slug>.jpg`.
+`images/PanorAIma/<slug>/stories/<section-slug>.jpg` (section cards) and
+`images/PanorAIma/<slug>/stories/{title-card,dedication}.jpg` (intro cards, reusing the
+`-1`/`0` blocks already defined for the post carousel — `title`/`subtitle`/`author` for the
+title card, `body` for the dedication card — rendered in the same dark/gold story style via
+dedicated `HTML_TITLE_TEMPLATE`/`HTML_DEDICATION_TEMPLATE`).
+
+**Posting cadence:** the default is one card every couple of days. A full-deck same-session
+publish (all 18 cards back-to-back) is a deliberate one-off for an article's launch, not the
+standing default — only do it when explicitly asked.
 
 Purpose: each card **delivers one section's core idea on its own** (a self-contained taste,
 not a teaser, and **not** a request for comments). A short CTA then nudges the reader to the
