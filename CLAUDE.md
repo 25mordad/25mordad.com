@@ -106,6 +106,10 @@ Work in this order. Each phase depends on the previous.
 18. Run `npm run build:css`.
 19. Commit and push.
 
+### Draft-Stage Privacy
+
+Normally an article's whole `files/PanorAIma/<slug>/` working directory is tracked and committed (only PDFs/HTML previews are gitignored — see the table above). If an article is still being drafted/reviewed and publication hasn't been decided yet (e.g. sharing PDFs with friends for feedback first), add the whole `files/PanorAIma/<slug>/` directory as its own line in `.gitignore` instead. A bare `git add -A` does **not** skip untracked-but-not-ignored directories, so without this the draft — including unresolved statistical claims, private notes, etc. — would land on the public repo. Remove the `.gitignore` line once publication is approved and the article moves to `PanorAIma/<slug>-fa|en/`.
+
 ### Short and Long Versions
 
 Each article has a **long** draft and a **short** draft (e.g. `peoples-of-iran-fa.md` and `peoples-of-iran-fa-short.md`). The short version exists because many readers today are put off by long-form pieces — it's prepared for people who want to read faster.

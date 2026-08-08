@@ -11,3 +11,6 @@ files/PanorAIma/**/*.pdf
 files/PanorAIma/**/peoples-of-iran-*.html
 files/PanorAIma/**/preview-*.png
 files/PanorAIma/**/preview-*.jpg
+
+# Article in draft, not yet decided for publication — keep out of the public repo
+files/PanorAIma/surviving-or-living/

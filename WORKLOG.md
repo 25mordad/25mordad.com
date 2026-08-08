@@ -4,69 +4,6 @@ Reverse-chronological log of work sessions on 25mordad.com.
 
 ---
 
-## 2026-07-01 — Set up Instagram API access + published first test Story via API
-
-### What we built
-
-| Feature | Files |
-|---|---|
-| Meta app for Instagram API access (Instagram Login flow) | none (Meta dashboard only) |
-| Long-lived access token, stored locally | `.env` (gitignored, not committed) |
-| Python automation scripts folder | `scripts/.venv/` (gitignored venv), `scripts/requirements.txt` |
-| Token verification script | `scripts/test_ig_token.py` |
-| Story publish script (container create → poll → publish) | `scripts/publish_story.py` |
-| Updated ignore rules | `.gitignore` (`.env`, `scripts/.venv/`) |
-
-### Decisions
-
-#### 1. Use Instagram API with Instagram Login, not Facebook Login
-**Why:** The Facebook-login-based Graph API setup was blocked on creating/linking a Facebook Page (logged as a blocker in the 2026-06-16 sessions). The newer "Instagram API with Instagram Login" product authenticates directly against the Instagram Business/Creator account and does **not** require a Facebook Page at all.
-**How:** Built the Meta app using "API setup with Instagram login," added the account as a tester, and generated the token from that flow. This resolves the P1.8 blocker entirely — see [[project_ig_automation]].
-
-#### 2. Generate the token from the dashboard, not via OAuth redirect exchange
-**Why:** Tokens generated through the App Dashboard's "Generate token" button for a tester account come back long-lived (~60 days) already — no separate short-to-long-lived token exchange step needed.
-**How:** Used the in-dashboard "Generate token" action; confirmed via API call that it returns valid profile data.
-
-#### 3. Required permissions were already "Ready for testing" — no App Review needed
-**Why:** In Development mode, an app's own tester accounts get granted core permissions (basic profile, comments, messages, insights, **content publish**) without going through Meta's App Review process. Only extra permissions like `business_management`/`ads_management` (not needed here) require additional verification.
-**How:** Confirmed all five needed permissions show "Ready for testing" status on the Permissions and features page before generating the token.
-
-#### 4. Store the token in project-root `.env`, not an external path
-**Why:** User preference — keep it inside the repo (the conventional, easy-to-find location) rather than `~/.config/...`. Safe as long as `.gitignore` excludes `.env` *before* the file is created, which was verified.
-**How:** Added `.env` to `.gitignore` first, confirmed it wasn't already tracked, then wrote the token there. Old external copy deleted.
-
-#### 5. Python automation lives in its own `scripts/` folder with its own venv
-**Why:** Keeps Instagram-automation Python tooling (requests-based, dashboard-driven) separate from the per-article Playwright generator scripts that already live under `files/PanorAIma/<slug>/`. Avoids polluting the project's Node/Tailwind toolchain with Python deps.
-**How:** `scripts/.venv/` (gitignored) + `scripts/requirements.txt` for reproducibility. Run scripts via `scripts/.venv/bin/python scripts/<script>.py`.
-
-#### 6. Story card images are served directly from `25mordad.com` — no separate hosting needed
-**Why:** The Instagram Content Publishing API requires a publicly reachable `image_url`. Checked with a HEAD request and confirmed `images/PanorAIma/<slug>/stories/*.jpg` already returns 200 from the live site, so no extra image host/CDN step is needed.
-**How:** `curl -sI https://25mordad.com/images/PanorAIma/peoples-of-iran/stories/everyone-their-own-people.jpg` → `200 image/jpeg`.
-
-#### 7. End-to-end test: published a real Story via the API
-**Why:** Validate the full publish flow (container create → status poll → publish) against the live account before building scheduling/state-tracking on top of it.
-**How:** Wrote `scripts/publish_story.py` (takes an image URL, creates a `media_type=STORIES` container, polls `status_code` until `FINISHED`, then calls `media_publish`). Ran it against the `peoples-of-iran` story deck's `everyone-their-own-people.jpg` — published successfully to `@25mordad` (24h Story).
-**Note:** the Content Publishing API has no support for music stickers — that's an Instagram-app-only feature. Automated posts will always be music-less; if music matters for a given post, it has to go up manually.
-
-### Security note
-
-**This repo is public.** No app ID, app secret, account numeric ID, or token value was written into any tracked file (verified via grep before and after edits). The only place the live token exists is `.env`, which is gitignored and was confirmed untracked before being created. Any future scripts that print API responses should avoid echoing the raw token.
-
-### Challenges & Solutions
-
-| Challenge | Solution |
-|---|---|
-| Adding a permission scope threw a generic "Sorry something went wrong" error | Permission was already granted/"Ready for testing" — no action was actually needed; error was a red herring from trying to re-add an existing scope |
-| Token was pasted directly into chat despite a request not to | Saved it immediately to a protected file, then later moved to project `.env` per user preference; flagged that rotating it is good hygiene since it passed through the transcript |
-
-### Pending / TODO
-
-- [ ] Add slug → ordered story-card-filenames config to the publish script (currently single-URL-arg only)
-- [ ] Posting-state tracking, scheduler, credential security for CI, token refresh, failure handling (remaining P1.8 subtasks)
-- [ ] P2: Decide next article topic (still open)
-
----
-
 ## 2026-07-01 — Added title/dedication story cards; published full 18-card story deck; API capability research
 
 ### What we built
@@ -111,6 +48,63 @@ Reverse-chronological log of work sessions on 25mordad.com.
 - [ ] Add slug → ordered story-card-filenames config to the publish script (still single-URL-arg only)
 - [ ] Posting-state tracking, scheduler, credential security for CI, token refresh, failure handling (remaining P1.8 subtasks)
 - [ ] P2: Decide next article topic (still open)
+
+---
+
+## 2026-08-09 — Wrote and polished third PanorAIma article "زنده‌ماندن یا زیستن؟" (draft, unpublished)
+
+### What we built
+
+| Feature | Files |
+|---|---|
+| Third article moved from wrong (public) path into private working dir | `files/PanorAIma/surviving-or-living/sections/*.md` |
+| Citations converted to project's `[n]` + `## منابع` convention, 25 sources, strict ascending order | `files/PanorAIma/surviving-or-living/sections/99-manabe.md` |
+| Merged single-file draft for review | `surviving-or-living-fa.md` (frozen, untouched after creation) |
+| Fully revised working draft: de-duplicated repeated concepts, unified formatting, numbered ToC removed → added, two new war-normalization paragraphs, restructured "concerns" passage | `surviving-or-living-fa-v2.md` |
+| Short version (~3,900 words, all 25 citations + all named thinkers preserved) | `surviving-or-living-fa-short.md` |
+| Review PDFs (30pp long, 15pp short) for sharing with close friends | `surviving-or-living-fa-v2.pdf`, `surviving-or-living-fa-short.pdf` |
+| Reusable markdown→PDF generator (Chrome headless, RTL, Persian-digit ToC) | `make_pdf.py` |
+| Suggestion tracker for unapplied/resolved proposals | `review-notes.md` |
+
+### Decisions
+
+#### 1. Keep the whole draft article out of the public repo until publication is decided
+**Why:** Unlike every prior PanorAIma article, this one is not yet approved for publication — the user wants to share PDFs with close friends for feedback first. The standard convention (`files/PanorAIma/<slug>/` is tracked, only PDFs/previews are gitignored) would have exposed the full draft, including in-progress research and unresolved statistical claims, on the public repo.
+**How:** Added `files/PanorAIma/surviving-or-living/` as its own line in `.gitignore` (existing PDF/preview patterns weren't enough — the whole directory was untracked but NOT ignored, so a bare `git add -A` would have picked it up). Remove this line once the article is approved and moved to `PanorAIma/<slug>-fa|en/`.
+
+#### 2. Don't silently "correct" uncited statistics — verify or fold into what the source actually says
+**Why:** The original draft had a specific inflation figure (۴۲.۲٪ for 2025) that turned out to not exist in any source — the World Bank's most recent data point is 2024. Guessing or inventing a number for a public-facing article would be a factual-integrity risk.
+**How:** Web-searched each of 4 flagged statistics individually. Where the number existed but was wrong (IMF Iran 2026 growth), corrected it with the right vintage. Where it didn't exist at all (2025 inflation), rewrote the sentence to use the two years that ARE verified (2023: 44.6%, 2024: 32.5%) rather than inventing a replacement.
+
+#### 3. Never introduce a new concept in two sections — pick the section where it's structurally load-bearing
+**Why:** Found three near-duplicate passages across sections (Diane Vaughan's "normalization of deviance," `maladaptation`, and McEwen's "allostatic load" all appeared in both section 2 and section 5, nearly verbatim). Established a repeatable test: keep the concept in whichever section it's the central thesis for, not wherever it was first drafted.
+**How:** Section 5 ("وقتی سازگاری فرساینده می‌شود") is literally about erosive adaptation — `maladaptation` and allostatic load are foundational there. Section 2 ("تاب‌آوری یا عادی‌سازی؟") already has its defining citations (Norris, Vaughan); removed the decorative repeats and rewrote the connecting sentences so the paragraph flow survives the cut.
+
+#### 4. Renumbering citations after a mid-document edit requires re-deriving the whole sequence, not patching numbers
+**Why:** An earlier edit (removing a duplicate Vaughan paragraph from section 1) had left a citation-ordering bug — `[۵]` appeared before `[۴]` in reading order because the number wasn't re-verified after the paragraph that used it was deleted. Discovered only because today's cleanup touched the same numbers again.
+**How:** Built the full first-appearance sequence from scratch (source → its correct position in reading order) each time a citation moved sections, remapped every old→new number, and re-verified with `grep -oE '\[[۰-۹]+\]'` across every section file, the merged file, and the references list before considering it done.
+
+#### 5. A short version's job is compression, not selection — verified nothing was dropped
+**Why:** User explicitly required that "پشتوانه‌ی فکری" (every citation and every named thinker) survive into the short version, not just the concepts.
+**How:** After drafting the short version, ran a grep pass checking every one of the 21 named thinkers and all 25 citation numbers appear in the short file before presenting it — caught that `diglossia` (the only uncited concept in the whole article) had been dropped, and restored it on request.
+
+### Challenges & Solutions
+
+| Challenge | Solution |
+|---|---|
+| Draft material was sitting inside the *published* site path (`PanorAIma/3-materials/`) instead of the private `files/` convention | Moved to `files/PanorAIma/surviving-or-living/sections/` before anything was committed — confirmed nothing had been pushed, so no exposure occurred |
+| User's explicit "don't touch the text, only propose" instruction mid-session vs. later explicit "let's fix it" approvals | Tracked every proposal in `review-notes.md` first; only edited files after an explicit go-ahead per item, never bundled |
+| A background `grep` search (queued earlier for ToC precedent-checking) resolved mid-conversation as an unrelated task notification | Confirmed its (empty) result actually answered the pending question — published FA articles have no ToC — before treating it as closed |
+
+### Pending / TODO
+
+- [ ] User to review both PDFs with close friends before any publish decision
+- [ ] Final full read-through pass on Opus model (session currently on Sonnet for routine work, per user's model-switching plan)
+- [ ] Once approved for publication: move to `PanorAIma/<slug>-fa|en/`, remove the `.gitignore` exclusion, follow the full Phase 2–4 checklist in CLAUDE.md (covers, hero images, story/post card decks, sitemap, EN translation)
+- [ ] Build a tone/voice profile for the user (using articles 2 and 3 as reference) — explicitly deferred to last, after this article is fully finalized
+- [ ] No Instagram/Twitter work of any kind for this article — that whole system is being redesigned separately (standing constraint for this article)
+- [ ] P1.8 Instagram automation subtasks — untouched this session, still open (see TASKS.md)
+- [ ] P2: peoples-of-iran Instagram feed carousel post — untouched this session, still open
 
 ---
 

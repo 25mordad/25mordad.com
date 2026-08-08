@@ -1,45 +1,5 @@
 # TASKS
 
-## P1 — Publish "The Peoples of Iran" (overdue: was June 4, 2026)
-
-Article draft is at `files/PanorAIma/مردمان ایران.odt`.
-
-Slug plan:
-- EN: `PanorAIma/peoples-of-iran-en/index.html`
-- FA: `PanorAIma/peoples-of-iran-fa/index.html`
-
-- [x] Read the `.odt` draft and extract full article content — DONE (FA: 16 sections in `peoples-of-iran-fa.md`)
-- [x] Generate section image cards (HTML → PNG approach) — DONE 2026-06-07
-  - Card design: bordered panel (gold border, dark semi-transparent bg) floating over full-bleed photo; photo shows in margins ← locked 2026-06-07
-  - Background: `files/PanorAIma/peoples-of-iran/bg-d.png` (dark, preferred)
-  - Output: `images/PanorAIma/peoples-of-iran/stories/<section-slug>.jpg` (16 JPEG cards, q=98)
-- [x] Generate square hero images — DONE 2026-06-07 (16 heroes in `images/PanorAIma/peoples-of-iran/heroes/`)
-- [x] Render covers — DONE 2026-06-07
-  - FA cover: `images/PanorAIma/peoples-of-iran/cover.jpg` (Vazirmatn, RTL)
-  - EN cover: `images/PanorAIma/peoples-of-iran/cover-en.jpg` (Space Grotesk, LTR)
-- [x] Add post card to `PanorAIma/index.html` — DONE 2026-06-07
-- [x] Add both EN + FA URLs to `sitemap.xml` with `xhtml:link` alternates and `lastmod 2026-06-07` — DONE
-- [x] Extract/translate EN article body to `peoples-of-iran-en.md` — DONE (16 sections, no short EN version)
-- [x] Create `PanorAIma/peoples-of-iran-en/index.html` — DONE 2026-06-07
-  - Cover image at top, ToC, superscript citations, refs section, PDF link, `AI-Assisted` chip
-- [x] Create `PanorAIma/peoples-of-iran-fa/index.html` — DONE (610 lines, 16 heroes embedded, correct meta)
-- [x] Verify hreflang in FA page — DONE 2026-06-07 (x-default now consistently → EN slug)
-- [x] Run `npm run build:css` — DONE 2026-06-07
-- [x] Commit and push — DONE 2026-06-07
-
-## P1.5 — Fix peoples-of-iran Instagram card texts for outsider clarity
-
-Card titles and some bodies were written from an insider perspective (as if the reader already knows the article concepts). Instagram viewers haven't read the article — a title like "سبک زندگی، سطحِ نیروهای پنهان است" is cryptic to a new reader (what forces? hidden how?). All 16 cards need an outsider-clarity review.
-
-- [x] Review all 16 titles: flag any that rely on article-internal concepts without enough standalone context
-- [x] Rewrite flagged titles so they carry the section's idea on their own — no jargon, no assumed knowledge
-- [x] Review bodies for the same issue (titles are higher priority)
-- [x] Update `files/PanorAIma/peoples-of-iran/card-texts.md` with revised copy
-- [x] Delete the story card JPEGs that changed (so gen_section_cards.py re-renders them): `rm images/PanorAIma/peoples-of-iran/stories/<slug>.jpg`
-- [x] Run `python3 files/PanorAIma/peoples-of-iran/gen_section_cards.py` to regenerate affected cards
-- [x] Visually verify each re-rendered card before committing
-- [x] Commit and push — DONE 2026-06-13 (fae56cd: 4 titles rewritten, 3 story card JPEGs regenerated)
-
 ## P1.6 — peoples-of-iran Instagram feed post cards
 
 - [x] Build gen_post_cards.py (Playwright, 1080×1080) — `files/PanorAIma/peoples-of-iran/gen_post_cards.py`
@@ -96,20 +56,72 @@ Solution: light background, dark text, larger starting font, replace label with 
   - Note: Stories support `user_tags` (mention accounts, added to the API July 2025) but no captions, link/poll/location/hashtag stickers — those remain app-only. Decided to skip hashtags on Stories entirely rather than fake them as baked-in image text.
   - Note: the Comments API (`/{ig-media-id}/comments`) only applies to feed posts/Reels/carousels — Stories have no public comment thread on Instagram at all, only private DM replies (the automatic "Say something…" box, not API-controlled).
   - [ ] Add a config mapping slug → ordered list of story card filenames for the publish script to read (currently takes a single URL arg, no slug/ordering logic yet)
+    - [ ] Derive the deck order by parsing `card-texts.md` block order (slots -1, 0, 1–16) instead of hardcoding filenames, so new articles need no manual list
+    - [ ] Add `scripts/deck.py` helper exposing `deck_for(slug) -> [(card_slug, public_url), …]` used by every publish script
+    - [ ] Extend `publish_story.py` to accept `--slug <slug> --card <card-slug>` in addition to the current raw-URL arg (keep the raw-URL path working)
+    - [ ] Add `--dry-run` flag: resolve the URL, HEAD-check it returns 200, print what would be posted, publish nothing
+    - [ ] Add a URL reachability pre-check (HEAD request) before creating the media container, so a 404 fails fast with a clear message
 - [x] Add title-card + dedication story slides to the `peoples-of-iran` deck (previously only the 16 section cards existed for Stories; now matches the 18-card post carousel structure) — `gen_section_cards.py` extended with two new dark/gold templates — DONE 2026-07-01
 - [x] Published the full 18-card story deck (title → dedication → 16 sections) live to `@25mordad` in one sitting, per user request — confirmed via `GET /me/stories` returning exactly 18 items — DONE 2026-07-01
   - Note: this was a one-time exception to the "every couple of days" cadence for this article's launch; default back to the slower cadence for future articles unless told otherwise
 - [ ] Add posting-state tracking — manifest (e.g. `posted.json` per article) so the script knows which cards are already posted and picks the next one in order
+  - [ ] Decide manifest location + whether it is committed or gitignored (`scripts/state/posted-<slug>.json`) and document the choice ← blocks scheduler work
+  - [ ] Define the manifest schema: card slug, container id, published media id, `published_at` ISO timestamp
+  - [ ] Write `scripts/publish_next.py` — read deck order + manifest, pick the first unposted card, publish it, append the result to the manifest ← depends on deck config
+  - [ ] Backfill a `peoples-of-iran` manifest marking all 18 story cards as already posted (2026-07-01) so nothing gets reposted
+  - [ ] Add a `--status` mode printing posted/remaining counts per slug
+  - [ ] Guard against duplicate posts — cross-check `GET /me/stories` before publishing (the 2026-07-01 timeout incident showed the script's own output can be truncated mid-run)
 - [ ] Build the cadence/scheduler — cron job or GitHub Actions to run every couple of days, matching existing posting cadence
   - [ ] Decide between a local cron job vs a GitHub Actions scheduled workflow ← depends on credential security decision
+  - [ ] Note the constraint in the decision: `.env` is local-only, so GH Actions requires putting the token in a repo secret on a **public** repo
+  - [ ] Write the chosen artifact — crontab entry or `.github/workflows/publish-story.yml` on a 2-day schedule ← depends on the decision above
+  - [ ] Make the scheduler a no-op (exit 0, log a line) when the deck for the active slug is fully posted
+  - [ ] Add an "active slug" setting so the scheduler knows which article's deck is currently being drip-posted
 - [ ] Secure credentials — app secret + access token as env vars / GitHub Actions secrets, never committed
+  - [ ] Add a repo guard that greps tracked files for the token/app-secret pattern and fails loudly if one leaks
+  - [ ] Re-verify `.env` is still gitignored and untracked before any commit that touches `scripts/`
 - [ ] Handle token expiry — add a refresh step or calendar reminder (IG long-lived tokens expire ~60 days)
+  - [ ] **Time-sensitive:** token was issued 2026-07-01 → expires ~2026-08-30; refresh before then
+  - [ ] Write `scripts/refresh_token.py` — call `GET /refresh_access_token?grant_type=ig_refresh_token`, rewrite `IG_ACCESS_TOKEN` in `.env`, never print the value
+  - [ ] Make `test_ig_token.py` also report days-to-expiry so the state is visible at a glance
+  - [ ] Have the scheduler auto-refresh when the token is within ~10 days of expiry ← depends on refresh_token.py
 - [ ] Add failure handling — log/alert (push notification or email) on a failed publish call instead of silently skipping
+  - [ ] Wrap the container-create / poll / publish steps in try-except and append failures to `scripts/state/publish.log`
+  - [ ] Distinguish retryable (rate limit, transient 5xx) from terminal (bad token, 404 image) failures and retry only the former
+  - [ ] Pick the alert channel (email vs push) and implement it for terminal failures
 - [ ] Wire into the existing pipeline — decide whether new articles auto-enqueue story cards for posting or require manual trigger per article
+  - [ ] Add a Phase-4 checklist step in CLAUDE.md for registering a new slug with the story-deck publisher
+  - [ ] Document the whole automation flow (deck config → manifest → scheduler → refresh) in a short `scripts/README.md`
+
+## P3 — Finalize third article "زنده‌ماندن یا زیستن؟" (draft, gitignored — not yet public)
+
+User pre-drafted this article's material via ChatGPT before this session; work here was cleanup, citation integrity, de-duplication, and producing review copies. Working files live in `files/PanorAIma/surviving-or-living/` — this whole directory is in `.gitignore` until publication is decided (see CLAUDE.md note).
+
+- [x] Move draft material from wrong public path (`PanorAIma/3-materials/`) to `files/PanorAIma/surviving-or-living/sections/`
+- [x] Convert inline links to project's `[n]` + `## منابع` citation convention (25 sources)
+- [x] Research and add real citations for 6 previously-uncited claims (Hirschman, Scott, Barry, IMF figures, Sen, Margalit)
+- [x] Fix factual error: IMF 2026 Iran growth figure corrected via web research
+- [x] Merge 9 section files into single review draft `surviving-or-living-fa.md` (kept frozen/untouched)
+- [x] Remove 3 near-duplicate passages found across sections (Diane Vaughan, maladaptation, McEwen allostatic load) — each kept in its structurally correct section only
+- [x] Fix citation numbering end-to-end (including a leftover ordering bug from an earlier edit) — strict ascending first-appearance order, verified via grep
+- [x] Add the user's "war normalization" closing question to the section-8 question list
+- [x] Unify formatting sitewide in the revised draft: book titles, Persian glosses for Latin terms, repeated-name trimming, section-heading punctuation, reference-list format
+- [x] Remove section numbers from headings, add a numbered-free table of contents (`surviving-or-living-fa-v2.md`)
+- [x] Verify/correct 4 statistical claims via live web research; found and removed one fabricated figure (2025 inflation number had no source)
+- [x] Complete 2 previously incomplete reference entries ([14] McEwen 2004, [16] Asadi-Lari et al. 2016, Urban HEART-2 Tehran study)
+- [x] Produce short version `surviving-or-living-fa-short.md` (~3,900 words) — verified all 25 citations and 21 named thinkers survive the cut
+- [x] Generate review PDFs (`surviving-or-living-fa-v2.pdf` 30pp, `surviving-or-living-fa-short.pdf` 15pp) via `make_pdf.py`
+- [x] Add `files/PanorAIma/surviving-or-living/` to `.gitignore` — draft not yet approved for publication
+- [ ] User to review both PDFs with close friends before any publish decision
+- [ ] Final full read-through pass on Opus model (user's plan: research/mechanical work on Sonnet, final polish on Opus)
+- [ ] Decide official EN title + produce EN translation (long version only, per convention — no short EN)
+- [ ] Once approved: move to `PanorAIma/<slug>-fa|en/`, remove the `.gitignore` line, follow full Phase 2–4 checklist in CLAUDE.md (covers, hero images, story/post card decks, sitemap, hreflang)
+- [ ] After this article is fully finalized: build a tone/voice profile for the user using articles 2 (مردمان ایران) and 3 (this one) as reference — explicitly deferred to last
+- ~~No Instagram/Twitter work of any kind for this article~~ — standing constraint for this article only; that whole system is being redesigned separately
 
 ## P2 — Teaser: announce next article after "Peoples of Iran"
 
-- [ ] Decide next article topic
+- [x] Decide next article topic — RESOLVED via a different path than planned below: user pre-drafted "زنده‌ماندن یا زیستن؟" independently (see new P3 block above) rather than through the brainstorm/shortlist process outlined in the subtasks. Subtasks below kept as-is (not this article's actual path, but still valid process for the *next* one after this).
   - [ ] Brainstorm 3–5 candidate topics aligned with PanorAIma's analytical lens (social/historical/cultural/economic Iran)
     - [ ] Candidate A: Iranian bazaar — economic structure, guild culture, political role
     - [ ] Candidate B: Iranian diaspora — identity, cultural negotiation, dual belonging
@@ -121,6 +133,9 @@ Solution: light background, dark text, larger starting font, replace label with 
   - [ ] Present the shortlisted candidates to the user as a numbered list for a final pick
   - [ ] Note chosen topic + rationale in WORKLOG
   - [ ] Derive slug plan (EN + FA slugs) and note in TASKS under new P1 block
+  - [ ] Draft the 16-section outline for the chosen topic (matching peoples-of-iran's structure) ← depends on topic pick
+  - [ ] Collect the source list up front so `[n]` citations are settled before drafting ← depends on outline
+  - [ ] Source and place `bg-d.png` / `bg.png` background photos in `files/PanorAIma/<new-slug>/` ← depends on topic
 - [ ] Update `PanorAIma/next/index.html` with new title, description, and dates ← depends on topic
   - [ ] Update `<title>`, meta description/keywords, og:title, og:description, twitter:title, twitter:description
   - [ ] Update JSON-LD headline, description, and estimated publish date
@@ -132,10 +147,13 @@ Solution: light background, dark text, larger starting font, replace label with 
 - [ ] Commit and push P2 teaser updates ← depends on above three
 - [ ] Update memory: `project_panoraima_next.md` to reflect peoples-of-iran published and new topic chosen
 - [ ] Post peoples-of-iran Instagram feed post carousel (18 cards in `images/PanorAIma/peoples-of-iran/posts/`, numbered 00a/00b + 01–16) — caption is in `files/PanorAIma/peoples-of-iran/card-texts.md` under `## general-caption`
+  - [ ] Verify all 18 post images return 200 from `https://25mordad.com/images/PanorAIma/peoples-of-iran/posts/…` before posting
+  - [ ] Confirm 18 fits Instagram's carousel limit (max 20 items) — no split needed
   - [ ] Upload all 18 images as a single carousel in filename order (00a → 00b → 01 → … → 16)
   - [ ] Paste the FA `caption` field from `general-caption` block as the post caption
   - [ ] Immediately after publishing, post `first_comment_en` as the first comment (no flag emojis)
   - [ ] Note: this is a one-off manual carousel post — separate from the recurring story-card automation in P1.8
+  - [ ] Optional follow-up: script it (`scripts/publish_carousel.py` — child containers with `is_carousel_item=true` → CAROUSEL container → publish → POST first comment) so future articles don't need a manual upload
 - [ ] Consider AI-assisted comment replies — draft a workflow or prompt template for replying to reader comments on published articles using AI
   - [ ] Clarify the comment surface (Instagram DMs, website, or both)
   - [ ] Draft the reply prompt template (referencing article content + reader message) and save to `files/ai-reply-template.md`
@@ -144,8 +162,10 @@ Solution: light background, dark text, larger starting font, replace label with 
   - [ ] Decide content scope: site summary, owner/contact, canonical sections, PanorAIma article URLs, and usage/licensing notes
   - [ ] Check `robots.txt` for any existing AI-crawler directives to keep `llms.txt` consistent with them
   - [ ] Add `/llms.txt` at the site root with concise Markdown-style guidance and important links
+  - [ ] Confirm Cloudflare Pages serves root `.txt` files as `text/plain` (no build step needed for a static file)
   - [ ] Verify `https://25mordad.com/llms.txt` is served after deploy
   - [ ] Consider adding `llms.txt` mention/link to README and sitemap if useful
+  - [ ] Add an llms.txt refresh step to the article-publish checklist so new PanorAIma URLs get listed
 
 ## Done
 
