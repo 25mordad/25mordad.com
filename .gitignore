@@ -4,6 +4,7 @@ node_modules/
 *.lock
 .env
 scripts/.venv/
+scripts/.certs/
 __pycache__/
 *.pyc
 

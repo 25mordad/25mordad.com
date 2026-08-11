@@ -110,12 +110,35 @@ Planned 2026-08-11; not started, no code written yet.
   mirrors the existing `card-texts.md` `general-caption` convention, no flag emojis
 - One photo per Feed post (not a carousel) — "post them one by one"
 - Photo selection: a named album inside the Lightroom app; automation reads it via Adobe's
-  Lightroom API (self-serve OAuth via Adobe Developer Console — confirmed live 2026-08-11).
-  Reading a user's own existing album works fine via OAuth consent — only albums *created*
-  via the partner API are hidden from the app UI, not read access to real ones.
+  Lightroom API (self-serve OAuth via Adobe Developer Console).
+  - **2026-08-11 RE-VERIFIED:** research this session initially found Adobe's docs
+    inconsistent — Firefly Services "Lightroom APIs" require an Enterprise contract, and
+    "Lightroom Partner APIs" require Adobe partner approval. But the plain "Lightroom
+    Services" API in the standard Developer Console (confirmed live in-console this session)
+    offers self-serve **OAuth Web App / Single-Page App / Native App** credentials with no
+    Enterprise-contract mention — this is the real path. Chose **OAuth Web App** (confidential
+    client, client_secret + backend-stored refresh token) to match the unattended-script plan.
 - Photos are committed straight into the git repo (new `images/ig-queue/` folder) — same
   pattern as every other site image, since the repo is already public. No external object
   storage needed for this project.
+- **Series + naming workflow (2026-08-11):** the current batch flowing into `images/ig-queue/`
+  is the **Ethiopia series**, titled **«دنیا بزرگتر از اونه که ما تصور می‌کنیم»** — every photo
+  fetched belongs to this series until the user explicitly says a new series is starting
+  (tracked as the `SERIES_NAME` constant in `lr_fetch_photo.py`, and a `series`/`title` field
+  on each photo's JSON record). The user picks and approves each photo's individual `title`
+  themselves — the only thing they need to sign off on per photo. They've asked me to propose
+  candidate titles each time too, explicitly so I can learn their naming style/playfulness
+  from which ones they pick or rewrite — treat this as an ongoing calibration, not a one-off.
+- **Privacy constraint (2026-08-11):** standard EXIF (camera model, lens, exposure settings)
+  is fine to keep on committed photos. What must never leak into anything committed or logged
+  is the **local file path on the phone or computer** — Lightroom's asset metadata includes a
+  `payload.importSource.localAssetId` field with the exact on-device storage path (e.g.
+  `/storage/emulated/0/ax/.../R0002269.DNG`), plus `uniqueDeviceId`/`importedBy` device
+  identifiers. These are Lightroom-catalog-only fields (not standard EXIF), so the downloaded
+  rendition JPEG itself shouldn't contain them — but `lr_fetch_photo.py` must (1) never
+  print/store/commit the `importSource` block from the API response anywhere, and (2) verify
+  the actual downloaded JPEG's embedded metadata (e.g. via exiftool) has no local path before
+  the first real commit, to confirm rather than assume.
 - Publish flow reuses an existing internal pattern (adapted, not copied verbatim): each queued
   photo gets a small record (status, caption fields); publishing refuses anything not
   `status: approved`, always prints a preview, and requires a typed confirmation before it
@@ -134,15 +157,39 @@ Planned 2026-08-11; not started, no code written yet.
      ~2 days — no AI/drafting inside this step, HTTP calls only
 
 **Rollout subtasks:**
-- [ ] User creates the Adobe Developer Console project + a Lightroom album for this purpose
-- [ ] Build Lightroom OAuth setup + refresh scripts; verify the refresh token actually works
-      end-to-end before building anything downstream (the one real unknown from research —
-      Adobe's docs hint some long-lived-access capabilities need contacting Adobe directly)
+- [x] User creates the Adobe Developer Console project + adds the Lightroom Services API (OAuth Web App credential) — DONE 2026-08-11
+- [x] User creates the Lightroom album — named **`instagram`** (Latin, lowercase — not the Persian "اینستاگرام" originally assumed), 1 photo added so far — DONE 2026-08-11
+- [x] Build Lightroom OAuth setup + refresh scripts; verify the refresh token actually works
+      end-to-end — DONE 2026-08-11, confirmed via live token refresh call
+  - [x] Register the Lightroom Services API in the Adobe Developer Console project, obtain client_id/client_secret — DONE 2026-08-11
+  - [x] Store `LR_CLIENT_ID` / `LR_CLIENT_SECRET` / `LR_REFRESH_TOKEN` in project-root `.env` (gitignored, never commit) — DONE 2026-08-11
+  - [x] Write `scripts/lr_auth.py` — one-time OAuth authorization-code flow (local HTTPS redirect handler) to obtain the initial access + refresh token — DONE 2026-08-11
+  - [x] Write `scripts/lr_refresh_token.py` — exchange refresh token for a new access token — DONE 2026-08-11, end-to-end check passed
+  - [ ] **Unverified refresh-token lifetime:** Adobe's token response doesn't return the refresh token's own expiry (only the access_token's `expires_in`, observed ≈41.6 days). Community reports suggest Adobe IMS refresh tokens often default to ~14 days, but some services use a sliding inactivity window instead (renews on use) — unclear which applies to Lightroom. Since the posting scheduler will call the refresh endpoint every ~2 days anyway, a sliding window would keep it alive indefinitely; a hard 14-day expiry would not. Re-run `scripts/lr_refresh_token.py` around **2026-08-25** (~14 days out) to empirically determine which model applies before relying on it unattended.
 - [ ] Build the album-fetch script (list assets → request rendition → poll → download JPEG →
       commit to `images/ig-queue/`)
-- [ ] Draft captions for the first photo only, get tone/style calibration before the rest
+  - [x] Write `scripts/lr_list_album.py` — list assets in the configured album via the Lightroom API — DONE 2026-08-11, confirmed against the live `instagram` album (1 photo: `R0002269.DNG`, RICOH GR IIIx RAW, captured 2026-02-03)
+    - Technical notes for `lr_fetch_photo.py`: base API is `https://lr.adobe.io/v2/`, auth via `X-API-Key: <LR_CLIENT_ID>` + `Authorization: Bearer <access_token>` headers; every response body is prefixed with `while (1) {}` (XSSI protection) — must be stripped before JSON parsing (handled in `scripts/lr_common.py`'s `lr_get`); album-assets listing needs `?embed=asset` or fields come back mostly empty; the real asset id/payload is nested under `resources[].asset`, not the outer `resources[]` (that outer id is the album-membership id); rendition download hrefs are `assets/{asset_id}/renditions/{2048|1280|640|thumbnail2x}`
+  - [x] Decide the per-photo record filename/schema — DONE 2026-08-11: `images/ig-queue/<asset-id>.jpg` + sidecar `images/ig-queue/<asset-id>.json` with `{asset_id, image, capture_date, fetched_at, status: "draft", caption_fa, first_comment_en}`. Deliberately excludes the `importSource` block (local file path). `status` will gate publishing later (draft → approved → posted), mirroring the existing internal pattern.
+  - [x] Write `scripts/lr_fetch_photo.py` — DONE 2026-08-11. Turned out renditions return synchronously (200 + JPEG bytes on first GET, no async poll needed — simpler than assumed). Includes a built-in safety scan of the raw downloaded bytes for local-path patterns (`/storage/`, `/Users/`, `/home/`, `C:\Users`) that refuses to save if any match — tested against the real photo, zero matches, confirmed clean.
+    - [x] Rendition size tuned to `1280` (not `2048`) — DONE 2026-08-11. User flagged the first fetch (2048px, ~1.1MB) as too heavy for the repo compared to every other image type here (~400-500KB). Instagram's feed only displays up to ~1440px and recommends 1080px minimum, so `1280` (~300KB, still well above IG's floor) has no visible quality cost.
+    - [x] End-to-end test: fetched the 1 real photo from the `instagram` album into `images/ig-queue/` — verified visually (a black-and-white/selective-color portrait, subject walking away in a dry landscape wearing a blue jacket, matches the user's "Ethiopia" album) — DONE 2026-08-11
+    - [ ] Not yet committed to git — image + record currently only in the working tree; commit is a separate, deliberate step (not done automatically by the fetch script)
+- [x] Draft captions for the first photo only, get tone/style calibration before the rest — DONE 2026-08-11, photo 1 (`e88d9e2e96b84f9389823d0754676ed9`, titled «یارو») approved after 3 rounds of calibration
+  - **Locked caption format for this series** (supersedes the split FA-caption/EN-first-comment convention used by PanorAIma carousels — this series uses ONE combined caption, no first comment at all):
+    1. Line 1: the user's chosen photo title, in Persian quotation marks («»), on its own
+    2. A short **fictional** micro-story inspired by the photo — explicitly not documentary/travel-journal, doesn't need to relate to the actual location — first in Persian, then the English translation, both in the same caption block
+    3. Fixed closing line, bilingual: `دنیا بزرگتر از اونه که ما تصور می‌کنیم.` / `The world is bigger than we imagine.` — appears in every photo in this series
+    4. ~28-30 hashtags mixing Persian and English, biased toward **high-volume/trending** tags (e.g. `#photography #travelphotography #instatravel #wanderlust #explorepage`, `#عکاسی #سفر #هنر`) rather than niche invented compounds — plus the series tags (`#یارو`-style per-photo title tag, `#دنیای_بزرگتر`/`#TheWorldIsBigger`) and **always `#هوش‌واره`** since the pipeline is AI-assisted
+  - Record schema updated to match: `caption` (single bilingual field, replaces the earlier `caption_fa`/`first_comment_en` split) — updated in both the photo-1 record and `lr_fetch_photo.py`'s template for future fetches
+  - Photo 1's `status` set to `"approved"` (caption finalized) — actual posting still blocked on the publish script not existing yet
+  - **New standing rule (2026-08-11):** always draft **two** distinct fictional story options per photo (documented in CLAUDE.md's Personal Photo Series section) — for photo 1, offered a mystical/lyrical option vs. a deadpan/absurdist one (man searching for something he lost 30 years ago, forgot what it was); user picked the deadpan one, confirming the same taste signal as the «یارو» title pick. See memory `feedback_photo_naming_style.md`.
+  - Whole pipeline documented in `CLAUDE.md` under a new **Personal Photo Series (Lightroom → Instagram Feed)** top-level section — DONE 2026-08-11
 - [ ] Build the publish script (adapted from the existing internal pattern above), test with
       `--dry-run` first, then one real live post triggered manually
+  - [ ] Adapt the container→poll→publish flow from `scripts/publish_story.py` for a single-image Feed post (default `media_type`, not `STORIES`) plus a real caption ← depends on caption drafting
+  - [ ] Add the status-gated preview + typed-confirmation gate before any live publish call, matching the reused internal pattern
+  - [ ] Post the EN first comment immediately after a successful publish (no flag emojis, matching the existing PanorAIma carousel convention)
 - [ ] Only after a manual post is verified live on `@25mordad`: wire up a scheduled job
       (GitHub Actions cron, ~2-day interval) for unattended posting
 - [ ] Wire up the Telegram approval channel as an alternative review path

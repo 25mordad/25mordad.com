@@ -36,7 +36,8 @@ After any HTML change that uses new Tailwind utility classes, rebuild CSS. The T
 | `images/PanorAIma/<slug>/posts/<nn>-<section-slug>.jpg` | Square Instagram feed post cards (1080×1080) — one per section, numbered 01–16 for carousel upload order |
 | `images/PanorAIma/soon.jpg` | Placeholder feature image used on the teaser page before the cover is ready |
 | `images/site.webmanifest` | PWA manifest (icon paths are `/images/…`) |
-| `scripts/` | Python automation scripts (Instagram API, etc.) — separate from the per-article Playwright generators in `files/PanorAIma/<slug>/` |
+| `scripts/` | Python automation scripts (Instagram API, Lightroom API) — separate from the per-article Playwright generators in `files/PanorAIma/<slug>/` |
+| `images/ig-queue/<asset-id>.jpg` + `.json` | Personal photo series queue — fetched from Lightroom, one image + status/caption record per photo. See **Personal Photo Series** |
 | `scripts/.venv/` | Python virtualenv for `scripts/` — gitignored, recreate with `python3 -m venv scripts/.venv && scripts/.venv/bin/pip install -r scripts/requirements.txt` |
 | `.env` | Project-root secrets (e.g. `IG_ACCESS_TOKEN`) — gitignored, never committed. **This repo is public** — never write secret values into any tracked file, including this one |
 
@@ -366,6 +367,112 @@ A permanent slot that always previews the next upcoming article. Workflow:
 ### SEO Pattern
 
 Every page includes: canonical, OG tags (title, description, type, url, image, locale), Twitter card tags, and JSON-LD structured data. Article pages use `@type: BlogPosting`; teaser page uses `@type: Article`; home page uses `@type: Person` + `@type: WebSite`.
+
+## Personal Photo Series (Lightroom → Instagram Feed)
+
+A pipeline separate from PanorAIma: curates the owner's personal photography from a Lightroom
+Cloud album into single-image Instagram Feed posts, drip-posted over time (not a carousel —
+"post them one by one"). Built 2026-08-11 on the mini PC.
+
+### Adobe Lightroom API access
+
+- Adobe's docs are inconsistent across three different surfaces — Firefly Services (Enterprise
+  contract required), Lightroom Partner APIs (needs Adobe partner approval), and a plain
+  **Lightroom Services** option in the standard Developer Console that's genuinely self-serve.
+  Use the third one: Developer Console → new project → Add API → **Lightroom Services** →
+  credential type **OAuth Web App** (not Native/SPA — needs a `client_secret` for the
+  unattended refresh flow). No Enterprise contract required. Scopes
+  `openid,AdobeID,lr_partner_apis,lr_partner_rendition_apis,offline_access` are included by
+  default and can't be deselected.
+- Adobe requires the redirect URI to be **HTTPS even for localhost** — `scripts/lr_auth.py`
+  generates a self-signed cert into `scripts/.certs/` (gitignored) on first run; the browser
+  will show a one-time cert warning during the consent flow, expected.
+- IMS auth endpoint: `GET https://ims-na1.adobelogin.com/ims/authorize/v1`. Token
+  exchange/refresh (same endpoint for both): `POST https://ims-na1.adobelogin.com/ims/token/v1`,
+  form-encoded body. (These are verified against Adobe's own `aio-lib-ims` SDK source — Adobe's
+  prose docs are unreliable/inconsistent about version suffixes.)
+- The actual Lightroom data API is a **different host**: `https://lr.adobe.io/v2/`, headers
+  `X-API-Key: <LR_CLIENT_ID>` + `Authorization: Bearer <access_token>`. Every response body is
+  prefixed with `while (1) {}` (XSSI guard) — must be stripped before JSON parsing (handled by
+  `scripts/lr_common.py`'s `lr_get()`).
+- Album-assets listing needs `?embed=asset` or the payload comes back empty; the real asset is
+  nested at `resources[].asset`, not the outer `resources[]` (that outer id is just the
+  album-membership id). Rendition downloads (`assets/{id}/renditions/{size}`) return the JPEG
+  **synchronously** on the first `GET` — no async poll needed.
+- **Refresh-token lifetime is unverified.** Access token confirmed ≈41.6 days via live API
+  response, but Adobe doesn't return the refresh token's own expiry. Re-run
+  `scripts/lr_refresh_token.py` around **2026-08-25** to check whether it's still valid or
+  `scripts/lr_auth.py` needs to be re-run.
+
+### Scripts (`scripts/`, same `.venv` as the Instagram Story scripts — `requests` + `python-dotenv`, no new deps)
+
+| Script | Purpose |
+|---|---|
+| `lr_auth.py` | One-time OAuth flow (local HTTPS callback server), saves `LR_REFRESH_TOKEN` to `.env` |
+| `lr_refresh_token.py` | Verifies/renews the refresh token |
+| `lr_common.py` | Shared `get_access_token()` / `lr_get()` helpers |
+| `lr_list_album.py "<album name>"` | Lists an album's assets — spot-check tool |
+| `lr_fetch_photo.py` | Pulls new assets from the Lightroom album named **`instagram`** at the `1280` rendition (not `2048` — ~300KB vs ~1.1MB, no visible quality loss since Instagram's feed only displays up to ~1440px), writes `images/ig-queue/<asset-id>.jpg` + a JSON record, skip-logic on already-fetched assets |
+
+### Privacy constraint
+
+Standard EXIF (camera model, lens, exposure settings) is fine to keep on committed photos.
+What must **never** leak into anything committed or logged is the **local file path on the
+phone or computer** — Lightroom's `payload.importSource.localAssetId` field carries the exact
+on-device storage path, plus `uniqueDeviceId`/`importedBy` device identifiers. Confirmed via a
+raw-byte scan of a real downloaded rendition that these are Lightroom-catalog-only fields, not
+embedded in the JPEG itself — but `lr_fetch_photo.py` still (1) never writes the
+`importSource` block into any record and (2) runs a built-in raw-byte safety scan on every
+downloaded file (checking for `/storage/`, `/Users/`, `/home/`, `C:\Users` patterns), refusing
+to save if any match.
+
+### Per-photo record (`images/ig-queue/<asset-id>.json`)
+
+```json
+{
+  "asset_id": "...",
+  "image": "<asset-id>.jpg",
+  "capture_date": "...",
+  "fetched_at": "...",
+  "status": "draft",
+  "series": "<active series name>",
+  "title": null,
+  "caption": null
+}
+```
+
+`status` gates publishing (`draft` → `approved` → `posted` — nothing gets posted unless
+`approved`, mirroring the Instagram Story publish pattern). `series` auto-fills from the
+`SERIES_NAME` constant in `lr_fetch_photo.py` — update that constant when the user starts a
+new series (current series: **«دنیا بزرگتر از اونه که ما تصور می‌کنیم»**, Ethiopia photos).
+
+### Caption workflow (per photo)
+
+1. Propose **two distinct fictional micro-stories** inspired by the photo — explicitly not
+   documentary/travel-journal, doesn't need to relate to the actual location — and let the
+   user pick between them. Their pick is a live calibration signal for tone/imagery
+   preference; note what distinguished the winning option so future drafts lean that way.
+2. The user names the photo themselves (the one thing they must approve per photo) — offer
+   title suggestions too, spanning blunt/colloquial to poetic; their taste so far has run
+   toward short deadpan slang (e.g. «یارو») over lyrical phrasing.
+3. Assemble the final caption in this exact structure — **one combined bilingual caption, no
+   first comment** (different from the PanorAIma carousel convention of FA caption + EN first
+   comment — don't conflate the two):
+   1. Line 1: the chosen title in Persian quote marks («»), alone on its own line
+   2. The winning fictional story — Persian version, then its English translation, both in
+      the same caption block
+   3. Fixed bilingual closing line, appears on **every** photo in the series:
+      `دنیا بزرگتر از اونه که ما تصور می‌کنیم.` / `The world is bigger than we imagine.`
+   4. ~28-30 hashtags, Persian + English mixed, biased toward **high-volume/trending**
+      photography-travel tags (e.g. `#photography #travelphotography #instatravel
+      #wanderlust #explorepage`, `#عکاسی #سفر #هنر`) over niche invented compounds — plus the
+      series tags and **always `#هوش‌واره`** (this whole pipeline is AI-assisted)
+
+### Not yet built
+
+Publish script (adapted from `scripts/publish_story.py`'s container→poll→publish pattern, for
+a single-image Feed post with a real caption instead of a Story), the ~2-day scheduled posting
+job, and a Telegram-based approval channel as an alternative to approving in-session.
 
 ## Icons
 
