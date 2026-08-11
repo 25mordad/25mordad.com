@@ -31,7 +31,8 @@ me = requests.get(
     params={"fields": "id,username", "access_token": TOKEN},
     timeout=10,
 )
-me.raise_for_status()
+if not me.ok:
+    raise SystemExit(f"Failed to fetch profile: HTTP {me.status_code} — {me.json()}")
 ig_user_id = me.json()["id"]
 print(f"Publishing to @{me.json()['username']} (id={ig_user_id})")
 
@@ -45,7 +46,8 @@ create = requests.post(
     },
     timeout=15,
 )
-create.raise_for_status()
+if not create.ok:
+    raise SystemExit(f"Failed to create container: HTTP {create.status_code} — {create.json()}")
 container_id = create.json()["id"]
 print(f"Container created: {container_id}")
 
@@ -56,7 +58,8 @@ for attempt in range(10):
         params={"fields": "status_code", "access_token": TOKEN},
         timeout=10,
     )
-    status.raise_for_status()
+    if not status.ok:
+        raise SystemExit(f"Failed to poll container status: HTTP {status.status_code} — {status.json()}")
     code = status.json().get("status_code")
     print(f"  status: {code}")
     if code == "FINISHED":
@@ -76,5 +79,6 @@ publish = requests.post(
     },
     timeout=15,
 )
-publish.raise_for_status()
+if not publish.ok:
+    raise SystemExit(f"Failed to publish: HTTP {publish.status_code} — {publish.json()}")
 print("Published:", publish.json())

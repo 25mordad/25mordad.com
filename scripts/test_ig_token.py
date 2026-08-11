@@ -22,5 +22,8 @@ resp = requests.get(
     },
     timeout=10,
 )
-resp.raise_for_status()
+if not resp.ok:
+    # Don't let requests' default HTTPError bubble up — its message embeds the
+    # full request URL, which includes access_token as a query param.
+    raise SystemExit(f"Token check failed: HTTP {resp.status_code} — {resp.json()}")
 print(resp.json())
