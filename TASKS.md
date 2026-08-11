@@ -82,7 +82,9 @@ Solution: light background, dark text, larger starting font, replace label with 
   - [ ] Add a repo guard that greps tracked files for the token/app-secret pattern and fails loudly if one leaks
   - [ ] Re-verify `.env` is still gitignored and untracked before any commit that touches `scripts/`
 - [ ] Handle token expiry — add a refresh step or calendar reminder (IG long-lived tokens expire ~60 days)
-  - [ ] **Time-sensitive:** token was issued 2026-07-01 → expires ~2026-08-30; refresh before then
+  - [x] **2026-08-12 UPDATE:** the 2026-07-01 token was found invalid this session (Meta error 190 — session invalidated, not just expired; `scripts/test_ig_token.py`'s traceback-leak bug was discovered and fixed while diagnosing this, see the fix commit). User manually generated a **new** token via the Meta dashboard directly (not through the `ig_auth.py` OAuth script written for this — that script is untested/unused so far, kept for future automated refresh) — confirmed working via `test_ig_token.py`.
+    - [ ] **Unknown whether the new manual token is long-lived (~60 days) or short-lived (~1 hour, if generated via Graph API Explorer's default button)** — wasn't confirmed at generation time. If posting starts failing again soon after 2026-08-12, this is the first thing to check; consider running `ig_auth.py` (needs `IG_APP_ID`/`IG_APP_SECRET` in `.env`, not yet added) to get a properly long-lived token deterministically instead of relying on manual dashboard generation again.
+  - [ ] **Original time-sensitive item (superseded by the above, kept for history):** token was issued 2026-07-01 → expired ~2026-08-30 window turned out to not matter — it invalidated early for a different reason (session invalidation, not natural expiry)
   - [ ] **As of 2026-08-11 only ~19 days remain** — run `scripts/test_ig_token.py` this session to confirm the token still works before doing any further IG API work
   - [ ] Write `scripts/refresh_token.py` — call `GET /refresh_access_token?grant_type=ig_refresh_token`, rewrite `IG_ACCESS_TOKEN` in `.env`, never print the value
   - [ ] If `refresh_token.py` isn't written before the deadline, do a manual refresh via Meta Graph API Explorer as a stop-gap and note the new expiry date in WORKLOG
@@ -185,13 +187,15 @@ Planned 2026-08-11; not started, no code written yet.
   - Photo 1's `status` set to `"approved"` (caption finalized) — actual posting still blocked on the publish script not existing yet
   - **New standing rule (2026-08-11):** always draft **two** distinct fictional story options per photo (documented in CLAUDE.md's Personal Photo Series section) — for photo 1, offered a mystical/lyrical option vs. a deadpan/absurdist one (man searching for something he lost 30 years ago, forgot what it was); user picked the deadpan one, confirming the same taste signal as the «یارو» title pick. See memory `feedback_photo_naming_style.md`.
   - Whole pipeline documented in `CLAUDE.md` under a new **Personal Photo Series (Lightroom → Instagram Feed)** top-level section — DONE 2026-08-11
-- [ ] Build the publish script (adapted from the existing internal pattern above), test with
-      `--dry-run` first, then one real live post triggered manually
-  - [ ] Adapt the container→poll→publish flow from `scripts/publish_story.py` for a single-image Feed post (default `media_type`, not `STORIES`) plus a real caption ← depends on caption drafting
-  - [ ] Add the status-gated preview + typed-confirmation gate before any live publish call, matching the reused internal pattern
-  - [ ] Post the EN first comment immediately after a successful publish (no flag emojis, matching the existing PanorAIma carousel convention)
+- [x] Build the publish script (adapted from the existing internal pattern above), test with
+      `--dry-run` first, then one real live post triggered manually — DONE 2026-08-12
+  - [x] Adapt the container→poll→publish flow from `scripts/publish_story.py` for a single-image Feed post (default `media_type`, not `STORIES`) plus a real caption — `scripts/lr_publish_photo.py` — DONE 2026-08-12
+  - [x] Add the status-gated preview + typed-confirmation gate before any live publish call — implemented as default dry-run + explicit `--confirm-publish` flag (only ever passed after the user explicitly says to post, in-session) — DONE 2026-08-12
+  - No first comment for this series (superseded — see the locked caption format above; everything's in one combined caption)
+  - **First real live post, 2026-08-12:** photo `e88d9e2e96b84f9389823d0754676ed9` ("یارو") published to `@25mordad` — https://www.instagram.com/p/Db6pBdIDtb5/ (media_id `18098543159625393`). Record `status` auto-updated to `"posted"` with `posted_at`/`media_id`.
+  - **IG token had to be regenerated mid-session** — the 2026-07-01 token was invalid (see P1.8 above). User manually generated a replacement via the Meta dashboard rather than using the new `ig_auth.py` script (which needs `IG_APP_ID`/`IG_APP_SECRET`, not yet added to `.env`) — works, but token type (long vs. short-lived) unconfirmed; watch for another sudden failure.
 - [ ] Only after a manual post is verified live on `@25mordad`: wire up a scheduled job
-      (GitHub Actions cron, ~2-day interval) for unattended posting
+      (GitHub Actions cron, ~2-day interval) for unattended posting — manual post now verified live, this is next
 - [ ] Wire up the Telegram approval channel as an alternative review path
 - [ ] Document the finished pipeline in `CLAUDE.md` (new section, same depth as the existing
       Instagram Story/Feed Post sections) once it's actually built
