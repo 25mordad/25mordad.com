@@ -4,6 +4,13 @@ node_modules/
 *.lock
 .env
 scripts/.venv/
+__pycache__/
+*.pyc
+
+# Personal Claude Code settings — previously relied on a laptop-only global
+# gitignore rule (~/.config/git/ignore), which doesn't travel with the repo
+.claude/settings.local.json
+.claude/settings.local.json.bak
 
 # Generated outputs — rebuilt from markdown sources on demand
 # PDFs for download live in assets/pdf/ (committed) not files/ (excluded)
