@@ -1,6 +1,11 @@
-"""Shared helpers for Lightroom API scripts — token refresh + authenticated GET requests."""
+"""Shared helpers for Lightroom API scripts — token refresh, authenticated GET
+requests, and the Instagram Feed publish sequence (container -> poll -> publish)
+shared between the manual (lr_publish_photo.py) and scheduled
+(lr_check_schedule.py) publishers."""
 
+import datetime
 import json
+import time
 from pathlib import Path
 
 import requests
@@ -14,6 +19,8 @@ load_dotenv(ENV_PATH)
 IMS_HOST = "https://ims-na1.adobelogin.com"
 LR_API_BASE = "https://lr.adobe.io/v2/"
 SCOPES = "openid,AdobeID,lr_partner_apis,lr_partner_rendition_apis,offline_access"
+
+PUBLIC_BASE = "https://25mordad.com/images/ig-queue"
 
 
 def get_access_token():
@@ -72,3 +79,78 @@ def lr_get(client_id, access_token, path, params=None):
     if text.startswith("while (1) {}"):
         text = text[len("while (1) {}"):]
     return json.loads(text) if text.strip() else {}
+
+
+def publish_feed_photo(asset_id: str, record: dict, record_path: Path) -> str:
+    """Publish one photo to the @25mordad Instagram Feed: HEAD-check public
+    reachability, then container -> poll status_code -> media_publish. Updates
+    and writes `record`/`record_path` on success (status, posted_at, media_id).
+    Returns the media_id. Raises SystemExit with a clear message on any
+    failure — callers (lr_publish_photo.py for a manual run, lr_check_schedule.py
+    for the cron) are expected to let that propagate or catch it themselves."""
+    token = os.environ.get("IG_ACCESS_TOKEN")
+    if not token:
+        raise SystemExit("IG_ACCESS_TOKEN not found in .env")
+
+    caption = record.get("caption")
+    if not caption:
+        raise SystemExit(f"Refusing to publish {asset_id}: record has no caption")
+
+    image_url = f"{PUBLIC_BASE}/{asset_id}.jpg"
+    head = requests.head(image_url, timeout=15)
+    if not head.ok:
+        raise SystemExit(
+            f"Image not publicly reachable yet: HTTP {head.status_code} for {image_url}\n"
+            f"Commit and push images/ig-queue/{asset_id}.jpg (+ its .json record), "
+            f"wait for the Cloudflare Pages deploy, then retry."
+        )
+
+    me = requests.get(
+        "https://graph.instagram.com/me",
+        params={"fields": "id,username", "access_token": token},
+        timeout=10,
+    )
+    if not me.ok:
+        raise SystemExit(f"Failed to fetch profile: HTTP {me.status_code} — {me.json()}")
+    ig_user_id = me.json()["id"]
+
+    create = requests.post(
+        f"https://graph.instagram.com/{ig_user_id}/media",
+        data={"image_url": image_url, "caption": caption, "access_token": token},
+        timeout=15,
+    )
+    if not create.ok:
+        raise SystemExit(f"Failed to create container: HTTP {create.status_code} — {create.json()}")
+    container_id = create.json()["id"]
+
+    for _ in range(10):
+        status = requests.get(
+            f"https://graph.instagram.com/{container_id}",
+            params={"fields": "status_code", "access_token": token},
+            timeout=10,
+        )
+        if not status.ok:
+            raise SystemExit(f"Failed to poll container status: HTTP {status.status_code} — {status.json()}")
+        code = status.json().get("status_code")
+        if code == "FINISHED":
+            break
+        if code == "ERROR":
+            raise SystemExit("Container processing failed")
+        time.sleep(2)
+    else:
+        raise SystemExit("Container did not finish processing in time")
+
+    publish = requests.post(
+        f"https://graph.instagram.com/{ig_user_id}/media_publish",
+        data={"creation_id": container_id, "access_token": token},
+        timeout=15,
+    )
+    if not publish.ok:
+        raise SystemExit(f"Failed to publish: HTTP {publish.status_code} — {publish.json()}")
+
+    media_id = publish.json().get("id")
+    record["status"] = "posted"
+    record["posted_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    record["media_id"] = media_id
+    record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
+    return media_id

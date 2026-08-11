@@ -1,16 +1,29 @@
 #!/usr/bin/env python3
-"""Fetch new photos from the Lightroom "instagram" album into images/ig-queue/.
+"""Pick ONE random not-yet-processed photo from the Lightroom "instagram" album
+and fetch it at the largest rendition Adobe's API actually serves, for the
+photo-pipeline's GPT quality-enhance step.
 
-For each asset in the album not already present locally: downloads the 2048px
-rendition, scans it for accidentally-embedded local file paths (safety check,
-not just an assumption), and writes an image + a JSON status record.
+Verified live 2026-08-12: Adobe's rendition endpoint only accepts "1280" and
+"2048" — "2560", "fullsize", "3072", "original" all 400/404. So "full size" in
+this pipeline means 2048px, not a resize-free master; there is no original/
+master download exposed via this API tier. The output goes to
+images/ig-queue/_source/<asset_id>.jpg — a working file for gpt_enhance_photo.py,
+never committed (see .gitignore) — NOT the final public/committed image at
+images/ig-queue/<asset_id>.jpg, which gpt_enhance_photo.py produces.
+
+The "queue of one" is enforced by the caller (the /photo-beshno skill), which
+only calls this script when no record is currently in flight. This script
+itself just makes sure it never re-picks an asset that already has a local
+record (any status).
 
 Usage:
     scripts/.venv/bin/python scripts/lr_fetch_photo.py
+    scripts/.venv/bin/python scripts/lr_fetch_photo.py <asset_id>   # fetch a specific asset instead of picking randomly
 """
 
 import datetime
 import json
+import random
 import re
 import sys
 from pathlib import Path
@@ -22,16 +35,14 @@ from lr_common import get_access_token, lr_get, LR_API_BASE  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 ALBUM_NAME = "instagram"
-# 1280 keeps well above Instagram's ~1080px recommended minimum while being
-# far lighter than 2048 (~300KB vs ~1.1MB) — IG's feed only displays up to
-# ~1440px anyway, so the larger rendition bought no visible quality.
-RENDITION_SIZE = "1280"
+RENDITION_SIZE = "2048"  # the largest rendition Adobe's API serves — see module docstring
 # Active series — everything fetched belongs to this series until the user
 # says otherwise and this constant gets updated for the next one.
 SERIES_NAME = "دنیا بزرگتر از اونه که ما تصور می‌کنیم"
-OUTPUT_DIR = REPO_ROOT / "images" / "ig-queue"
+QUEUE_DIR = REPO_ROOT / "images" / "ig-queue"
+SOURCE_DIR = QUEUE_DIR / "_source"
 
-# Local-path patterns that must never end up in a committed file — these would
+# Local-path patterns that must never end up in a saved file — these would
 # only appear if Adobe's rendition unexpectedly embeds Lightroom catalog
 # metadata (device storage paths) into the JPEG itself.
 LEAK_PATTERNS = [
@@ -53,7 +64,8 @@ def scan_for_leaks(data: bytes, label: str):
 
 
 def main():
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    QUEUE_DIR.mkdir(parents=True, exist_ok=True)
+    SOURCE_DIR.mkdir(parents=True, exist_ok=True)
     client_id, access_token = get_access_token()
 
     catalog = lr_get(client_id, access_token, "catalog")
@@ -73,55 +85,65 @@ def main():
         f"catalogs/{catalog_id}/albums/{album_id}/assets",
         params={"embed": "asset"},
     )
+    album_assets = {
+        entry["asset"]["id"]: entry["asset"]
+        for entry in assets.get("resources", [])
+        if entry.get("asset", {}).get("id")
+    }
 
-    new_count = 0
-    for entry in assets.get("resources", []):
-        asset = entry.get("asset", {})
-        asset_id = asset.get("id")
-        if not asset_id:
-            continue
-
-        image_path = OUTPUT_DIR / f"{asset_id}.jpg"
-        record_path = OUTPUT_DIR / f"{asset_id}.json"
-        if image_path.exists() and record_path.exists():
-            continue  # already fetched — skip logic, same convention as the other gen_*.py scripts
-
-        rendition_url = (
-            f"{LR_API_BASE}catalogs/{catalog_id}/assets/{asset_id}/renditions/{RENDITION_SIZE}"
-        )
-        resp = requests.get(
-            rendition_url,
-            headers={"X-API-Key": client_id, "Authorization": f"Bearer {access_token}"},
-            timeout=30,
-        )
-        if not resp.ok:
-            raise SystemExit(f"Rendition download failed for {asset_id}: HTTP {resp.status_code}")
-
-        scan_for_leaks(resp.content, str(image_path))
-        image_path.write_bytes(resp.content)
-
-        payload = asset.get("payload", {})
-        record = {
-            "asset_id": asset_id,
-            "image": image_path.name,
-            "capture_date": payload.get("captureDate"),
-            "fetched_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-            "status": "draft",
-            "series": SERIES_NAME,
-            "title": None,
-            "caption": None,
-        }
-        # Deliberately not including payload.importSource here — see TASKS.md
-        # P1.9 privacy note: it carries the on-device file path.
-        record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
-
-        print(f"Fetched {asset_id} -> {image_path.relative_to(REPO_ROOT)}")
-        new_count += 1
-
-    if new_count == 0:
-        print("No new photos — everything in the album is already fetched.")
+    requested_id = sys.argv[1] if len(sys.argv) > 1 else None
+    if requested_id:
+        if requested_id not in album_assets:
+            raise SystemExit(f"{requested_id!r} is not in the {ALBUM_NAME!r} album")
+        asset_id = requested_id
     else:
-        print(f"{new_count} new photo(s) fetched into {OUTPUT_DIR.relative_to(REPO_ROOT)}/")
+        already_processed = {p.stem for p in QUEUE_DIR.glob("*.json")}
+        unprocessed = [aid for aid in album_assets if aid not in already_processed]
+        if not unprocessed:
+            print("No unprocessed photos left in the album — every asset already has a local record.")
+            return
+        asset_id = random.choice(unprocessed)
+
+    asset = album_assets[asset_id]
+    source_path = SOURCE_DIR / f"{asset_id}.jpg"
+    record_path = QUEUE_DIR / f"{asset_id}.json"
+
+    rendition_url = (
+        f"{LR_API_BASE}catalogs/{catalog_id}/assets/{asset_id}/renditions/{RENDITION_SIZE}"
+    )
+    resp = requests.get(
+        rendition_url,
+        headers={"X-API-Key": client_id, "Authorization": f"Bearer {access_token}"},
+        timeout=30,
+    )
+    if not resp.ok:
+        raise SystemExit(f"Rendition download failed for {asset_id}: HTTP {resp.status_code}")
+
+    scan_for_leaks(resp.content, str(source_path))
+    source_path.write_bytes(resp.content)
+
+    payload = asset.get("payload", {})
+    record = {
+        "asset_id": asset_id,
+        "image": f"{asset_id}.jpg",  # written later by gpt_enhance_photo.py
+        "capture_date": payload.get("captureDate"),
+        "fetched_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "status": "draft",
+        "pipeline_state": "enhancing",
+        "series": SERIES_NAME,
+        "title": None,
+        "story": None,
+        "caption": None,
+        "scheduled_for": None,
+    }
+    # Deliberately not including payload.importSource here — it carries the
+    # on-device file path (confirmed live 2026-08-12: importSource.localAssetId
+    # is literally "/storage/emulated/0/..."). See CLAUDE.md's Personal Photo
+    # Series privacy constraint.
+    record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
+
+    print(f"Fetched {asset_id} -> {source_path.relative_to(REPO_ROOT)}")
+    print(f"Record written -> {record_path.relative_to(REPO_ROOT)}")
 
 
 if __name__ == "__main__":

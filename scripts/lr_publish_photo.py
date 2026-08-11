@@ -19,25 +19,17 @@ Usage:
 """
 
 import argparse
-import datetime
 import json
-import time
+import sys
 from pathlib import Path
 
 import requests
-from dotenv import load_dotenv
-import os
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lr_common import publish_feed_photo, PUBLIC_BASE  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-ENV_PATH = REPO_ROOT / ".env"
-load_dotenv(ENV_PATH)
-
 QUEUE_DIR = REPO_ROOT / "images" / "ig-queue"
-PUBLIC_BASE = "https://25mordad.com/images/ig-queue"
-
-TOKEN = os.environ.get("IG_ACCESS_TOKEN")
-if not TOKEN:
-    raise SystemExit("IG_ACCESS_TOKEN not found in .env")
 
 
 def load_record(asset_id):
@@ -98,70 +90,8 @@ def main():
         print("\nDRY RUN — nothing posted. Re-run with --confirm-publish to actually post.")
         return
 
-    caption = record.get("caption")
-    if not caption:
-        raise SystemExit("Refusing to publish: record has no caption")
-
-    me = requests.get(
-        "https://graph.instagram.com/me",
-        params={"fields": "id,username", "access_token": TOKEN},
-        timeout=10,
-    )
-    if not me.ok:
-        raise SystemExit(f"Failed to fetch profile: HTTP {me.status_code} — {me.json()}")
-    ig_user_id = me.json()["id"]
-    print(f"Publishing to @{me.json()['username']} (id={ig_user_id})")
-
-    create = requests.post(
-        f"https://graph.instagram.com/{ig_user_id}/media",
-        data={
-            "image_url": image_url,
-            "caption": caption,
-            "access_token": TOKEN,
-        },
-        timeout=15,
-    )
-    if not create.ok:
-        raise SystemExit(f"Failed to create container: HTTP {create.status_code} — {create.json()}")
-    container_id = create.json()["id"]
-    print(f"Container created: {container_id}")
-
-    for attempt in range(10):
-        status = requests.get(
-            f"https://graph.instagram.com/{container_id}",
-            params={"fields": "status_code", "access_token": TOKEN},
-            timeout=10,
-        )
-        if not status.ok:
-            raise SystemExit(f"Failed to poll container status: HTTP {status.status_code} — {status.json()}")
-        code = status.json().get("status_code")
-        print(f"  status: {code}")
-        if code == "FINISHED":
-            break
-        if code == "ERROR":
-            raise SystemExit("Container processing failed")
-        time.sleep(2)
-    else:
-        raise SystemExit("Container did not finish processing in time")
-
-    publish = requests.post(
-        f"https://graph.instagram.com/{ig_user_id}/media_publish",
-        data={
-            "creation_id": container_id,
-            "access_token": TOKEN,
-        },
-        timeout=15,
-    )
-    if not publish.ok:
-        raise SystemExit(f"Failed to publish: HTTP {publish.status_code} — {publish.json()}")
-
-    media_id = publish.json().get("id")
+    media_id = publish_feed_photo(asset_id, record, record_path)
     print(f"Published: media_id={media_id}")
-
-    record["status"] = "posted"
-    record["posted_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
-    record["media_id"] = media_id
-    record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
     print(f"Record updated: {record_path.relative_to(REPO_ROOT)}")
 
 

@@ -22,3 +22,8 @@ files/PanorAIma/**/preview-*.jpg
 
 # Article in draft, not yet decided for publication — keep out of the public repo
 files/PanorAIma/surviving-or-living/
+
+# Photo pipeline (P1.9): full-2048px source fetches (GPT-enhance input, never
+# the published file) and Telegram reply handoffs from the pipeline bridge — both transient
+images/ig-queue/_source/
+images/ig-queue/_inbox/

@@ -372,7 +372,10 @@ Every page includes: canonical, OG tags (title, description, type, url, image, l
 
 A pipeline separate from PanorAIma: curates the owner's personal photography from a Lightroom
 Cloud album into single-image Instagram Feed posts, drip-posted over time (not a carousel —
-"post them one by one"). Built 2026-08-11 on the mini PC.
+"post them one by one"). Built 2026-08-11 on the mini PC; automated end-to-end via Telegram
+on 2026-08-12 (see **Automated routine** below) — the whole title/story/schedule review now
+happens as a Telegram conversation, one photo in flight at a time, with no manual in-session
+work required per photo.
 
 ### Adobe Lightroom API access
 
@@ -404,15 +407,19 @@ Cloud album into single-image Instagram Feed posts, drip-posted over time (not a
   `scripts/lr_refresh_token.py` around **2026-08-25** to check whether it's still valid or
   `scripts/lr_auth.py` needs to be re-run.
 
-### Scripts (`scripts/`, same `.venv` as the Instagram Story scripts — `requests` + `python-dotenv`, no new deps)
+### Scripts (`scripts/`, same `.venv` as the Instagram Story scripts — `requests` + `python-dotenv` + `Pillow` (added 2026-08-12 for `gpt_enhance_photo.py`'s resize/recompress step))
 
 | Script | Purpose |
 |---|---|
 | `lr_auth.py` | One-time OAuth flow (local HTTPS callback server), saves `LR_REFRESH_TOKEN` to `.env` |
 | `lr_refresh_token.py` | Verifies/renews the refresh token |
-| `lr_common.py` | Shared `get_access_token()` / `lr_get()` helpers |
+| `lr_common.py` | Shared `get_access_token()` / `lr_get()` helpers, plus `publish_feed_photo()` (the container→poll→publish sequence shared by `lr_publish_photo.py` and `lr_check_schedule.py`) |
 | `lr_list_album.py "<album name>"` | Lists an album's assets — spot-check tool |
-| `lr_fetch_photo.py` | Pulls new assets from the Lightroom album named **`instagram`** at the `1280` rendition (not `2048` — ~300KB vs ~1.1MB, no visible quality loss since Instagram's feed only displays up to ~1440px), writes `images/ig-queue/<asset-id>.jpg` + a JSON record, skip-logic on already-fetched assets |
+| `lr_fetch_photo.py [asset_id]` | Picks **one random** not-yet-processed asset from the `instagram` album (or a specific one if given) and fetches it at **2048px** — verified live 2026-08-12 that Adobe's rendition endpoint only serves `1280`/`2048`, nothing larger, no original/master download — into the non-committed working path `images/ig-queue/_source/<asset-id>.jpg`. Writes the initial JSON record with `pipeline_state: "enhancing"`. |
+| `gpt_enhance_photo.py <asset_id> --prompt "..."` | Quality-enhances `_source/<asset-id>.jpg` via OpenAI's `gpt-image-2` image-edit endpoint (`images/edits`, same request shape as kavosh/dariche's `reel_stills.py`/`podcast_cover.py`) with a **fresh, photo-specific prompt written per photo**, not a fixed template. Every result — whether GPT-enhanced or the fallback below — is resized to max 1440px and recompressed under ~500KB (`optimize_jpeg()`) before being written to the final, committed, public `images/ig-queue/<asset-id>.jpg`, so nothing heavy lands in the repo. **Moderation fallback** (confirmed live 2026-08-12): OpenAI's output moderation can hard-block edits of photos containing children, even for a plain quality pass — the script retries once, and if still rejected, falls back to an optimize-only copy of the source with no AI enhancement. Never reword the prompt to route around a moderation block. |
+| `telegram_send.py` | Sends a photo-pipeline message by shelling out to a sibling private automation repo's own `notify_telegram.py` (`cwd=$TELEGRAM_BRIDGE_DIR`, that repo's own bot/chat/`.env` — no Telegram secrets duplicated here; its path is deliberately not hardcoded — see **Automated routine** below), tagging every send `--record-context {"type": "photo_pipeline", ...}` so a later reply resolves back to this pipeline. See **Automated routine** below for why this repo never runs its own `getUpdates` consumer. |
+| `lr_publish_photo.py [asset_id] [--confirm-publish]` | Manual one-off publish of an `"approved"` photo — dry-run preview by default. Calls the shared `publish_feed_photo()`. |
+| `lr_check_schedule.py [--dry-run]` | Cron script (every 15 min): publishes any record with `pipeline_state: "scheduled"` whose `scheduled_for` has passed, via the same shared `publish_feed_photo()`. Mirrors kavosh/dariche's `scripts/check_schedule.py` pattern (same alert-on-every-failure, `MAX_ATTEMPTS = 3` reasoning). |
 
 ### Privacy constraint
 
@@ -435,9 +442,12 @@ to save if any match.
   "capture_date": "...",
   "fetched_at": "...",
   "status": "draft",
+  "pipeline_state": "enhancing",
   "series": "<active series name>",
   "title": null,
-  "caption": null
+  "story": null,
+  "caption": null,
+  "scheduled_for": null
 }
 ```
 
@@ -446,33 +456,65 @@ to save if any match.
 `SERIES_NAME` constant in `lr_fetch_photo.py` — update that constant when the user starts a
 new series (current series: **«دنیا بزرگتر از اونه که ما تصور می‌کنیم»**, Ethiopia photos).
 
-### Caption workflow (per photo)
+`pipeline_state` drives the Telegram conversation (see **Automated routine** below):
+`"enhancing"` → `"awaiting_title"` → `"awaiting_story"` → `"awaiting_schedule"` →
+`"scheduled"` → (once `lr_check_schedule.py` actually publishes it) `"posted"`. Only one
+record may be outside `{"scheduled", "posted", "rejected"}` at a time — that's the
+"queue of one." `publish_attempts`/`publish_error` are added by `lr_check_schedule.py` only
+if a scheduled publish fails.
 
-1. Propose **two distinct fictional micro-stories** inspired by the photo — explicitly not
-   documentary/travel-journal, doesn't need to relate to the actual location — and let the
-   user pick between them. Their pick is a live calibration signal for tone/imagery
-   preference; note what distinguished the winning option so future drafts lean that way.
-2. The user names the photo themselves (the one thing they must approve per photo) — offer
-   title suggestions too, spanning blunt/colloquial to poetic; their taste so far has run
-   toward short deadpan slang (e.g. «یارو») over lyrical phrasing.
-3. Assemble the final caption in this exact structure — **one combined bilingual caption, no
-   first comment** (different from the PanorAIma carousel convention of FA caption + EN first
-   comment — don't conflate the two):
-   1. Line 1: the chosen title in Persian quote marks («»), alone on its own line
-   2. The winning fictional story — Persian version, then its English translation, both in
-      the same caption block
-   3. Fixed bilingual closing line, appears on **every** photo in the series:
-      `دنیا بزرگتر از اونه که ما تصور می‌کنیم.` / `The world is bigger than we imagine.`
-   4. ~28-30 hashtags, Persian + English mixed, biased toward **high-volume/trending**
-      photography-travel tags (e.g. `#photography #travelphotography #instatravel
-      #wanderlust #explorepage`, `#عکاسی #سفر #هنر`) over niche invented compounds — plus the
-      series tags and **always `#هوش‌واره`** (this whole pipeline is AI-assisted)
+### Caption format (locked, one combined bilingual caption, no first comment)
 
-### Not yet built
+Different from the PanorAIma carousel convention of FA caption + EN first comment — don't
+conflate the two:
+1. Line 1: the chosen title in Persian quote marks («»), alone on its own line
+2. The chosen fictional micro-story — Persian version, then its English translation, both in
+   the same caption block
+3. Fixed bilingual closing line, appears on **every** photo in the series:
+   `دنیا بزرگتر از اونه که ما تصور می‌کنیم.` / `The world is bigger than we imagine.`
+4. ~28-30 hashtags, Persian + English mixed, biased toward **high-volume/trending**
+   photography-travel tags (e.g. `#photography #travelphotography #instatravel
+   #wanderlust #explorepage`, `#عکاسی #سفر #هنر`) over niche invented compounds — plus the
+   series tags and **always `#هوش‌واره`** (this whole pipeline is AI-assisted)
 
-Publish script (adapted from `scripts/publish_story.py`'s container→poll→publish pattern, for
-a single-image Feed post with a real caption instead of a Story), the ~2-day scheduled posting
-job, and a Telegram-based approval channel as an alternative to approving in-session.
+Title and story picks are both live calibration signals — see
+`feedback_photo_naming_style.md` (memory): taste has run deadpan/mundane/absurdist over
+lyrical/mystical, confirmed twice so far («یارو» over 9 poetic title options; a deadpan
+"forgot what he lost" story over a mystical one). Keep updating that memory on every pick.
+
+### Automated routine (Telegram-driven, built 2026-08-12)
+
+The whole per-photo review (title pick → story pick → schedule confirm) now runs as a
+Telegram conversation, driven by the `.claude/commands/photo-beshno.md` skill
+(`claude -p "/photo-beshno"`), with **no manual in-session work** required per photo — see
+that file for the full step-by-step state machine.
+
+**Telegram bridge — reuses a sibling private automation repo's own bot/chat, not a
+dedicated one.** That repo is **not named here and its path is not hardcoded anywhere in
+this repo** — this repo is public. Its location lives only in this repo's own gitignored
+`.env` as `TELEGRAM_BRIDGE_DIR` (never printed/logged); ask Bahman if you need to know it.
+- **Sending**: always via `scripts/telegram_send.py`, which shells out to that repo's own
+  `notify_telegram.py` (`cwd=$TELEGRAM_BRIDGE_DIR`) — reuses its existing, unmodified send/record-context
+  logic. No Telegram secrets are duplicated into this repo's `.env`.
+- **Receiving**: this repo **never** runs its own Telegram `getUpdates` consumer — two
+  independent long-poll consumers on the same bot token steal each other's updates
+  (confirmed real bug in that repo's own remote-trigger handler on 2026-08-11). Instead, that
+  repo has one new file, `handle_photo_pipeline_trigger.py` (mirrors the exact mechanism of
+  its own pre-existing remote-trigger handler — peek `getUpdates` at the shared offset, only
+  ever advance past what it itself handled), wired into its always-on Telegram watcher's
+  chain. When a reply resolves (via that repo's own `inbox/telegram_action_map.json`) to a
+  message tagged `type: "photo_pipeline"`, it writes a handoff file to
+  `images/ig-queue/_inbox/<message_id>.json` in **this** repo and launches
+  `claude -p "/photo-beshno"` with `cwd` set to this repo.
+- The `/photo-beshno` skill reads any pending `_inbox/` handoff, advances the in-flight
+  record's `pipeline_state`, and — once a schedule is confirmed — commits + pushes the final
+  image/record (the schedule confirmation *is* the explicit go-ahead; this run is
+  unattended) and immediately starts the next photo in the same run.
+- `images/ig-queue/_source/` (full-2048px GPT input) and `images/ig-queue/_inbox/`
+  (Telegram handoffs) are both gitignored — transient working files, never committed.
+- `images/ig-queue/_story_universe.md` — running continuity log the skill reads before
+  drafting each pair of story options and appends to after a pick, so the series' fictional
+  stories loosely share one world instead of being fully independent per photo.
 
 ## Icons
 
