@@ -108,4 +108,73 @@ Reverse-chronological log of work sessions on 25mordad.com.
 
 ---
 
+## 2026-08-11 — Planned Lightroom → Instagram Feed photo pipeline; migrated project to the mini PC
+
+### What we planned (no code written yet)
+
+A new, separate pipeline from the PanorAIma article system: curate a series of personal photos
+in a Lightroom (cloud/CC) album, get an AI-written bilingual caption for each, and have them
+drip out to the `@25mordad` Instagram Feed automatically every couple of days. Full design is
+in `TASKS.md` under **P1.9** — this entry covers the *why* behind the decisions.
+
+### Decisions
+
+#### 1. Feed posts only for now, Stories deferred
+**Why:** Instagram's Stories API has no caption field at all — there's no way to attach the
+"cool story" text to a Story slide without either a compositing step (burn text onto the image)
+or giving up on text entirely. That's a real design fork, not a small detail, so it was
+explicitly parked for a later session rather than guessed at.
+**How:** Only Feed posts are in scope for the first build. Story support is still on the
+roadmap (P1.9 in TASKS.md) once the text-on-Story question gets its own design pass.
+
+#### 2. Photos get committed to git, not uploaded to external object storage
+**Why:** An existing internal pattern for Instagram publishing (elsewhere on this machine)
+uploads media to Cloudflare R2 at publish time instead of committing it. Considered that here,
+but the user pointed out 25mordad.com is already a fully public repo with every other site
+image committed straight into `images/` — adding a second storage mechanism just for this one
+pipeline would be inconsistent with zero benefit.
+**How:** New photos land in `images/ig-queue/`, committed like everything else, served by
+Cloudflare Pages the same way the PanorAIma image folders already are.
+
+#### 3. Drafting and posting are split into two phases
+**Why:** Writing a caption requires actually looking at the photo — that can't run unattended
+inside a scheduled job. Every other script in this repo's automation is purely mechanical
+(HTTP calls, no AI-in-the-loop at run time), and the posting scheduler should keep that
+property rather than becoming the one exception.
+**How:** Drafting happens interactively in a session (batch-caption a new stack of curated
+photos, calibrate tone on the first one, approve the rest). Posting is a separate, dumb,
+scheduled script that only ever picks the oldest `approved` item and posts it — never drafts.
+
+#### 4. Reusing existing patterns instead of building from scratch
+**Why:** Before designing this from zero, checked what already exists elsewhere on this
+machine for Instagram publishing and for getting the user's approval outside of a chat
+session. Found a mature, already-working publish flow (status-gated record per post, always
+previews before publishing, requires a typed confirmation, single-image/carousel/video all
+handled) and a working Telegram-based approval channel (bot sends a message, a 👌/👎 emoji
+reaction on it resolves back to what it was approving).
+**How:** Adapting both patterns rather than reinventing them — the publish gate/preview/confirm
+shape, and Telegram as an alternative approval path to the existing story cards' in-session
+review. Kept out of this public repo's docs by name/path (see below) since they live in other,
+unrelated private projects — only the *pattern* is documented here, not where it came from.
+
+#### 5. Migrated the project to the mini PC (`voidloop`)
+**Why:** The user is consolidating several personal/business projects onto an always-on home
+mini PC instead of running them ad hoc from the laptop — this project was next on that list,
+and better to move it now, before the new Instagram/Lightroom scheduler exists, so the cron
+only ever gets set up once, in its final home.
+**How:** Followed the existing migration runbook (`rsync`, not `git clone` — this repo has
+gitignored state that matters: `.env`, the still-private third-article draft, `.claude/`
+project settings). Full checklist and verification in the runbook; laptop copy stays untouched
+and canonical until the mini PC copy is proven stable.
+
+### Pending / TODO
+
+- [ ] P1.9 rollout subtasks (Adobe Developer Console setup, Lightroom OAuth, fetch/publish
+      scripts, Telegram approval wiring) — see TASKS.md, nothing built yet
+- [ ] Continue future 25mordad.com sessions from the mini PC copy, not this laptop session
+- [ ] Everything already pending from the 2026-08-09 entry (third-article friend review, P1.8
+      Instagram token refresh, P2 carousel post) is still open and untouched this session
+
+---
+
 > Older entries archived in WORKLOG_ARCHIVE.md

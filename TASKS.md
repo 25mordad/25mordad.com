@@ -71,6 +71,7 @@ Solution: light background, dark text, larger starting font, replace label with 
   - [ ] Backfill a `peoples-of-iran` manifest marking all 18 story cards as already posted (2026-07-01) so nothing gets reposted
   - [ ] Add a `--status` mode printing posted/remaining counts per slug
   - [ ] Guard against duplicate posts — cross-check `GET /me/stories` before publishing (the 2026-07-01 timeout incident showed the script's own output can be truncated mid-run)
+  - [ ] Before backfilling the `peoples-of-iran` manifest, re-check `GET /me/stories` for what's currently live — Stories expire after 24h so the 2026-07-01 deck is long gone; manifest should record *history* (what was posted and when), not assume anything is still visible
 - [ ] Build the cadence/scheduler — cron job or GitHub Actions to run every couple of days, matching existing posting cadence
   - [ ] Decide between a local cron job vs a GitHub Actions scheduled workflow ← depends on credential security decision
   - [ ] Note the constraint in the decision: `.env` is local-only, so GH Actions requires putting the token in a repo secret on a **public** repo
@@ -82,7 +83,9 @@ Solution: light background, dark text, larger starting font, replace label with 
   - [ ] Re-verify `.env` is still gitignored and untracked before any commit that touches `scripts/`
 - [ ] Handle token expiry — add a refresh step or calendar reminder (IG long-lived tokens expire ~60 days)
   - [ ] **Time-sensitive:** token was issued 2026-07-01 → expires ~2026-08-30; refresh before then
+  - [ ] **As of 2026-08-11 only ~19 days remain** — run `scripts/test_ig_token.py` this session to confirm the token still works before doing any further IG API work
   - [ ] Write `scripts/refresh_token.py` — call `GET /refresh_access_token?grant_type=ig_refresh_token`, rewrite `IG_ACCESS_TOKEN` in `.env`, never print the value
+  - [ ] If `refresh_token.py` isn't written before the deadline, do a manual refresh via Meta Graph API Explorer as a stop-gap and note the new expiry date in WORKLOG
   - [ ] Make `test_ig_token.py` also report days-to-expiry so the state is visible at a glance
   - [ ] Have the scheduler auto-refresh when the token is within ~10 days of expiry ← depends on refresh_token.py
 - [ ] Add failure handling — log/alert (push notification or email) on a failed publish call instead of silently skipping
@@ -92,6 +95,59 @@ Solution: light background, dark text, larger starting font, replace label with 
 - [ ] Wire into the existing pipeline — decide whether new articles auto-enqueue story cards for posting or require manual trigger per article
   - [ ] Add a Phase-4 checklist step in CLAUDE.md for registering a new slug with the story-deck publisher
   - [ ] Document the whole automation flow (deck config → manifest → scheduler → refresh) in a short `scripts/README.md`
+
+## P1.9 — Lightroom-curated photo series → Instagram Feed (personal photography pipeline)
+
+New, separate pipeline from the PanorAIma article system: curate a series of personal photos in a
+Lightroom (cloud/CC) album, get an AI-written bilingual caption for each, and have them drip out to
+the `@25mordad` Instagram Feed automatically every couple of days — no per-post manual trigger.
+Planned 2026-08-11; not started, no code written yet.
+
+**Locked-in decisions:**
+- Feed posts only for now — Stories deferred (Instagram's Stories API has no caption field at all,
+  so that needs its own design pass later; explicitly parked, not forgotten)
+- Bilingual captions: FA caption on the post itself, EN translation as the first comment —
+  mirrors the existing `card-texts.md` `general-caption` convention, no flag emojis
+- One photo per Feed post (not a carousel) — "post them one by one"
+- Photo selection: a named album inside the Lightroom app; automation reads it via Adobe's
+  Lightroom API (self-serve OAuth via Adobe Developer Console — confirmed live 2026-08-11).
+  Reading a user's own existing album works fine via OAuth consent — only albums *created*
+  via the partner API are hidden from the app UI, not read access to real ones.
+- Photos are committed straight into the git repo (new `images/ig-queue/` folder) — same
+  pattern as every other site image, since the repo is already public. No external object
+  storage needed for this project.
+- Publish flow reuses an existing internal pattern (adapted, not copied verbatim): each queued
+  photo gets a small record (status, caption fields); publishing refuses anything not
+  `status: approved`, always prints a preview, and requires a typed confirmation before it
+  actually calls the Instagram API — same shape as `scripts/publish_story.py`'s
+  container→poll→publish, just for single-image Feed posts with a real caption.
+  Also reusing an existing Telegram-bot approval channel (send photo + draft caption to a
+  chat, resolve a 👌/👎 emoji reaction back to that item) as an alternative to approving
+  inside a chat session — TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID would go in this project's
+  own `.env`, never committed.
+- Two-phase split — drafting is interactive (AI needs to actually look at each photo, can't
+  run unattended in a cron), posting is purely mechanical:
+  1. **Drafting (session-time):** pull new album photos, draft FA caption + EN first comment
+     for each, validate the *first* photo's tone with the user before batch-drafting the rest
+     (same "approve item 1 before the rest" rule already used for story cards)
+  2. **Posting (scheduled, unattended):** unattended job posts the oldest `approved` item every
+     ~2 days — no AI/drafting inside this step, HTTP calls only
+
+**Rollout subtasks:**
+- [ ] User creates the Adobe Developer Console project + a Lightroom album for this purpose
+- [ ] Build Lightroom OAuth setup + refresh scripts; verify the refresh token actually works
+      end-to-end before building anything downstream (the one real unknown from research —
+      Adobe's docs hint some long-lived-access capabilities need contacting Adobe directly)
+- [ ] Build the album-fetch script (list assets → request rendition → poll → download JPEG →
+      commit to `images/ig-queue/`)
+- [ ] Draft captions for the first photo only, get tone/style calibration before the rest
+- [ ] Build the publish script (adapted from the existing internal pattern above), test with
+      `--dry-run` first, then one real live post triggered manually
+- [ ] Only after a manual post is verified live on `@25mordad`: wire up a scheduled job
+      (GitHub Actions cron, ~2-day interval) for unattended posting
+- [ ] Wire up the Telegram approval channel as an alternative review path
+- [ ] Document the finished pipeline in `CLAUDE.md` (new section, same depth as the existing
+      Instagram Story/Feed Post sections) once it's actually built
 
 ## P3 — Finalize third article "زنده‌ماندن یا زیستن؟" (draft, gitignored — not yet public)
 
@@ -113,8 +169,10 @@ User pre-drafted this article's material via ChatGPT before this session; work h
 - [x] Generate review PDFs (`surviving-or-living-fa-v2.pdf` 30pp, `surviving-or-living-fa-short.pdf` 15pp) via `make_pdf.py`
 - [x] Add `files/PanorAIma/surviving-or-living/` to `.gitignore` — draft not yet approved for publication
 - [ ] User to review both PDFs with close friends before any publish decision
+  - [ ] Check in with user on friend-review status — last touched 2026-08-09, ~2 days idle as of session start 2026-08-11
 - [ ] Final full read-through pass on Opus model (user's plan: research/mechanical work on Sonnet, final polish on Opus)
 - [ ] Decide official EN title + produce EN translation (long version only, per convention — no short EN)
+  - [ ] Draft 2–3 candidate EN titles for «زنده‌ماندن یا زیستن؟» ahead of time so translation can start immediately once friend review clears ← depends on publish approval
 - [ ] Once approved: move to `PanorAIma/<slug>-fa|en/`, remove the `.gitignore` line, follow full Phase 2–4 checklist in CLAUDE.md (covers, hero images, story/post card decks, sitemap, hreflang)
 - [ ] After this article is fully finalized: build a tone/voice profile for the user using articles 2 (مردمان ایران) and 3 (this one) as reference — explicitly deferred to last
 - ~~No Instagram/Twitter work of any kind for this article~~ — standing constraint for this article only; that whole system is being redesigned separately
@@ -158,6 +216,7 @@ User pre-drafted this article's material via ChatGPT before this session; work h
   - [ ] Clarify the comment surface (Instagram DMs, website, or both)
   - [ ] Draft the reply prompt template (referencing article content + reader message) and save to `files/ai-reply-template.md`
   - [ ] Test the template against a sample comment from peoples-of-iran article
+  - [ ] Note: no real reader comments exist yet since the peoples-of-iran feed carousel hasn't been posted — either post the carousel first or draft synthetic sample comments to test against ← depends on carousel post above
 - [ ] Create root `llms.txt` for AI crawler / LLM-friendly site guidance
   - [ ] Decide content scope: site summary, owner/contact, canonical sections, PanorAIma article URLs, and usage/licensing notes
   - [ ] Check `robots.txt` for any existing AI-crawler directives to keep `llms.txt` consistent with them
