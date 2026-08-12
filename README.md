@@ -99,15 +99,26 @@ npm run build:css
 
 ## Python Automation Scripts (`scripts/`)
 
-Used for Instagram API automation (publishing Stories, etc.), separate from the Node/Tailwind toolchain.
+Used for Instagram API automation (publishing Stories/Feed posts) and the Lightroom→Instagram
+photo pipeline, separate from the Node/Tailwind toolchain.
 
 ```bash
 python3 -m venv scripts/.venv
 scripts/.venv/bin/pip install -r scripts/requirements.txt
+scripts/.venv/bin/python3 -m playwright install chromium   # one-time, for the Story-typography fallback
 scripts/.venv/bin/python scripts/<script>.py
 ```
 
-Requires a project-root `.env` (gitignored, not committed) with `IG_ACCESS_TOKEN=<your Instagram access token>`. This repo is public — never commit `.env` or print secret values.
+Also requires `ffmpeg`/`ffprobe` on `PATH` (system package, not in `requirements.txt`) for
+`make_story_video.py`.
+
+Requires a project-root `.env` (gitignored, not committed) with:
+- `IG_ACCESS_TOKEN` — Instagram Graph API access token
+- `LR_CLIENT_ID` / `LR_CLIENT_SECRET` / `LR_REFRESH_TOKEN` — Adobe Lightroom API (see CLAUDE.md's Personal Photo Series section)
+- `OPENAI_API_KEY` — gpt-image-2 quality-enhance and Story typography generation
+- `TELEGRAM_BRIDGE_DIR` — local path to a sibling private repo whose Telegram bot/chat this pipeline sends through (see CLAUDE.md — deliberately not documented further here, this repo is public)
+
+This repo is public — never commit `.env` or print secret values.
 
 ## Contact
 
