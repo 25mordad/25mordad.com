@@ -142,6 +142,20 @@ numbered steps below once a specific story is actually picked.
    plus the series tags and always `#هوش‌واره`). Save to `record["caption"]`.
 4. Append a short entry to `images/ig-queue/_story_universe.md` (photo title,
    one-line story summary, any named recurring motif introduced).
+4.5. Generate this photo's Instagram Story typography graphic:
+   `scripts/.venv/bin/python scripts/gpt_story_typography.py <asset_id> --prompt "<bespoke prompt>"`
+   — **write a fresh, story-themed prompt every time** (same principle as the
+   GPT-enhance prompt in step 2 — never call this without `--prompt`, the
+   generic default was explicitly rejected as "not creative enough," 2026-08-12).
+   Ground the prompt in the actual chosen story's imagery/mood (see یارو's
+   dusty-golden-hour/faint-footprints treatment and مذهب's
+   worn-pilgrimage-path treatment as the two references so far) — atmospheric
+   photo treatment + the tagline woven into the scene (etched/weathered/set
+   into the environment), not a flat gradient box with centered text. Falls
+   back automatically to a Playwright/Vazirmatn overlay if gpt-image-2
+   moderation-blocks the photo twice (confirmed to recur on photos with
+   children) — that fallback can't be made thematic, note it plainly if it
+   was used. Result lands at `images/ig-queue/stories/<asset_id>.jpg`.
 5. Propose a `scheduled_for` slot (corrected 2026-08-12 — the original "~7
    days out" default was wrong, Bahman explicitly wants posting to start
    **tomorrow**, not next week): take the latest `scheduled_for` across all

@@ -5,9 +5,20 @@ tagline baked in as elegant Persian typography.
 
 The tagline is the same on every photo's story (it's the series' fixed
 closing line, already used in every caption) — what changes per photo is the
-base image. One of these gets made per published post, not once for the
-whole series (confirmed 2026-08-12 after an initial one-off attempt was
-mistaken for a series-wide asset).
+base image AND the visual treatment. One of these gets made per published
+post, not once for the whole series (confirmed 2026-08-12 after an initial
+one-off attempt was mistaken for a series-wide asset).
+
+The prompt should be photo/story-specific, not generic (confirmed 2026-08-12:
+Bahman rejected the first, generic "photo + flat bottom gradient + boxed
+text" version as not creative enough — a second attempt that wove in the
+photo's own story themes — dusty golden-hour light, faint footprints on the
+path, weathered typography set into the sky instead of a flat box, for
+یارو's "walks the same path searching for something he lost" story — worked
+much better). `--prompt` lets the caller (the /photo-beshno skill) pass a
+bespoke, story-themed prompt each time, the same way gpt_enhance_photo.py's
+quality-enhance prompt is written fresh per photo. Falls back to a plain
+generic prompt only if none is given.
 
 Primary path: gpt-image-2 `images/edits` (same endpoint/model as
 gpt_enhance_photo.py) draws the typography directly onto the photo. Retries
@@ -18,10 +29,11 @@ reword the prompt to route around it).
 Fallback (persistent moderation block): Playwright + real Vazirmatn web
 font, the same guaranteed-correct-Persian-rendering method already used
 throughout this repo for every other typography asset (story cards, hero
-images, covers) — a dark gradient panel over the untouched photo with the
-tagline rendered as real HTML/CSS text, not AI-drawn. Slower to set up but
-never garbles Persian script and never hits a moderation wall (it's not an
-AI image edit at all).
+images, covers) — a soft-vignetted gradient panel over the untouched photo
+with the tagline rendered as real HTML/CSS text, not AI-drawn. Slower to set
+up and can't be made thematic per-story the way the AI path can, but never
+garbles Persian script and never hits a moderation wall (it's not an AI
+image edit at all) — so the pipeline never stalls on a rejected photo.
 
 Reads the FINAL, already-published photo at images/ig-queue/<asset_id>.jpg
 (not the working _source/ copy) and writes to
@@ -32,7 +44,8 @@ saving — an unoptimized gpt-image-2 story output can be 3MB+, well outside
 this repo's usual ~300-500KB image weight.
 
 Usage:
-    scripts/.venv/bin/python scripts/gpt_story_typography.py <asset_id>
+    scripts/.venv/bin/python scripts/gpt_story_typography.py <asset_id> --prompt "..."
+    scripts/.venv/bin/python scripts/gpt_story_typography.py <asset_id>   # generic default prompt
 """
 
 import argparse
@@ -60,10 +73,10 @@ EDIT_API_URL = "https://api.openai.com/v1/images/edits"
 
 TAGLINE = "دنیا بزرگتر از اونه که ما تصور می‌کنیم"
 
-PROMPT = f"""Turn this photograph into a striking vertical Instagram Story design (portrait
-9:16 composition, 1088x1920). Keep the original photo as the main visual — do not change
-the subject, pose, or setting — but you may add a tasteful dark gradient/vignette at the
-bottom third of the frame to create legible contrast for text.
+DEFAULT_PROMPT = f"""Turn this photograph into a striking vertical Instagram Story design
+(portrait 9:16 composition, 1088x1920). Keep the original photo as the main visual — do not
+change the subject, pose, or setting — but you may add a tasteful dark gradient/vignette at
+the bottom third of the frame to create legible contrast for text.
 
 Add large, elegant Persian (Farsi) typography, in Persian script, reading exactly this
 phrase, on two lines:
@@ -71,10 +84,10 @@ phrase, on two lines:
 {TAGLINE}
 
 Style the typography: warm gold/amber color, a modern elegant Persian typeface (like
-Vazirmatn or a similarly clean geometric Persian typeface), positioned in the lower third
-over the dark gradient, generous letter spacing, right-to-left reading order preserved
-correctly. Add a small thin gold decorative line or ornament above the text. Do not add any
-other text, no logos, no watermarks, no English text anywhere in the image."""
+Vazirmatn or a similarly clean geometric Persian typeface), generous letter spacing,
+right-to-left reading order preserved correctly. Add a small thin gold decorative line or
+ornament near the text. Do not add any other text, no logos, no watermarks, no English text
+anywhere in the image."""
 
 HTML_TEMPLATE = """<!doctype html>
 <html><head><meta charset="utf-8">
@@ -84,9 +97,13 @@ HTML_TEMPLATE = """<!doctype html>
   * {{ margin: 0; padding: 0; box-sizing: border-box; }}
   body {{ width: 1088px; height: 1920px; position: relative; overflow: hidden; }}
   .bg {{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }}
+  .vignette {{
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%);
+  }}
   .gradient {{
-    position: absolute; left: 0; right: 0; bottom: 0; height: 55%;
-    background: linear-gradient(to top, rgba(0,0,0,0.92) 10%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0) 100%);
+    position: absolute; left: 0; right: 0; bottom: 0; height: 58%;
+    background: linear-gradient(to top, rgba(0,0,0,0.94) 8%, rgba(0,0,0,0.6) 45%, rgba(0,0,0,0) 100%);
   }}
   .ornament {{
     position: absolute; bottom: 420px; left: 0; right: 0; text-align: center;
@@ -96,10 +113,12 @@ HTML_TEMPLATE = """<!doctype html>
     position: absolute; bottom: 200px; left: 60px; right: 60px; text-align: center;
     font-family: 'Vazirmatn', sans-serif; font-weight: 700; color: #d4af37;
     font-size: 64px; line-height: 1.6; direction: rtl;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.5);
   }}
 </style></head>
 <body>
   <img class="bg" src="{photo_path}">
+  <div class="vignette"></div>
   <div class="gradient"></div>
   <div class="ornament">&#10022;</div>
   <div class="tagline">{tagline}</div>
@@ -113,7 +132,7 @@ def _is_moderation_block(resp: requests.Response) -> bool:
         return False
 
 
-def _generate_via_gpt(source_path: Path) -> bytes | None:
+def _generate_via_gpt(source_path: Path, prompt: str) -> bytes | None:
     """Returns raw image bytes on success, None if persistently moderation-blocked."""
     for attempt in range(2):
         with open(source_path, "rb") as f:
@@ -121,7 +140,7 @@ def _generate_via_gpt(source_path: Path) -> bytes | None:
                 EDIT_API_URL,
                 headers={"Authorization": f"Bearer {API_KEY}"},
                 files={"image": (source_path.name, f, "image/jpeg")},
-                data={"model": "gpt-image-2", "prompt": PROMPT, "size": "1088x1920", "quality": "high"},
+                data={"model": "gpt-image-2", "prompt": prompt, "size": "1088x1920", "quality": "high"},
                 timeout=180,
             )
         if resp.ok:
@@ -156,7 +175,7 @@ def _generate_via_playwright(source_path: Path) -> bytes:
         html_path.unlink(missing_ok=True)
 
 
-def generate(asset_id: str) -> Path:
+def generate(asset_id: str, prompt: str = None) -> Path:
     if not API_KEY:
         raise SystemExit("OPENAI_API_KEY not found in .env")
 
@@ -167,7 +186,7 @@ def generate(asset_id: str) -> Path:
     STORIES_DIR.mkdir(parents=True, exist_ok=True)
     out_path = STORIES_DIR / f"{asset_id}.jpg"
 
-    raw = _generate_via_gpt(source_path)
+    raw = _generate_via_gpt(source_path, prompt or DEFAULT_PROMPT)
     if raw is None:
         print("gpt-image-2 rejected this photo twice (moderation_blocked) — "
               "falling back to the Playwright/Vazirmatn overlay.", file=sys.stderr)
@@ -183,9 +202,10 @@ def generate(asset_id: str) -> Path:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("asset_id")
+    parser.add_argument("--prompt", help="Bespoke, story-themed prompt (falls back to a generic one if omitted)")
     args = parser.parse_args()
 
-    out_path = generate(args.asset_id)
+    out_path = generate(args.asset_id, args.prompt)
     print(f"Saved: {out_path.relative_to(REPO_ROOT)} ({out_path.stat().st_size // 1024} KB)")
 
 
