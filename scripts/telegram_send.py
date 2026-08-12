@@ -52,10 +52,13 @@ BRIDGE_DIR = Path(_bridge_dir)
 
 
 def send(message: str, asset_id: Optional[str] = None, stage: Optional[str] = None,
-          image_path: Optional[str] = None) -> Optional[int]:
+          image_path: Optional[str] = None, reply_to: Optional[int] = None) -> Optional[int]:
     """Sends `message` (optionally with an attached image) via the bridge
     repo's notify_telegram.py, tagged as a photo_pipeline message. Returns
-    the sent message_id, or None on failure."""
+    the sent message_id, or None on failure. `reply_to` threads the send to
+    a specific past message_id (e.g. answering a stale/off-script reply
+    directly instead of sending a new standalone message) — passed straight
+    through to notify_telegram.py's own --reply-to."""
     context = {"type": "photo_pipeline"}
     if asset_id:
         context["asset_id"] = asset_id
@@ -76,6 +79,8 @@ def send(message: str, asset_id: Optional[str] = None, stage: Optional[str] = No
                    "--caption", message, "--record-context", context_path]
         else:
             cmd = [sys.executable, "notify_telegram.py", message, "--record-context", context_path]
+        if reply_to:
+            cmd += ["--reply-to", str(reply_to)]
         result = subprocess.run(cmd, cwd=BRIDGE_DIR, capture_output=True, text=True, timeout=60)
         print(result.stdout.strip(), file=sys.stderr)
         if result.returncode != 0:
@@ -96,9 +101,10 @@ def main():
     parser.add_argument("--asset-id")
     parser.add_argument("--stage")
     parser.add_argument("--file", help="Path to an image to attach")
+    parser.add_argument("--reply-to", type=int, help="message_id to thread this reply to")
     args = parser.parse_args()
 
-    message_id = send(args.message, args.asset_id, args.stage, args.file)
+    message_id = send(args.message, args.asset_id, args.stage, args.file, args.reply_to)
     print(f"sent {message_id}" if message_id else "failed")
     sys.exit(0 if message_id else 1)
 

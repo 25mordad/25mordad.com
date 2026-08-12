@@ -43,8 +43,23 @@ Branch:
   to the step below for that record's current `pipeline_state`. Delete the
   handoff file once fully processed (success or handled failure).
 - **A handoff file exists but there's no matching in-flight record** (stale —
-  e.g. a reply arrived after the pipeline already moved on) → delete it,
-  report, stop.
+  e.g. a reply arrived after the pipeline already moved on, most often
+  because the record it was replying to already reached `scheduled`) →
+  delete it, but **do not just silently drop it if `reply_text` reads like a
+  real question or comment**, not a redundant confirmation/no-op. Confirmed
+  real 2026-08-12: Bahman asked (as a reply on an already-`scheduled` «شادی»
+  message) whether the tagline-in-scene style was actually applied to that
+  photo's story graphic — the run correctly identified the handoff as stale,
+  investigated, found the real answer (yes, it was applied correctly), then
+  just reported that internally and stopped without ever telling him,
+  because this run is unattended `claude -p` with no one to ask "should I
+  send this?" If `reply_text` is a redundant no-op (an already-superseded
+  "تایید می‌کنم" on a schedule that's already confirmed, etc.), silently
+  dropping it is still fine. If it reads as a genuine question/comment, send
+  a short `telegram_send.py --reply-to <message_id>` answering it directly
+  (using whatever you can determine from the record/files) before deleting
+  the handoff — don't leave Bahman's question unanswered just because the
+  pipeline itself has moved on.
 - **No handoff file, no in-flight record** → this is a bootstrap/manual run.
   Go to step 2.
 - **No handoff file, but an in-flight record exists** → nothing to do yet;
