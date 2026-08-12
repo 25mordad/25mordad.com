@@ -508,6 +508,11 @@ this repo** — this repo is public. Its location lives only in this repo's own 
   message tagged `type: "photo_pipeline"`, it writes a handoff file to
   `images/ig-queue/_inbox/<message_id>.json` in **this** repo and launches
   `claude -p "/photo-beshno"` with `cwd` set to this repo.
+- **Manual trigger**: typing **`عکس‌بشنو`** (or `photobeshno`) as a plain message — not a
+  reply — in that same Telegram chat launches `/photo-beshno` directly, no handoff needed
+  (the skill just reads its own current state: starts the next photo if none is in flight,
+  or reports status if one's already in progress). This is Bahman's manual way to nudge the
+  pipeline without replying to a specific message.
 - The `/photo-beshno` skill reads any pending `_inbox/` handoff, advances the in-flight
   record's `pipeline_state`, and — once a schedule is confirmed — commits + pushes the final
   image/record (the schedule confirmation *is* the explicit go-ahead; this run is

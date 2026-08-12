@@ -206,7 +206,14 @@ numbered steps below once a specific story is actually picked.
   - Delete the handoff file.
   - **Same run, immediately**: go back to step 2 and start the next photo —
     this is what keeps exactly one photo in the queue at all times without a
-    separate manual re-trigger.
+    separate manual re-trigger. **Do this unconditionally, every time, no
+    exceptions** — confirmed 2026-08-12 that skipping this "just this once"
+    (deferring it with "I'll send the next one whenever you're ready" mid a
+    busy moment) actually broke the queue-of-one guarantee: nothing else
+    would have ever restarted it, since nothing calls `/photo-beshno` except
+    a reply to a message this pipeline itself sent. Bahman had to notice
+    and ask. There is no such thing as "start it later" — either continue
+    to step 2 right now, in this same run, or the pipeline silently stops.
 - **Wants a different time**: re-propose based on what Bahman asked for,
   stay in `pipeline_state: "awaiting_schedule"`, reply in Telegram, delete
   the handoff file, stop (waiting for the next confirmation).
