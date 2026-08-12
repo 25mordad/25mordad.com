@@ -27,3 +27,4 @@ files/PanorAIma/surviving-or-living/
 # the published file) and Telegram reply handoffs from the pipeline bridge — both transient
 images/ig-queue/_source/
 images/ig-queue/_inbox/
+logs/
