@@ -156,6 +156,11 @@ numbered steps below once a specific story is actually picked.
    moderation-blocks the photo twice (confirmed to recur on photos with
    children) — that fallback can't be made thematic, note it plainly if it
    was used. Result lands at `images/ig-queue/stories/<asset_id>.jpg`.
+   **Send it to Telegram right away** (standing rule, 2026-08-12 — Bahman
+   wants to see every story graphic as it's made, not just the feed photo):
+   `telegram_send.py "<short note on which version — AI or fallback>" --asset-id <asset_id> --stage story_preview --file images/ig-queue/stories/<asset_id>.jpg`.
+   This is FYI, not a gate — do not wait for a reply before continuing to the
+   caption/schedule step below.
 5. Propose a `scheduled_for` slot (corrected 2026-08-12 — the original "~7
    days out" default was wrong, Bahman explicitly wants posting to start
    **tomorrow**, not next week): take the latest `scheduled_for` across all
