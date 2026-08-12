@@ -37,3 +37,20 @@ number for "a long, unquestioned stretch of time" (44 is Bahman's own age —
 a deliberate personal easter egg, per `feedback_photo_naming_style.md`).
 Future stories can reuse "forty-four years" the way «یارو»'s "thirty years"
 anchors searching-without-knowing-why.
+
+### 3. «شادی» (photo of two girls mid-stride, motion-blurred, carrying
+farm loads — dried stalks + thermos, and a bundle of greens + jug — both
+glancing back over their shoulder at the camera)
+
+A woman used to say the walk back from the farm was always shorter than the
+walk there. She counted forty-four years — same road, same load, same feet.
+Once she told someone; they said it must be the downhill slope. That road
+has no slope.
+
+Reuses the **forty-four years** motif from «مذهب» (entry 2) — Bahman asked
+for it explicitly on a second pass, rather than it arising organically. Also
+carries the same unresolved, quietly-uncanny "fact that doesn't add up" (a
+downhill slope that isn't there) that sits in the same family as «یارو»'s
+unremembered lost thing: something the story states plainly but never
+explains. Future entries could reuse "a road with no slope" as a stand-in
+for an unexplained discrepancy, if one comes up naturally.
