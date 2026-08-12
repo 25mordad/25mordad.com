@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
-"""Publish a single Instagram Story from a public image URL.
+"""Publish a single Instagram Story from a public image or video URL.
+
+Auto-detects image vs video from the URL's extension (.mp4/.mov -> video_url,
+everything else -> image_url) — added 2026-08-12 for the photo pipeline's
+Story videos (make_story_video.py), which need longer to process than a
+plain image, hence the higher poll-attempt count for video.
 
 Usage:
-    scripts/.venv/bin/python scripts/publish_story.py <image_url>
+    scripts/.venv/bin/python scripts/publish_story.py <image_or_video_url>
 """
 
 import sys
@@ -21,9 +26,11 @@ if not TOKEN:
     raise SystemExit("IG_ACCESS_TOKEN not found in .env")
 
 if len(sys.argv) != 2:
-    raise SystemExit("Usage: publish_story.py <image_url>")
+    raise SystemExit("Usage: publish_story.py <image_or_video_url>")
 
-IMAGE_URL = sys.argv[1]
+MEDIA_URL = sys.argv[1]
+IS_VIDEO = MEDIA_URL.lower().split("?")[0].endswith((".mp4", ".mov"))
+MAX_POLL_ATTEMPTS = 30 if IS_VIDEO else 10
 
 # Step 1: get the IG user id
 me = requests.get(
@@ -34,16 +41,18 @@ me = requests.get(
 if not me.ok:
     raise SystemExit(f"Failed to fetch profile: HTTP {me.status_code} — {me.json()}")
 ig_user_id = me.json()["id"]
-print(f"Publishing to @{me.json()['username']} (id={ig_user_id})")
+print(f"Publishing to @{me.json()['username']} (id={ig_user_id}) — {'video' if IS_VIDEO else 'image'}")
 
 # Step 2: create a media container
+create_data = {
+    "media_type": "STORIES",
+    "access_token": TOKEN,
+}
+create_data["video_url" if IS_VIDEO else "image_url"] = MEDIA_URL
+
 create = requests.post(
     f"https://graph.instagram.com/{ig_user_id}/media",
-    data={
-        "image_url": IMAGE_URL,
-        "media_type": "STORIES",
-        "access_token": TOKEN,
-    },
+    data=create_data,
     timeout=15,
 )
 if not create.ok:
@@ -52,7 +61,7 @@ container_id = create.json()["id"]
 print(f"Container created: {container_id}")
 
 # Step 3: poll container status until FINISHED
-for attempt in range(10):
+for attempt in range(MAX_POLL_ATTEMPTS):
     status = requests.get(
         f"https://graph.instagram.com/{container_id}",
         params={"fields": "status_code", "access_token": TOKEN},
