@@ -194,11 +194,55 @@ Planned 2026-08-11; not started, no code written yet.
   - No first comment for this series (superseded — see the locked caption format above; everything's in one combined caption)
   - **First real live post, 2026-08-12:** photo `e88d9e2e96b84f9389823d0754676ed9` ("یارو") published to `@25mordad` — https://www.instagram.com/p/Db6pBdIDtb5/ (media_id `18098543159625393`). Record `status` auto-updated to `"posted"` with `posted_at`/`media_id`.
   - **IG token had to be regenerated mid-session** — the 2026-07-01 token was invalid (see P1.8 above). User manually generated a replacement via the Meta dashboard rather than using the new `ig_auth.py` script (which needs `IG_APP_ID`/`IG_APP_SECRET`, not yet added to `.env`) — works, but token type (long vs. short-lived) unconfirmed; watch for another sudden failure.
-- [ ] Only after a manual post is verified live on `@25mordad`: wire up a scheduled job
-      (GitHub Actions cron, ~2-day interval) for unattended posting — manual post now verified live, this is next
-- [ ] Wire up the Telegram approval channel as an alternative review path
-- [ ] Document the finished pipeline in `CLAUDE.md` (new section, same depth as the existing
-      Instagram Story/Feed Post sections) once it's actually built
+- [x] Wire up a scheduled job for unattended posting — DONE 2026-08-12, `scripts/lr_check_schedule.py`
+      (mirrors kavosh/dariche's `check_schedule.py` pattern) on the personal crontab, hourly at
+      `:23` (user's explicit call — 15-min cadence unnecessary here, wanted a distinct minute
+      offset from the other projects' cron marks so it doesn't pile up with them)
+- [x] Wire up the Telegram approval channel — DONE 2026-08-12, bigger than originally scoped: the
+      **entire** per-photo review (title pick → story pick → schedule confirm → auto-advance to
+      next photo) now runs as a Telegram conversation, not just a final approval step. See the
+      **Automated Telegram routine (2026-08-12)** block below and CLAUDE.md's Personal Photo
+      Series → "Automated routine" section for the full mechanism.
+- [x] Document the finished pipeline in `CLAUDE.md` — DONE 2026-08-12
+
+### Automated Telegram routine (2026-08-12)
+
+Built the full self-driving loop per the user's request ("همیشه توی صف تولید محتوا یک دونه
+باشه ... اسکجول بشه و بعد پست بعدی خودکار"). Architecture, in brief (full detail in
+CLAUDE.md + memory `project_lightroom_ig_pipeline.md`):
+
+- New skill `.claude/commands/photo-beshno.md` (`claude -p "/photo-beshno"`) drives a
+  `pipeline_state` state machine per photo: `enhancing` → `awaiting_title` → `awaiting_story`
+  → `awaiting_schedule` → `scheduled` → `posted`. Only one record in flight at a time.
+- **Reuses a sibling private automation repo's own Telegram bot/chat** (not a new dedicated
+  bot, per the user's explicit choice) — but deliberately never names that repo or hardcodes
+  its path anywhere in this **public** repo (caught during a review pass the user asked for
+  before committing — see memory `feedback_public_repo_secrets.md`'s 2026-08-12 addition).
+  Its location lives only in this repo's own gitignored `.env` as `TELEGRAM_BRIDGE_DIR`.
+- This repo never runs its own Telegram `getUpdates` consumer (would race the bridge repo's
+  own consumer for the same offset — confirmed real bug there on 2026-08-11). Sending is via
+  `scripts/telegram_send.py` (shells out to the bridge repo's `notify_telegram.py`); receiving
+  is via a new file added to that repo, `handle_photo_pipeline_trigger.py`, which hands off to
+  `/photo-beshno` here.
+- `lr_fetch_photo.py` reworked: picks ONE random unprocessed asset (not bulk-fetch), full
+  2048px (verified live — Adobe's API doesn't serve anything larger).
+- New `gpt_enhance_photo.py`: OpenAI `gpt-image-2` image-edit, fresh photo-specific prompt
+  per photo. **Hit a real moderation block on the very first live photo tried** (two children
+  in frame) — `moderation_blocked`, likely a standing OpenAI policy around editing images of
+  minors. User's call: never reword the prompt to route around it; auto-retry once, then fall
+  back to an optimize-only copy of the source with no AI enhancement. Will likely recur across
+  this Ethiopia set. Also now always resizes/recompresses the final image (max 1440px, ~500KB)
+  regardless of which path was used — user flagged wanting nothing heavy in the repo (added
+  `Pillow` as a new dependency for this, the first beyond `requests`/`python-dotenv`).
+- `lr_common.py` gained `publish_feed_photo()` (extracted from `lr_publish_photo.py`) so the
+  manual publish script and the new scheduler share the exact same tested publish logic.
+- New `images/ig-queue/_story_universe.md` — continuity log so the series' fictional stories
+  loosely share one world across photos.
+- **First live cycle run 2026-08-12**: photo `67a0aa28e8a648f6bfcf22dac91f85c8` fetched,
+  GPT-enhanced (succeeded on retry after the moderation block), 7 title options sent to
+  Telegram — sitting at `pipeline_state: "awaiting_title"`, not yet committed (per the skill's
+  own rule: nothing commits until a schedule is confirmed). This is the first real end-to-end
+  test of the reply→handoff→resume half of the loop, still unproven at commit time.
 
 ## P3 — Finalize third article "زنده‌ماندن یا زیستن؟" (draft, gitignored — not yet public)
 

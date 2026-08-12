@@ -107,11 +107,22 @@ Branch:
    `_story_universe.md` where it fits naturally (never forced). One option
    should be genuinely deadpan/mundane/absurdist (the register that's won
    twice so far), the other more lyrical/mystical, for a real contrast.
-6. `telegram_send.py "<both story options, clearly labeled>" --asset-id <asset_id> --stage awaiting_story` (no `--file` — text only).
+   **Persian only at this stage** (standing rule, 2026-08-12) — do not draft
+   an English translation until Bahman has actually approved a specific
+   Persian story. Translation happens in step 4 below, after a pick.
+6. `telegram_send.py "<both Persian-only story options, clearly labeled>" --asset-id <asset_id> --stage awaiting_story` (no `--file` — text only).
 7. Update the record: `pipeline_state: "awaiting_story"`.
 8. Delete the handoff file. Report and stop.
 
-### 4. `pipeline_state: "awaiting_story"` + handoff → story picked
+### 4. `pipeline_state: "awaiting_story"` + handoff → story picked, or feedback
+
+If the reply doesn't actually pick one of the offered options (rejects both,
+asks for changes, gives new instructions) — do **not** advance
+`pipeline_state`. Instead: take the feedback into account, draft a **fresh**
+pair of Persian-only options (same rules as step 2.5 above), send them via
+`telegram_send.py` with the same `--stage awaiting_story`, delete the
+handoff file, and stop — waiting for the next reply. Only proceed with the
+numbered steps below once a specific story is actually picked.
 
 1. Save the chosen story text to `record["story"]`.
 2. **Update `feedback_photo_naming_style.md`** with this data point too.
