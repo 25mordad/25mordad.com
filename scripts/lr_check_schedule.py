@@ -136,7 +136,16 @@ def main() -> None:
         record["publish_attempts"] = 0
         record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
         print(f"✅ {asset_id}: published (media_id={media_id})")
-        alert(f"✅ عکس «{record.get('title')}» منتشر شد.")
+        if record.get("story_media_id"):
+            print(f"   story also published (media_id={record['story_media_id']})")
+            alert(f"✅ عکس «{record.get('title')}» منتشر شد، استوریش هم همراهش رفت.")
+        elif record.get("story_publish_error"):
+            alert(
+                f"✅ عکس «{record.get('title')}» منتشر شد.\n\n"
+                f"⚠️ ولی استوریش منتشر نشد:\n{record['story_publish_error']}"
+            )
+        else:
+            alert(f"✅ عکس «{record.get('title')}» منتشر شد.")
         published += 1
 
     if published or failed:

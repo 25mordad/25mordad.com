@@ -81,6 +81,86 @@ def lr_get(client_id, access_token, path, params=None):
     return json.loads(text) if text.strip() else {}
 
 
+def publish_story_from_url(token: str, story_url: str) -> str:
+    """Container -> poll -> publish an Instagram Story from a public image or
+    video URL. Same Graph API surface (and same IG_ACCESS_TOKEN/permission —
+    "instagram_content_publish" already covers Stories, no separate scope) as
+    publish_feed_photo below, just media_type=STORIES instead of a feed post.
+    Raises SystemExit on any failure. Returns the media_id."""
+    is_video = story_url.lower().split("?")[0].endswith((".mp4", ".mov"))
+
+    me = requests.get(
+        "https://graph.instagram.com/me",
+        params={"fields": "id,username", "access_token": token},
+        timeout=10,
+    )
+    if not me.ok:
+        raise SystemExit(f"Failed to fetch profile: HTTP {me.status_code} — {me.json()}")
+    ig_user_id = me.json()["id"]
+
+    create_data = {"media_type": "STORIES", "access_token": token}
+    create_data["video_url" if is_video else "image_url"] = story_url
+    create = requests.post(f"https://graph.instagram.com/{ig_user_id}/media", data=create_data, timeout=15)
+    if not create.ok:
+        raise SystemExit(f"Failed to create story container: HTTP {create.status_code} — {create.json()}")
+    container_id = create.json()["id"]
+
+    max_attempts = 30 if is_video else 10
+    for _ in range(max_attempts):
+        status = requests.get(
+            f"https://graph.instagram.com/{container_id}",
+            params={"fields": "status_code", "access_token": token},
+            timeout=10,
+        )
+        if not status.ok:
+            raise SystemExit(f"Failed to poll story container status: HTTP {status.status_code} — {status.json()}")
+        code = status.json().get("status_code")
+        if code == "FINISHED":
+            break
+        if code == "ERROR":
+            raise SystemExit("Story container processing failed")
+        time.sleep(2)
+    else:
+        raise SystemExit("Story container did not finish processing in time")
+
+    publish = requests.post(
+        f"https://graph.instagram.com/{ig_user_id}/media_publish",
+        data={"creation_id": container_id, "access_token": token},
+        timeout=15,
+    )
+    if not publish.ok:
+        raise SystemExit(f"Failed to publish story: HTTP {publish.status_code} — {publish.json()}")
+    return publish.json().get("id")
+
+
+def publish_story_for_asset(asset_id: str) -> str | None:
+    """Publish this asset's already-committed/pushed Story (video preferred,
+    falls back to the image if no video exists) from images/ig-queue/stories/.
+    Returns the media_id, or None if no story asset exists for this photo at
+    all (not a failure — some records may not have one). Raises SystemExit on
+    a real publish failure (asset not yet publicly reachable, API error)."""
+    token = os.environ.get("IG_ACCESS_TOKEN")
+    if not token:
+        raise SystemExit("IG_ACCESS_TOKEN not found in .env")
+
+    stories_dir = REPO_ROOT / "images" / "ig-queue" / "stories"
+    if (stories_dir / f"{asset_id}.mp4").exists():
+        ext = "mp4"
+    elif (stories_dir / f"{asset_id}.jpg").exists():
+        ext = "jpg"
+    else:
+        return None
+
+    story_url = f"{PUBLIC_BASE}/stories/{asset_id}.{ext}"
+    head = requests.head(story_url, timeout=15)
+    if not head.ok:
+        raise SystemExit(
+            f"Story asset not publicly reachable yet: HTTP {head.status_code} for {story_url}\n"
+            f"Commit and push images/ig-queue/stories/{asset_id}.{ext}, wait for the Cloudflare Pages deploy, then retry."
+        )
+    return publish_story_from_url(token, story_url)
+
+
 def publish_feed_photo(asset_id: str, record: dict, record_path: Path) -> str:
     """Publish one photo to the @25mordad Instagram Feed: HEAD-check public
     reachability, then container -> poll status_code -> media_publish. Updates
@@ -152,5 +232,23 @@ def publish_feed_photo(asset_id: str, record: dict, record_path: Path) -> str:
     record["status"] = "posted"
     record["posted_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     record["media_id"] = media_id
+
+    # Always publish the matching Story alongside the feed post (2026-08-12,
+    # per Bahman's explicit ask) — best-effort: a story failure must not look
+    # like the feed publish itself failed (it already succeeded above), so
+    # this is caught here rather than left to propagate as a SystemExit.
+    try:
+        story_media_id = publish_story_for_asset(asset_id)
+    except SystemExit as e:
+        print(f"   (story publish failed: {e})")
+        record["story_publish_error"] = str(e)
+    else:
+        if story_media_id:
+            record["story_media_id"] = story_media_id
+            record["story_posted_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+            record["story_publish_error"] = ""
+        else:
+            print(f"   (no story asset for {asset_id} — feed-only post)")
+
     record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
     return media_id

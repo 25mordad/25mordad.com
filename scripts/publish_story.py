@@ -2,21 +2,25 @@
 """Publish a single Instagram Story from a public image or video URL.
 
 Auto-detects image vs video from the URL's extension (.mp4/.mov -> video_url,
-everything else -> image_url) — added 2026-08-12 for the photo pipeline's
-Story videos (make_story_video.py), which need longer to process than a
-plain image, hence the higher poll-attempt count for video.
+everything else -> image_url). Thin CLI wrapper around lr_common.py's
+publish_story_from_url() — the same helper lr_check_schedule.py and
+lr_publish_photo.py now call automatically (via publish_feed_photo(), added
+2026-08-12 per Bahman's ask that every feed post always brings its Story
+along). This script is for ad-hoc/manual publishing of an arbitrary URL —
+e.g. testing before an asset is committed to this repo.
 
 Usage:
     scripts/.venv/bin/python scripts/publish_story.py <image_or_video_url>
 """
 
 import sys
-import time
 from pathlib import Path
 
-import requests
 from dotenv import load_dotenv
 import os
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lr_common import publish_story_from_url  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(REPO_ROOT / ".env")
@@ -29,65 +33,5 @@ if len(sys.argv) != 2:
     raise SystemExit("Usage: publish_story.py <image_or_video_url>")
 
 MEDIA_URL = sys.argv[1]
-IS_VIDEO = MEDIA_URL.lower().split("?")[0].endswith((".mp4", ".mov"))
-MAX_POLL_ATTEMPTS = 30 if IS_VIDEO else 10
-
-# Step 1: get the IG user id
-me = requests.get(
-    "https://graph.instagram.com/me",
-    params={"fields": "id,username", "access_token": TOKEN},
-    timeout=10,
-)
-if not me.ok:
-    raise SystemExit(f"Failed to fetch profile: HTTP {me.status_code} — {me.json()}")
-ig_user_id = me.json()["id"]
-print(f"Publishing to @{me.json()['username']} (id={ig_user_id}) — {'video' if IS_VIDEO else 'image'}")
-
-# Step 2: create a media container
-create_data = {
-    "media_type": "STORIES",
-    "access_token": TOKEN,
-}
-create_data["video_url" if IS_VIDEO else "image_url"] = MEDIA_URL
-
-create = requests.post(
-    f"https://graph.instagram.com/{ig_user_id}/media",
-    data=create_data,
-    timeout=15,
-)
-if not create.ok:
-    raise SystemExit(f"Failed to create container: HTTP {create.status_code} — {create.json()}")
-container_id = create.json()["id"]
-print(f"Container created: {container_id}")
-
-# Step 3: poll container status until FINISHED
-for attempt in range(MAX_POLL_ATTEMPTS):
-    status = requests.get(
-        f"https://graph.instagram.com/{container_id}",
-        params={"fields": "status_code", "access_token": TOKEN},
-        timeout=10,
-    )
-    if not status.ok:
-        raise SystemExit(f"Failed to poll container status: HTTP {status.status_code} — {status.json()}")
-    code = status.json().get("status_code")
-    print(f"  status: {code}")
-    if code == "FINISHED":
-        break
-    if code == "ERROR":
-        raise SystemExit("Container processing failed")
-    time.sleep(2)
-else:
-    raise SystemExit("Container did not finish processing in time")
-
-# Step 4: publish the container
-publish = requests.post(
-    f"https://graph.instagram.com/{ig_user_id}/media_publish",
-    data={
-        "creation_id": container_id,
-        "access_token": TOKEN,
-    },
-    timeout=15,
-)
-if not publish.ok:
-    raise SystemExit(f"Failed to publish: HTTP {publish.status_code} — {publish.json()}")
-print("Published:", publish.json())
+media_id = publish_story_from_url(TOKEN, MEDIA_URL)
+print("Published:", media_id)
