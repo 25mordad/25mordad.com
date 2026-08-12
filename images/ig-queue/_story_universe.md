@@ -24,3 +24,16 @@ No named recurring motif was established yet; this entry exists so future
 stories can reference "یارو" and his unresolved search as the series'
 founding thread, if a natural connection comes up (not forced into every
 story).
+### 2. «مذهب» (photo of one child piggybacking another, who wears a gold
+Ethiopian Orthodox cross necklace)
+
+A man vowed that if his child got well, he'd walk up there once, on foot.
+The child got well; he went. The next year he went again, unsure the first
+climb had counted. It's been forty-four years and he still goes, every
+year — the child is old now too, and has still never asked why.
+
+Recurring motif introduced: **forty-four years** as the series' stand-in
+number for "a long, unquestioned stretch of time" (44 is Bahman's own age —
+a deliberate personal easter egg, per `feedback_photo_naming_style.md`).
+Future stories can reuse "forty-four years" the way «یارو»'s "thirty years"
+anchors searching-without-knowing-why.
