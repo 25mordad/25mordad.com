@@ -81,7 +81,15 @@ def send(message: str, asset_id: Optional[str] = None, stage: Optional[str] = No
             cmd = [sys.executable, "notify_telegram.py", message, "--record-context", context_path]
         if reply_to:
             cmd += ["--reply-to", str(reply_to)]
-        result = subprocess.run(cmd, cwd=BRIDGE_DIR, capture_output=True, text=True, timeout=60)
+        try:
+            result = subprocess.run(cmd, cwd=BRIDGE_DIR, capture_output=True, text=True, timeout=60)
+        except (OSError, subprocess.TimeoutExpired) as e:
+            # e.g. BRIDGE_DIR doesn't exist — subprocess.run raises here
+            # rather than returning a non-zero returncode. Same class of gap
+            # found+fixed in report_error.py 2026-08-12; mirrored here since
+            # this function has the identical cwd=BRIDGE_DIR pattern.
+            print(f"bridge call errored: {e}", file=sys.stderr)
+            return None
         print(result.stdout.strip(), file=sys.stderr)
         if result.returncode != 0:
             print(result.stderr.strip(), file=sys.stderr)
