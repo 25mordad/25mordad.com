@@ -225,6 +225,20 @@ Short chat summary: what stage ran, what was sent to Telegram, what's next
 
 ## Never do
 
+- **Never run any step of this skill as a background task and wait for a
+  harness notification** (e.g. Bash tool's `run_in_background`, or any
+  "I'll wait for the async job to finish" pattern) — this includes
+  `gpt_story_typography.py` and `make_story_video.py` in step 4.5, which can
+  each take a while and may look like good background candidates. This
+  skill is always invoked via a one-shot `claude -p` (see the automatic
+  trigger above) — there is no later turn for a notification to land in.
+  Confirmed real 2026-08-12: a run backgrounded `gpt_story_typography.py`
+  and ended its turn "waiting" for the notification; since `claude -p` has
+  no such later turn, the process just exited (success, exit 0) with the
+  step never finished, the handoff file never deleted, and no error
+  anywhere — the pipeline silently stalled at `awaiting_story` with the
+  story/caption already saved but nothing past it. Always run every step of
+  this skill synchronously in the foreground, however long it takes.
 - Never run a Telegram `getUpdates` consumer from this repo — always go
   through `telegram_send.py` (send) and the `_inbox/` handoff (receive).
 - Never publish anything directly from this skill — publishing only happens
