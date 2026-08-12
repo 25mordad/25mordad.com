@@ -34,7 +34,6 @@ Usage:
 
 import argparse
 import base64
-import io
 import os
 import sys
 import time
@@ -42,7 +41,9 @@ from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
-from PIL import Image
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from image_common import optimize_jpeg  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(REPO_ROOT / ".env")
@@ -52,26 +53,6 @@ SOURCE_DIR = QUEUE_DIR / "_source"
 
 API_KEY = os.environ.get("OPENAI_API_KEY")
 EDIT_API_URL = "https://api.openai.com/v1/images/edits"
-
-MAX_DIM = 1440   # Instagram's feed never displays a photo past ~1440px
-TARGET_KB = 500  # keep final images comparable in weight to the rest of the repo's assets
-MIN_QUALITY = 55
-
-
-def optimize_jpeg(data: bytes, max_dim: int = MAX_DIM, target_kb: int = TARGET_KB) -> bytes:
-    img = Image.open(io.BytesIO(data)).convert("RGB")
-    if max(img.size) > max_dim:
-        ratio = max_dim / max(img.size)
-        img = img.resize((round(img.width * ratio), round(img.height * ratio)), Image.Resampling.LANCZOS)
-
-    quality = 90
-    buf = io.BytesIO()
-    while True:
-        buf = io.BytesIO()
-        img.save(buf, format="JPEG", quality=quality, optimize=True)
-        if buf.tell() <= target_kb * 1024 or quality <= MIN_QUALITY:
-            return buf.getvalue()
-        quality -= 5
 
 
 def _is_moderation_block(resp: requests.Response) -> bool:
