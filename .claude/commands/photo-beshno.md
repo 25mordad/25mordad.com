@@ -142,13 +142,20 @@ numbered steps below once a specific story is actually picked.
    plus the series tags and always `#هوش‌واره`). Save to `record["caption"]`.
 4. Append a short entry to `images/ig-queue/_story_universe.md` (photo title,
    one-line story summary, any named recurring motif introduced).
-5. Propose a `scheduled_for` slot: take the latest `scheduled_for` across all
-   existing records (any status), add a few days to it; if that's less than
-   7 days from now, use 7 days from now instead — this default spacing is a
-   starting point, not a fixed rule, and Bahman may ask for a different time,
-   same as the title/story calibration. Use the machine's local time
-   (`date`, Europe/Madrid) — `scheduled_for` is stored as a naive local ISO
-   datetime (`YYYY-MM-DDTHH:MM:SS`), matching `lr_check_schedule.py`'s
+5. Propose a `scheduled_for` slot (corrected 2026-08-12 — the original "~7
+   days out" default was wrong, Bahman explicitly wants posting to start
+   **tomorrow**, not next week): take the latest `scheduled_for` across all
+   existing records; if none, or if it's already in the past, propose
+   **tomorrow**; otherwise propose the day after the latest one — i.e.
+   roughly one photo per day, sequential, no artificial gap. Pick a specific
+   time using general Instagram-engagement best-practice info (e.g. evening
+   hours) until real post-performance stats exist for this account — once
+   there's a real posting history, look at it and refine the time choice
+   from actual data instead of general advice. This is still just a
+   starting proposal, not a fixed rule — Bahman may ask for a different
+   date/time, same as the title/story calibration. Use the machine's local
+   time (`date`, Europe/Madrid) — `scheduled_for` is stored as a naive local
+   ISO datetime (`YYYY-MM-DDTHH:MM:SS`), matching `lr_check_schedule.py`'s
    comparison.
 6. `telegram_send.py` the full caption + proposed date/time, asking for
    confirmation or a different time.
