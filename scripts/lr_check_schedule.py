@@ -37,6 +37,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lr_common import publish_feed_photo  # noqa: E402
 from telegram_send import send as telegram_alert  # noqa: E402
+from report_error import log_error  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 QUEUE_DIR = REPO_ROOT / "images" / "ig-queue"
@@ -90,6 +91,8 @@ def main() -> None:
                 record["publish_error"] = problem
                 record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
                 alert(f"⚠️ عکس {asset_id}\n\nزمان انتشارش رسیده ولی نمی‌شود منتشرش کرد:\n{problem}")
+                log_error("lr_check_schedule.py:record_problem", "needs-diagnosis",
+                          f"{asset_id}: {problem}", context={"asset_id": asset_id})
             continue
 
         image_path = QUEUE_DIR / f"{asset_id}.jpg"
@@ -101,6 +104,8 @@ def main() -> None:
                 record["publish_error"] = msg
                 record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
                 alert(f"⚠️ عکس {asset_id}\n\nزمان انتشارش رسیده ولی فایلش روی دیسک نیست.")
+                log_error("lr_check_schedule.py:record_problem", "needs-diagnosis",
+                          f"{asset_id}: {msg}", context={"asset_id": asset_id})
             continue
 
         attempts = int(record.get("publish_attempts", 0) or 0)
@@ -125,6 +130,13 @@ def main() -> None:
                 record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
                 alert(f"⚠️ عکس {asset_id}\n\nانتشار شکست خورد:\n{detail}\n\n"
                       f"{'دوباره تلاش می‌شود.' if left > 0 else 'دیگر تلاش نمی‌شود، دستی لازم است.'}")
+            # Only feed the error log once this script's own built-in retries
+            # (MAX_ATTEMPTS) are exhausted — a single transient hiccup that
+            # self-heals next tick shouldn't page the hourly diagnosis cron.
+            if left <= 0:
+                log_error("lr_check_schedule.py:publish_error", "needs-diagnosis",
+                          f"{asset_id}: feed publish failed after {MAX_ATTEMPTS} attempts — {detail}",
+                          context={"asset_id": asset_id})
             failed += 1
             continue
 
@@ -144,6 +156,12 @@ def main() -> None:
                 f"✅ عکس «{record.get('title')}» منتشر شد.\n\n"
                 f"⚠️ ولی استوریش منتشر نشد:\n{record['story_publish_error']}"
             )
+            # Known-safe recovery exists (just retry publish_story_for_asset
+            # for this asset_id) — the hourly cron can do this itself without
+            # an LLM call, no need to wait for a full diagnosis run.
+            log_error("lr_check_schedule.py:story_publish_error", "auto-retry",
+                      f"{asset_id}: story publish failed — {record['story_publish_error']}",
+                      context={"asset_id": asset_id})
         else:
             alert(f"✅ عکس «{record.get('title')}» منتشر شد.")
         published += 1
