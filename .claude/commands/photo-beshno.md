@@ -101,15 +101,22 @@ Branch:
    (what was offered vs. what was picked) — keep sharpening the calibration
    note every time, per the standing rule.
 4. Read `images/ig-queue/_story_universe.md` for continuity.
-5. Draft **2** distinct fictional micro-stories anchored on the chosen title
-   and photo — philosophical/meaning-driven fantasy, not fully independent
-   from the rest of the series: weave in a recurring motif/rule from
-   `_story_universe.md` where it fits naturally (never forced). One option
-   should be genuinely deadpan/mundane/absurdist (the register that's won
-   twice so far), the other more lyrical/mystical, for a real contrast.
-   **Persian only at this stage** (standing rule, 2026-08-12) — do not draft
-   an English translation until Bahman has actually approved a specific
-   Persian story. Translation happens in step 4 below, after a pick.
+5. **Draft the 2 story options via the Agent tool, model `opus`** (standing
+   rule, 2026-08-12 — Bahman wants the actual creative writing at a higher
+   tier than the rest of this skill's mechanical steps; mirrors the same
+   Sonnet-for-mechanical/Opus-for-Persian-prose split already used in other
+   sessions — see memory `feedback_model_switching_workflow.md`). Give the
+   subagent: the photo itself (path), the chosen title, the full contents of
+   `_story_universe.md`, and the relevant calibration notes from
+   `feedback_photo_naming_style.md` (deadpan-over-lyrical axis; indirection
+   axis — don't restate the title's word or literally describe the pictured
+   subjects, route through an indirect symbol/object/fragment instead,
+   judged fresh per photo, not a fixed formula). Ask for exactly **2**
+   distinct options, connected to the shared universe where it fits
+   naturally (never forced), **Persian only** (standing rule, 2026-08-12 —
+   do not draft an English translation until Bahman has actually approved a
+   specific Persian story; translation happens in step 4 below, after a
+   pick). Relay the subagent's two options as-is.
 6. `telegram_send.py "<both Persian-only story options, clearly labeled>" --asset-id <asset_id> --stage awaiting_story` (no `--file` — text only).
 7. Update the record: `pipeline_state: "awaiting_story"`.
 8. Delete the handoff file. Report and stop.
@@ -118,8 +125,9 @@ Branch:
 
 If the reply doesn't actually pick one of the offered options (rejects both,
 asks for changes, gives new instructions) — do **not** advance
-`pipeline_state`. Instead: take the feedback into account, draft a **fresh**
-pair of Persian-only options (same rules as step 2.5 above), send them via
+`pipeline_state`. Instead: take the feedback into account (pass it to the
+Opus subagent verbatim, alongside everything from step 3.5 above), draft a
+**fresh** pair of Persian-only options the same way, send them via
 `telegram_send.py` with the same `--stage awaiting_story`, delete the
 handoff file, and stop — waiting for the next reply. Only proceed with the
 numbered steps below once a specific story is actually picked.
