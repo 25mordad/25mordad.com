@@ -60,6 +60,34 @@ Branch:
   (using whatever you can determine from the record/files) before deleting
   the handoff — don't leave Bahman's question unanswered just because the
   pipeline itself has moved on.
+- **Stale handoff on a `posted` record, asking to redo/regenerate the Story
+  graphic** (e.g. "دوباره با مدلی که قرار بود بسازش" after deleting the
+  live Story) — confirmed real 2026-08-13, «مذهب». No defined procedure
+  existed for this before, which is exactly why an unattended run stalled on
+  it (msg 1117) rather than finishing. Now defined:
+  1. This is safe to attempt unattended: re-run
+     `gpt_story_typography.py <asset_id> --prompt "<fresh bespoke prompt>"`
+     (never `run_in_background` — see "Never do" below). It overwrites
+     `images/ig-queue/stories/<asset_id>.jpg` locally only; nothing public
+     or on Instagram changes yet.
+  2. If it succeeds via the real gpt-image-2 path this time: regenerate the
+     video (`make_story_video.py <asset_id>`), send the new result to
+     Telegram via `telegram_send.py --reply-to <message_id>`, and **stop and
+     wait for an explicit go-ahead before publishing** — republishing to an
+     already-`posted` record is never done without direct confirmation, same
+     as any other publish action.
+  3. If it moderation-blocks again (falls back to the Playwright overlay):
+     do **not** try a text-to-image "describe the photo and generate from
+     scratch" workaround to route around the block — confirmed 2026-08-13
+     this is not just a likely-futile retry (children-related moderation
+     applies to generation, not just edits) but a real ethical problem: it
+     would mean synthesizing a fake image of real, identifiable children
+     photographed in real life, standing in for the actual photo, which is a
+     different and worse thing than a color-grade/typography overlay on the
+     real photo. Report the block via `telegram_send.py --reply-to
+     <message_id>` and stop — this is Bahman's call each time, not something
+     to auto-resolve either way.
+  4. Delete the handoff file once the report is sent, regardless of outcome.
 - **No handoff file, no in-flight record** → this is a bootstrap/manual run.
   Go to step 2.
 - **No handoff file, but an in-flight record exists** → nothing to do yet;
