@@ -67,3 +67,22 @@ the series' running number rather than a one-off. Also continues the
 unresolved-discrepancy family (entry 3's "road with no slope"): two
 contradictory facts stated side by side, never reconciled, because
 reconciling them was never the point.
+
+
+### 5. «آسایش» (photo of a man resting on one of a field of woven wooden
+cots stretching into the distance, arid rocky ground, driftwood-fence
+shelter behind him)
+
+Some said the cots are folded up for travelers; some said they're kept for
+their owners. A man has been weaving them for forty-four years, and every
+time he finishes one, he sets a copy aside for himself. Forty-four set aside
+so far. None of them have reached his home yet.
+
+Reuses the **forty-four years** motif a third time (entries 2-4) — now a
+fixed structural element of the series, not a coincidence. Introduces a new
+variant of the unresolved-discrepancy family (entry 3's "no slope," entry 4's
+"two hours vs twenty minutes"): a compulsive, unexplained act of
+setting-aside-without-delivering — the man keeps producing a private surplus
+of the very thing (rest/shelter) his own labor is for, but it never reaches
+him. Future entries could reuse "kept aside, never delivered" as another
+stand-in for the same family of quietly-uncanny, never-explained facts.
