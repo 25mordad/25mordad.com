@@ -90,8 +90,18 @@ Branch:
   4. Delete the handoff file once the report is sent, regardless of outcome.
 - **No handoff file, no in-flight record** → this is a bootstrap/manual run.
   Go to step 2.
-- **No handoff file, but an in-flight record exists** → nothing to do yet;
-  report the current `pipeline_state` and stop. Do not fabricate a reply.
+- **No handoff file, but an in-flight record exists** → this is a manual
+  nudge (`claude -p "/photo-beshno"` run with nothing new to advance).
+  **Send a short Telegram status ping** via `telegram_send.py --asset-id
+  <id> --stage <current pipeline_state>` (no `--file`) restating what's
+  still pending (e.g. the still-open title options, or "still waiting on
+  your story pick") — do not just write to this run's own internal report
+  and stop silently. Confirmed real 2026-08-13: two manual nudges (22:20,
+  22:45) each ran, found nothing new to progress, and only reported
+  internally — from Bahman's side in Telegram this was indistinguishable
+  from the pipeline never having run at all, even though he'd asked a
+  direct question. Do not fabricate a reply or advance state; this is a
+  status echo, not progress.
 
 ### 2. No active record → start the next photo
 
@@ -134,6 +144,25 @@ Branch:
 9. Report in chat what was sent, then stop — waiting for Bahman's reply.
 
 ### 3. `pipeline_state: "awaiting_title"` + handoff → title picked
+
+If the reply doesn't actually pick a title — it's a question, feedback, or
+a comment about something else entirely (including about the pipeline
+itself) — do **not** advance `pipeline_state` or invent a title. Answer the
+question/feedback directly via `telegram_send.py --reply-to <message_id>`
+using whatever's actually true (check the record, this skill file, recent
+logs — never speculate), then remind Bahman the title options are still
+open (repeat them, don't assume he still has the earlier message handy).
+Delete the handoff file once answered — it's been handled even though the
+stage hasn't advanced. Stop, waiting for an actual title pick next.
+Confirmed real 2026-08-13: a reply asking why the pipeline had gone silent
+on an earlier nudge (see the fix above) landed here with no defined
+procedure for a non-title reply at this stage — unlike step 4 below, which
+already has one for `awaiting_story`. The run answered in Telegram but
+never finished (handoff left undeleted, looked stalled to the watchdog),
+most likely because it tried to fix this skill file directly instead of
+following a defined step — exactly the kind of edit this skill cannot make
+to itself unattended (`.claude/` file changes need direct approval in an
+interactive session).
 
 1. Read `context.text` from the handoff (Bahman's reply) — it may be one of
    the numbered options verbatim, a paraphrase, or something else entirely
