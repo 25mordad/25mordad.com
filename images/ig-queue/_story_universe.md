@@ -54,3 +54,16 @@ downhill slope that isn't there) that sits in the same family as «یارو»'s
 unremembered lost thing: something the story states plainly but never
 explains. Future entries could reuse "a road with no slope" as a stand-in
 for an unexplained discrepancy, if one comes up naturally.
+
+### 4. «زندگی» (photo of a young woman on a dirt path through trees,
+carrying a bucket and a bag, glancing back over her shoulder at the camera)
+
+Someone said the road takes two hours. Someone else said twenty minutes.
+Both had walked the same road for forty-four years, with the same steps.
+No one bothered to check who was right — because both had arrived.
+
+Reuses the **forty-four years** motif again (entries 2 and 3) — now clearly
+the series' running number rather than a one-off. Also continues the
+unresolved-discrepancy family (entry 3's "road with no slope"): two
+contradictory facts stated side by side, never reconciled, because
+reconciling them was never the point.
