@@ -4,6 +4,52 @@ Reverse-chronological log of work sessions on 25mordad.com.
 
 ---
 
+## 2026-08-13 — Incident: «مذهب» Story republished to the wrong Instagram account (Dornyx, not @25mordad)
+
+### What happened
+
+Bahman deleted the live «مذهب» Story and asked (via a late Telegram reply, msg 1117) to
+regenerate and republish it. Investigated from a sibling yaroo session (interactive, not the
+usual unattended `/photo-beshno` bridge) — confirmed `gpt-image-2` deterministically blocks
+this photo's typography edit (children in frame, known limitation, see decision #3 below), kept
+the existing Playwright fallback graphic, and ran `retry_story_publish.py` to republish it.
+It posted to **Dornyx's** Instagram account instead of `@25mordad`. Bahman had to notice it on
+the wrong account and ask why.
+
+### Root cause
+
+Not a bug in this repo's code — `IG_ACCESS_TOKEN` in this repo's own `.env` was, and still is,
+correctly `@25mordad`'s token. The session that ran `retry_story_publish.py` had a *different*,
+already-set `IG_ACCESS_TOKEN` (Dornyx's) directly in its shell environment, from an
+unidentified source. `python-dotenv`'s `load_dotenv()` never overrides an already-set env var,
+so the script silently used the shell's leaked value instead of this repo's correct `.env`
+value. Same mechanism as an earlier Telegram-token leak in that other session (documented
+2026-08-12), just a different credential this time — full incident writeup and the general
+fix lives in the yaroo repo's `WORKLOG.md` (2026-08-13 entry) and memory
+`feedback_shell_env_telegram_token_leak.md`, since the contamination is a property of that
+session's shell, not of this repo.
+
+### Fix
+
+Republished correctly to `@25mordad` with the contaminated vars explicitly stripped
+(`env -u IG_ACCESS_TOKEN ...`), verified via the Graph API's own `/me` that the token in use
+actually resolves to `@25mordad` before trusting it, and verified the new Story media_id
+resolves under that same token. Also added a defined procedure to `photo-beshno.md` for
+"regenerate an already-posted Story" requests (previously undefined — root cause of the
+original msg-1117 stall before this account mix-up even happened) and fixed an unrelated real
+bug found along the way: Playwright's Chromium browser was never installed in this repo's
+`scripts/.venv` on the voidloop mini PC.
+
+### Pending / TODO
+
+- [ ] Consider having `publish_story_for_asset()`/`publish_feed_photo()` in `lr_common.py`
+      assert the token's `/me` username matches an expected `IG_EXPECTED_USERNAME` (or similar)
+      from `.env` before publishing, rather than relying on whoever runs the script to remember
+      to check for shell contamination first — this incident wasn't caught by anything in code
+- [ ] Source of the leaked credentials in the yaroo session's shell is still unidentified
+
+---
+
 ## 2026-08-12 — Built and automated the Lightroom→Instagram photo pipeline end-to-end via Telegram
 
 ### What we built
