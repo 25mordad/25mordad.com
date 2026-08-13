@@ -140,7 +140,7 @@ Branch:
    colloquial/slang options, and include 1-2 more poetic ones for real
    contrast, not as filler.
 7. `scripts/.venv/bin/python scripts/telegram_send.py "<message with the numbered title options>" --asset-id <asset_id> --stage awaiting_title --file images/ig-queue/<asset_id>.jpg`
-8. Update the record: `pipeline_state: "awaiting_title"`.
+8. `scripts/.venv/bin/python scripts/update_ig_record.py <asset_id> --set pipeline_state=awaiting_title`
 9. Report in chat what was sent, then stop — waiting for Bahman's reply.
 
 ### 3. `pipeline_state: "awaiting_title"` + handoff → title picked
@@ -168,7 +168,8 @@ interactive session).
    the numbered options verbatim, a paraphrase, or something else entirely
    (he's picked something not offered before — «یارو» itself was not one of
    the 9 options offered). Use judgment, not strict matching.
-2. Save `record["title"]`.
+2. `scripts/.venv/bin/python scripts/update_ig_record.py <asset_id> --set title="<picked title>"`
+   — never the Edit/Write tool (see "Never do" below).
 3. **Update `feedback_photo_naming_style.md`** with this new data point
    (what was offered vs. what was picked) — keep sharpening the calibration
    note every time, per the standing rule.
@@ -190,7 +191,7 @@ interactive session).
    specific Persian story; translation happens in step 4 below, after a
    pick). Relay the subagent's two options as-is.
 6. `telegram_send.py "<both Persian-only story options, clearly labeled>" --asset-id <asset_id> --stage awaiting_story` (no `--file` — text only).
-7. Update the record: `pipeline_state: "awaiting_story"`.
+7. `scripts/.venv/bin/python scripts/update_ig_record.py <asset_id> --set pipeline_state=awaiting_story`
 8. Delete the handoff file. Report and stop.
 
 ### 4. `pipeline_state: "awaiting_story"` + handoff → story picked, or feedback
@@ -204,14 +205,18 @@ Opus subagent verbatim, alongside everything from step 3.5 above), draft a
 handoff file, and stop — waiting for the next reply. Only proceed with the
 numbered steps below once a specific story is actually picked.
 
-1. Save the chosen story text to `record["story"]`.
+1. Save the chosen story text: pipe it to
+   `scripts/.venv/bin/python scripts/update_ig_record.py <asset_id> --set-stdin story`
+   via a heredoc (`<<'EOF' ... EOF`) — never the Edit/Write tool. `--set-stdin`
+   exists specifically for long/multiline Persian text like this.
 2. **Update `feedback_photo_naming_style.md`** with this data point too.
 3. Build the final caption in the already-locked format (see CLAUDE.md's
    "Caption workflow (per photo)" under Personal Photo Series): title in «»
    quotes on its own line, the chosen story in Persian then its English
    translation, the fixed bilingual closing line, then ~28-30 hashtags
    (Persian+English mixed, high-volume/trending over niche invented ones,
-   plus the series tags and always `#هوش‌واره`). Save to `record["caption"]`.
+   plus the series tags and always `#هوش‌واره`). Save it the same way:
+   `update_ig_record.py <asset_id> --set-stdin caption` via heredoc.
 4. Append a short entry to `images/ig-queue/_story_universe.md` (photo title,
    one-line story summary, any named recurring motif introduced).
 4.5. Generate this photo's Instagram Story typography graphic:
@@ -257,14 +262,14 @@ numbered steps below once a specific story is actually picked.
    comparison.
 6. `telegram_send.py` the full caption + proposed date/time, asking for
    confirmation or a different time.
-7. Update the record: `pipeline_state: "awaiting_schedule"`.
+7. `scripts/.venv/bin/python scripts/update_ig_record.py <asset_id> --set pipeline_state=awaiting_schedule`
 8. Delete the handoff file. Report and stop.
 
 ### 5. `pipeline_state: "awaiting_schedule"` + handoff → schedule confirmed or adjusted
 
 - **Confirmed** (explicit yes, or a restated time that matches what was
-  proposed): set `record["scheduled_for"]` (final ISO datetime),
-  `pipeline_state: "scheduled"`, `status: "approved"`.
+  proposed):
+  `scripts/.venv/bin/python scripts/update_ig_record.py <asset_id> --set scheduled_for="<final ISO datetime>" --set pipeline_state=scheduled --set status=approved`
   - **Commit and push** `images/ig-queue/<asset_id>.jpg`,
     `images/ig-queue/<asset_id>.json`, `images/ig-queue/_story_universe.md`,
     and any touched memory files. This is the one point in the flow where a
@@ -323,3 +328,10 @@ Short chat summary: what stage ran, what was sent to Telegram, what's next
   instead of guessing which option was meant.
 - Never skip updating `feedback_photo_naming_style.md` on a title or story
   pick — this calibration is the whole point of offering choices each time.
+- **Never use the Edit or Write tool to change an `images/ig-queue/*.json`
+  record.** Always go through `scripts/update_ig_record.py` (a plain
+  `python3 *` call, already pre-approved). Edit/Write need an interactive
+  permission grant that an unattended `claude -p` run has no one to give —
+  confirmed real 2026-08-14 (msg 1153): a correctly-parsed title confirmation
+  triggered an Edit-tool call that hung on approval, the run exited 0 without
+  saving, and the handoff file was left behind, tripping the stall detector.
