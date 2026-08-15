@@ -86,3 +86,25 @@ setting-aside-without-delivering — the man keeps producing a private surplus
 of the very thing (rest/shelter) his own labor is for, but it never reaches
 him. Future entries could reuse "kept aside, never delivered" as another
 stand-in for the same family of quietly-uncanny, never-explained facts.
+
+### 6. «سایه» (photo of a young woman standing near a woven-stick fence and
+thatched hut, mountains behind, looking off past the camera)
+
+Someone asked a woman her age; she said forty-four. Ten years later they
+asked again; she said forty-four again. Someone sat down and worked it out
+from her mother's wedding year instead — that also came out to forty-four.
+After that no one counted for her anymore; when people talk about her, they
+just call her "the forty-four-year-old."
+
+Reuses the **forty-four years** motif a fourth time (entries 2-5), this time
+as an independently-re-derived constant rather than a duration counted from
+a start point — a new variant within the same running device, requested
+explicitly ("play with 44") rather than the flat X-years shape used before.
+First entry with an explicitly directed woman protagonist.
+
+**Shelved idea (not used, kept for a future photo per Bahman's request,
+2026-08-14):** a woman perpetually one goodbye short of forty-four — every
+time she finishes counting people to say farewell to before leaving, one
+more has just arrived or been born, so she starts over; she says she just
+wants the count to reach forty-four once, then she'll go. Still hasn't left.
+Surface this as a candidate option in a future story-drafting round.
