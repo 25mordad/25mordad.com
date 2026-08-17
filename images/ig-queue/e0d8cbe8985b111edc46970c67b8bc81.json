@@ -3,11 +3,18 @@
   "image": "e0d8cbe8985b111edc46970c67b8bc81.jpg",
   "capture_date": "2026-02-08T08:27:44",
   "fetched_at": "2026-08-13T22:47:03.195389+00:00",
-  "status": "approved",
-  "pipeline_state": "scheduled",
+  "status": "posted",
+  "pipeline_state": "posted",
   "series": "دنیا بزرگتر از اونه که ما تصور می‌کنیم",
   "title": "آسایش",
   "story": "یکی می‌گفت این تخت‌ها را برای مسافرها می‌بندند، یکی می‌گفت برای خودشان. مردی چهل‌وچهار سال است همین‌ها را می‌بافد و هر بار که تمام می‌شود، یکی‌اش را برای خودش کنار می‌گذارد. تا حالا چهل‌وچهار تا کنار گذاشته. هیچ‌کدام هنوز به خانه‌اش نرسیده‌اند.\n",
   "caption": "«آسایش»\n\nیکی می‌گفت این تخت‌ها را برای مسافرها می‌بندند، یکی می‌گفت برای خودشان.\nمردی چهل‌وچهار سال است همین‌ها را می‌بافد و هر بار که تمام می‌شود، یکی‌اش را برای خودش کنار می‌گذارد.\nتا حالا چهل‌وچهار تا کنار گذاشته.\nهیچ‌کدام هنوز به خانه‌اش نرسیده‌اند.\n\nSome said these cots are folded up for travelers; some said they're kept for themselves.\nA man has been weaving them for forty-four years, and each time he finishes one, he sets a copy aside for himself.\nSo far he's set aside forty-four.\nNone of them have reached his home yet.\n\nدنیا بزرگتر از اونه که ما تصور می‌کنیم.\nThe world is bigger than we imagine.\n\n#آسایش #دنیای_بزرگتر #TheWorldIsBigger #هوش‌واره #عکاسی #سفر #عکاسی_خیابانی #گردشگری #طبیعت_گردی #داستان_کوتاه #قصه #هنر #عکس_روز #photography #travelphotography #portraitphotography #instatravel #travelgram #wanderlust #explorepage #photooftheday #instagood #picoftheday #streetphotography #artofvisuals #travelphoto #storytelling #folklore #ethiopia\n",
-  "scheduled_for": "2026-08-16T19:00:00"
+  "scheduled_for": "2026-08-16T19:00:00",
+  "publish_attempts": 0,
+  "posted_at": "2026-08-16T17:23:13.620832+00:00",
+  "media_id": "18036412289825849",
+  "story_media_id": "17926863393165766",
+  "story_posted_at": "2026-08-16T17:23:53.831212+00:00",
+  "story_publish_error": "",
+  "publish_error": ""
 }
