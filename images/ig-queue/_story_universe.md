@@ -108,3 +108,21 @@ time she finishes counting people to say farewell to before leaving, one
 more has just arrived or been born, so she starts over; she says she just
 wants the count to reach forty-four once, then she'll go. Still hasn't left.
 Surface this as a candidate option in a future story-drafting round.
+
+### 7. «خاک» (photo of a child with a red beaded necklace and small cross
+pendant, standing at the edge of bare sandy ground scattered with dried
+plant debris)
+
+A footprint on this ground lasts forty-four days, then fades. Someone
+measured it once, and everyone accepts the number. There's a footprint
+beside this same field that matches no one's foot in the village, and it's
+long past its forty-four days. Everyone who passes sets their own foot down
+next to it, finds it doesn't match, and walks on.
+
+Reuses the **forty-four** motif a fifth time (entries 2-6), now recast as a
+measured lifespan (a footprint's) rather than a person's age or a duration
+walked — a new register for the same running number. Also extends the
+unresolved-discrepancy family (entry 3's "no slope," entry 6's
+independently-re-derived age): an object that outlives its own rule, whose
+origin nobody claims and nobody explains, and that the whole village treats
+as routine rather than strange.
