@@ -3,11 +3,18 @@
   "image": "1940a2401b23475583c128276f1fff80.jpg",
   "capture_date": "2026-02-03T09:07:16.000+03:00",
   "fetched_at": "2026-08-15T09:39:40.289230+00:00",
-  "status": "approved",
-  "pipeline_state": "scheduled",
+  "status": "posted",
+  "pipeline_state": "posted",
   "series": "دنیا بزرگتر از اونه که ما تصور می‌کنیم",
   "title": "خاک",
   "story": "جای پا روی این خاک چهل‌وچهار روز می‌ماند و بعد محو می‌شود. یکی این را اندازه گرفته بود و همه هم قبولش دارند. یک جای پا کنار همین زمین هست که به هیچ پایی در ده نمی‌خورد و خیلی وقت است از چهل‌وچهار روزش گذشته. هر کس رد می‌شود پایش را کنارش می‌گذارد، اندازه نمی‌شود، و راهش را می‌گیرد و می‌رود.\n",
   "caption": "«خاک»\n\nجای پا روی این خاک چهل‌وچهار روز می‌ماند و بعد محو می‌شود.\nیکی این را اندازه گرفته بود و همه هم قبولش دارند.\nیک جای پا کنار همین زمین هست که به هیچ پایی در ده نمی‌خورد و خیلی وقت است از چهل‌وچهار روزش گذشته.\nهر کس رد می‌شود پایش را کنارش می‌گذارد، اندازه نمی‌شود، و راهش را می‌گیرد و می‌رود.\n\n\"Soil\"\n\nA footprint on this ground lasts forty-four days, then fades.\nSomeone measured it once, and everyone accepts the number.\nThere's a footprint beside this same field that matches no one's foot in the village, and it's long past its forty-four days.\nEveryone who passes sets their own foot down next to it, finds it doesn't match, and walks on.\n\nدنیا بزرگتر از اونه که ما تصور می‌کنیم.\nThe world is bigger than we imagine.\n\n#خاک #دنیای_بزرگتر #TheWorldIsBigger #هوش‌واره #عکاسی #سفر #عکاسی_خیابانی #گردشگری #طبیعت_گردی #داستان_کوتاه #قصه #هنر #عکس_روز #photography #travelphotography #portraitphotography #instatravel #travelgram #wanderlust #explorepage #photooftheday #instagood #picoftheday #streetphotography #artofvisuals #travelphoto #storytelling #folklore #ethiopia\n",
-  "scheduled_for": "2026-08-18T19:00:00"
+  "scheduled_for": "2026-08-18T19:00:00",
+  "publish_attempts": 0,
+  "posted_at": "2026-08-18T17:23:15.140154+00:00",
+  "media_id": "18106218818133348",
+  "story_media_id": "18111087892966709",
+  "story_posted_at": "2026-08-18T17:23:49.657939+00:00",
+  "story_publish_error": "",
+  "publish_error": ""
 }
