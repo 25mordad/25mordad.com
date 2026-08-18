@@ -126,3 +126,21 @@ unresolved-discrepancy family (entry 3's "no slope," entry 6's
 independently-re-derived age): an object that outlives its own rule, whose
 origin nobody claims and nobody explains, and that the whole village treats
 as routine rather than strange.
+
+### 8. «تازیانه» (photo of a group of Hamar men and women at golden-hour
+dusk mid-ceremony — a woman in front with her hand raised, others holding
+whip-like sticks, beaded/patterned skirts and shawls)
+
+They say a mark like hers fades after forty-four days. There's a woman
+whose mark, on her back, is still there — even she doesn't know since when.
+Every spring, someone works out the days and says it should be gone by now.
+The next spring, someone else works it out again. No one has asked why it
+hasn't faded.
+
+Reuses the **forty-four** motif a sixth time (entries 2-7), in the same
+"unfaded past its rule" register as entry 7's footprint — here a mark on a
+woman's back instead of a footprint on the ground. Routes entirely around
+the ritual/whip itself (per the indirection rule) through the mark it
+leaves. Requested as a gender-swapped minimal retelling of a first-round
+option that used a man instead — same device, same 44-day rule, only the
+protagonist changed.
