@@ -144,3 +144,18 @@ the ritual/whip itself (per the indirection rule) through the mark it
 leaves. Requested as a gender-swapped minimal retelling of a first-round
 option that used a man instead — same device, same 44-day rule, only the
 protagonist changed.
+
+### 9. «بنفش» (photo of a boy in a yellow shirt straddling a yellow bike
+mid-intersection, both hands raised to his head, stopped traffic behind him)
+
+They say the cars here stop for the forty-fourth person, not before. No one
+knows when this count started, and no one's kept track of it since. People
+pass, cars stop, and every time everyone assumes it was someone else's turn.
+So far, no one has ever said they were the forty-fourth.
+
+Reuses the **forty-four** motif a seventh time (entries 2-8), now as an
+unconfirmed counting rule at a fixed point (a crossing) rather than a
+duration, age, or outlasted deadline — a new register again. Extends the
+unresolved-fact family (entry 3's "no slope," entry 6's re-derived age,
+entries 7-8's outlasted deadlines): a rule everyone defers to and no one has
+ever actually verified or claimed credit for triggering.
