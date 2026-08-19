@@ -3,11 +3,18 @@
   "image": "d4efe6abe1ad4e18b4690b8b1215b1b5.jpg",
   "capture_date": "2026-02-03T16:35:42.000+03:00",
   "fetched_at": "2026-08-17T16:52:17.087265+00:00",
-  "status": "approved",
-  "pipeline_state": "scheduled",
+  "status": "posted",
+  "pipeline_state": "posted",
   "series": "دنیا بزرگتر از اونه که ما تصور می‌کنیم",
   "title": "تازیانه",
   "story": "می‌گویند نشانش چهل‌وچهار روز می‌ماند و بعد محو می‌شود. زنی هست که نشانِ روی پشتش هنوز پیداست و خودش هم نمی‌داند از کِی. هر بهار یکی حساب می‌کند و می‌گوید باید تا حالا رفته باشد. باز بهار بعد یکی دیگر حساب می‌کند. هیچ‌کس نپرسیده چرا نرفته.\n",
   "caption": "«تازیانه»\n\nمی‌گویند نشانش چهل‌وچهار روز می‌ماند و بعد محو می‌شود.\nزنی هست که نشانِ روی پشتش هنوز پیداست و خودش هم نمی‌داند از کِی.\nهر بهار یکی حساب می‌کند و می‌گوید باید تا حالا رفته باشد.\nباز بهار بعد یکی دیگر حساب می‌کند.\nهیچ‌کس نپرسیده چرا نرفته.\n\n\"Whip\"\n\nThey say a mark like hers fades after forty-four days.\nThere's a woman whose mark is still on her back, and even she doesn't know since when.\nEvery spring, someone works out the days and says it should be gone by now.\nThe next spring, someone else works it out again.\nNo one has asked why it hasn't faded.\n\nدنیا بزرگتر از اونه که ما تصور می‌کنیم.\nThe world is bigger than we imagine.\n\n#تازیانه #دنیای_بزرگتر #TheWorldIsBigger #هوش‌واره #عکاسی #سفر #عکاسی_خیابانی #گردشگری #طبیعت_گردی #داستان_کوتاه #قصه #هنر #عکس_روز #photography #travelphotography #portraitphotography #instatravel #travelgram #wanderlust #explorepage #photooftheday #instagood #picoftheday #streetphotography #artofvisuals #travelphoto #storytelling #folklore #ethiopia\n",
-  "scheduled_for": "2026-08-19T19:00:00"
+  "scheduled_for": "2026-08-19T19:00:00",
+  "publish_attempts": 0,
+  "posted_at": "2026-08-19T17:23:13.558600+00:00",
+  "media_id": "18112935044066945",
+  "story_media_id": "18403539361082636",
+  "story_posted_at": "2026-08-19T17:23:59.340901+00:00",
+  "story_publish_error": "",
+  "publish_error": ""
 }

@@ -11,10 +11,14 @@ images/ig-queue/_source/<asset_id>.jpg — a working file for gpt_enhance_photo.
 never committed (see .gitignore) — NOT the final public/committed image at
 images/ig-queue/<asset_id>.jpg, which gpt_enhance_photo.py produces.
 
-The "queue of one" is enforced by the caller (the /photo-beshno skill), which
-only calls this script when no record is currently in flight. This script
-itself just makes sure it never re-picks an asset that already has a local
-record (any status).
+The "queue of one" is primarily the caller's (the /photo-beshno skill)
+responsibility — it should only call this script when no record is
+currently in flight. As a backstop (added 2026-08-19 after a confirmed
+incident where an unattended run bootstrapped a second photo while one was
+already at `awaiting_title`), this script also refuses to fetch a new photo
+itself if any existing record's `pipeline_state` is outside the terminal set
+— see TERMINAL_STATES below. It also makes sure it never re-picks an asset
+that already has a local record (any status).
 
 Usage:
     scripts/.venv/bin/python scripts/lr_fetch_photo.py
@@ -42,6 +46,10 @@ SERIES_NAME = "دنیا بزرگتر از اونه که ما تصور می‌ک�
 QUEUE_DIR = REPO_ROOT / "images" / "ig-queue"
 SOURCE_DIR = QUEUE_DIR / "_source"
 
+# Mirrors photo-beshno.md's own definition of "in flight" (anything outside
+# this set counts as a photo currently mid-pipeline).
+TERMINAL_STATES = {"scheduled", "posted", "rejected"}
+
 # Local-path patterns that must never end up in a saved file — these would
 # only appear if Adobe's rendition unexpectedly embeds Lightroom catalog
 # metadata (device storage paths) into the JPEG itself.
@@ -63,9 +71,29 @@ def scan_for_leaks(data: bytes, label: str):
             )
 
 
+def refuse_if_already_in_flight():
+    in_flight = []
+    for p in QUEUE_DIR.glob("*.json"):
+        try:
+            record = json.loads(p.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        state = record.get("pipeline_state")
+        if state and state not in TERMINAL_STATES:
+            in_flight.append((record.get("asset_id", p.stem), state))
+    if in_flight:
+        described = ", ".join(f"{asset_id} ({state})" for asset_id, state in in_flight)
+        raise SystemExit(
+            f"Refusing to fetch a new photo — {len(in_flight)} record(s) already in flight: "
+            f"{described}. The pipeline's queue-of-one invariant requires exactly one photo in "
+            "flight at a time; advance or resolve the existing record(s) first."
+        )
+
+
 def main():
     QUEUE_DIR.mkdir(parents=True, exist_ok=True)
     SOURCE_DIR.mkdir(parents=True, exist_ok=True)
+    refuse_if_already_in_flight()
     client_id, access_token = get_access_token()
 
     catalog = lr_get(client_id, access_token, "catalog")
