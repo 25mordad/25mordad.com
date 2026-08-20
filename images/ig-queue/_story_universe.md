@@ -159,3 +159,18 @@ duration, age, or outlasted deadline — a new register again. Extends the
 unresolved-fact family (entry 3's "no slope," entry 6's re-derived age,
 entries 7-8's outlasted deadlines): a rule everyone defers to and no one has
 ever actually verified or claimed credit for triggering.
+
+### 10. «انتظار» (photo of a woman standing among a row of tall, spike-like
+bundled reed/straw stacks against a clear blue sky)
+
+Custom here is not to shut the door until the guest arrives. One door has
+stood open for forty-four years. It later turned out the guest had arrived
+that very first year, by another road, and left. No one thought to close
+it. Now everyone who passes just looks to see that it's still open.
+
+Reuses the **forty-four** motif an eighth time (entries 2-9), in a new
+register within the "outlasted rule" family (entry 7's footprint, entry 8's
+unfaded mark): a wait that already quietly resolved years ago through an
+unwatched route, but nobody noticed, so it still outwardly reads as
+ongoing. Distinct from the outlasting-a-deadline shape because nothing here
+was ever overdue — it was simply never acknowledged as finished.

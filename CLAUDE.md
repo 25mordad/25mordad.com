@@ -473,11 +473,17 @@ if a scheduled publish fails.
 Different from the PanorAIma carousel convention of FA caption + EN first comment — don't
 conflate the two:
 1. Line 1: the chosen title in Persian quote marks («»), alone on its own line
-2. The chosen fictional micro-story — Persian version, then its English translation, both in
-   the same caption block
-3. Fixed bilingual closing line, appears on **every** photo in the series:
+2. The Persian version of the fictional micro-story
+3. The English title (translated title, in `"quote marks"`, alone on its own line) — **must
+   come immediately before the English story text**, not bunched with the Persian title up
+   top (corrected 2026-08-20, msg 1510, on «انتظار»/"Waiting" — the first draft put both
+   titles together at the top of the caption, before either story block; the two
+   title+story pairs must each stay together as one language block: FA title → FA story,
+   then EN title → EN story)
+4. The English translation of the story
+5. Fixed bilingual closing line, appears on **every** photo in the series:
    `دنیا بزرگتر از اونه که ما تصور می‌کنیم.` / `The world is bigger than we imagine.`
-4. ~28-30 hashtags, Persian + English mixed, biased toward **high-volume/trending**
+6. ~28-30 hashtags, Persian + English mixed, biased toward **high-volume/trending**
    photography-travel tags (e.g. `#photography #travelphotography #instatravel
    #wanderlust #explorepage`, `#عکاسی #سفر #هنر`) over niche invented compounds — plus the
    series tags and **always `#هوش‌واره`** (this whole pipeline is AI-assisted)
