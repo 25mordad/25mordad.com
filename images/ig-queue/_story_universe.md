@@ -174,3 +174,25 @@ unfaded mark): a wait that already quietly resolved years ago through an
 unwatched route, but nobody noticed, so it still outwardly reads as
 ongoing. Distinct from the outlasting-a-deadline shape because nothing here
 was ever overdue — it was simply never acknowledged as finished.
+
+### 11. «ننه» (photo of a mother carrying a child on her back)
+
+A narrator recounts a whole day spent searching for a goat that had gotten
+out of the yard — up and down the path to the water twice by noon, asking
+everyone met along the way, including a woman by the road who says she
+hasn't seen it. The narrator doesn't stop to talk, keeps looking further
+down. The goat comes back on its own by evening. The one thing that stays
+with the narrator afterward: the woman's feet were dusty to the ankle, the
+child with her had clean feet.
+
+First entry with **no 44 motif at all** — explicitly retired for this
+photo per Bahman's direct request (see `feedback_photo_naming_style.md`,
+thirty-third data point) after nine straight entries (2-10) using it. Also
+the first entry in a new narrative register, **style 5**: a marginal
+first-person narrator whose attention is on an unrelated errand for almost
+the whole telling, with the actual subject (the mother) registering only
+in hindsight as one small noticed physical detail — a break from the
+omniscient flat-fable voice of entries 1-10. Future entries can reuse
+either the "unrelated errand, subject noticed only in passing" narrator
+device, or return to the 44 motif if it comes up naturally — neither is a
+fixed rule going forward, both are now proven options.
