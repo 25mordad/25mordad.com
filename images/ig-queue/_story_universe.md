@@ -196,3 +196,20 @@ omniscient flat-fable voice of entries 1-10. Future entries can reuse
 either the "unrelated errand, subject noticed only in passing" narrator
 device, or return to the 44 motif if it comes up naturally — neither is a
 fixed rule going forward, both are now proven options.
+
+### 12. «خودمانی» (photo of a group of Ethiopian women layered in colorful
+beaded necklaces, close together against a woven-stick wall)
+
+This house has one door, sound and facing the alley — but no one in the
+household actually uses it; they come and go through a gap behind the
+fence. The door is only ever used to bring a guest in and see a guest out.
+It isn't a secret. It's just that no one has ever mentioned the gap to a
+guest.
+
+No 44 motif (retired per entry 11 / `feedback_photo_naming_style.md`).
+Introduces a new variant of the unresolved/quietly-uncanny family (entry
+3's "no slope," entries 7-8's outlasted deadlines, entry 10's unnoticed
+resolution): a maintained polite fiction — a fully functional door kept in
+use for outsiders alone, while insiders route around it through an
+unremarked gap. Future entries could reuse "the visible way is for
+guests, the real way is unmarked" as another stand-in for this family.
