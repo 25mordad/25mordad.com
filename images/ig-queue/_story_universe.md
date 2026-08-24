@@ -197,6 +197,26 @@ either the "unrelated errand, subject noticed only in passing" narrator
 device, or return to the 44 motif if it comes up naturally — neither is a
 fixed rule going forward, both are now proven options.
 
+### 13. «سرسختی» (dusk scene: a man sitting cross-legged on a stone wall,
+chin resting on his hand, watching two children on bare dirt in front of
+him, trees behind)
+
+A man went looking for a sickle he'd been told a neighbor had borrowed and
+never returned. He walked to the far end of the village, asking house by
+house, until it turned out it had never been borrowed at all. On the way he
+passed a yard where a few people sat, one of them telling the others
+something; he didn't stop. The only thing that stayed with him from that
+day: a child standing there, hands on hips, not moving — and no one had
+ever looked at anyone the way that child looked at him.
+
+No 44 motif (still retired per entry 11). Third-person voice, adapted from
+a first-person "style 5" draft (marginal narrator on an unrelated errand,
+the real subject noticed only in passing) at Bahman's explicit request — the
+device carries over from «ننه» (entry 11) but not the first-person framing.
+Extends the unresolved-fact family loosely: an errand built on a false
+premise (nothing was actually borrowed), with the one thing that outlasts
+it being an unexplained, searching child's stare.
+
 ### 12. «خودمانی» (photo of a group of Ethiopian women layered in colorful
 beaded necklaces, close together against a woven-stick wall)
 
