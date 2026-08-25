@@ -40,6 +40,10 @@ def main() -> None:
         sys.exit(1)
     record = json.loads(record_path.read_text())
 
+    if record.get("story_media_id") and not record.get("story_publish_error"):
+        print(f"{asset_id}: story already published — skipping to avoid a duplicate", file=sys.stderr)
+        sys.exit(0)
+
     try:
         story_media_id = publish_story_for_asset(asset_id)
     except SystemExit as e:

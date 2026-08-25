@@ -1,20 +1,15 @@
-"""Report an error, both locally (logs/error_log.json, always, in this repo)
-and into the sibling automation repo's shared error log (inbox/error_log.json,
-best-effort), which its hourly check_pipeline_errors.py cron reads to decide
-what to auto-retry vs. escalate to a real diagnosis run.
+"""Report an error, both locally (logs/error_log.json, always, unconditionally)
+and as a direct, best-effort Telegram alert to this project's own dedicated
+group (see CLAUDE.md's Personal Photo Series > Automated routine section).
 
-The local copy is written unconditionally, before the cross-repo bridge is
-even attempted — so a network hiccup, a stale env var, or the bridge repo
-being temporarily unreachable never means an error just vanishes with no
-trace anywhere. It's an audit trail, not consumed by any automation itself
-(check_pipeline_errors.py only reads the shared log) — if the bridge call
-below fails, that's printed to stderr so cron's own log file catches it too.
+The local copy is written first and unconditionally — so a Telegram hiccup
+never means an error just vanishes with no trace anywhere.
 
-Same reasoning as telegram_send.py right next to this file for the bridge
-part: this repo is public, so the sibling repo's path/name is never
-hardcoded here — it comes from TELEGRAM_BRIDGE_DIR in this repo's own
-gitignored .env (the same env var telegram_send.py already uses, since it
-points at the same repo).
+`severity: "auto-retry"` entries (a known-safe, mechanical recovery exists)
+are picked up by scripts/telegram_receive.py's cron-driven scan, which
+invokes retry_story_publish.py and marks the entry with retried_at.
+`severity: "needs-diagnosis"` entries are just alerted — nothing auto-retries
+them.
 
 Usage (as a library, from lr_check_schedule.py or other scripts):
     from report_error import log_error
@@ -26,29 +21,16 @@ Usage (CLI, mainly for connectivity testing):
 """
 
 import json
-import os
-import subprocess
 import sys
-import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-from dotenv import load_dotenv
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from telegram_common import send_message  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-load_dotenv(REPO_ROOT / ".env")
-
 LOCAL_LOG_FILE = REPO_ROOT / "logs" / "error_log.json"
-
-_bridge_dir = os.environ.get("TELEGRAM_BRIDGE_DIR")
-if not _bridge_dir:
-    raise SystemExit(
-        "TELEGRAM_BRIDGE_DIR not set in .env — should point to the sibling "
-        "automation repo whose error log (inbox/error_log.json) and hourly "
-        "check runs live. Not hardcoded here deliberately: this repo is public."
-    )
-BRIDGE_DIR = Path(_bridge_dir)
 
 
 def _log_local(source: str, severity: str, summary: str, context: Optional[dict]) -> None:
@@ -69,53 +51,25 @@ def _log_local(source: str, severity: str, summary: str, context: Optional[dict]
     LOCAL_LOG_FILE.write_text(json.dumps(entries, ensure_ascii=False, indent=2))
 
 
-def log_error(source: str, severity: str, summary: str, context: Optional[dict] = None) -> Optional[str]:
-    """Always writes a local record first (see module docstring), then tries
-    the cross-repo bridge. Returns the shared log's entry id, or None if the
-    bridge call itself failed (the local record still exists either way).
-    `severity` must be "auto-retry" (a known-safe, mechanical recovery
-    exists) or "needs-diagnosis" (anything else)."""
+def log_error(source: str, severity: str, summary: str, context: Optional[dict] = None) -> None:
+    """Always writes a local record first (see module docstring), then sends
+    a best-effort Telegram alert. `severity` must be "auto-retry" (a
+    known-safe, mechanical recovery exists — picked up automatically by
+    telegram_receive.py's cron scan) or "needs-diagnosis" (anything else)."""
     _log_local(source, severity, summary, context)
 
-    context_path = None
-    cmd = [
-        sys.executable, "log_error.py",
-        "--project", "25mordad.com",
-        "--source", source,
-        "--severity", severity,
-        "--summary", summary,
-    ]
+    icon = "↻" if severity == "auto-retry" else "⚠️"
+    text = f"{icon} {source} [{severity}]\n{summary}"
     try:
-        if context:
-            with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
-                json.dump(context, f, ensure_ascii=False)
-                context_path = f.name
-            cmd += ["--context-json", context_path]
-        try:
-            result = subprocess.run(cmd, cwd=BRIDGE_DIR, capture_output=True, text=True, timeout=30)
-        except (OSError, subprocess.TimeoutExpired) as e:
-            # e.g. BRIDGE_DIR doesn't exist, or python itself isn't reachable —
-            # subprocess.run raises here rather than returning a non-zero
-            # returncode, so this needs its own catch (confirmed real
-            # 2026-08-12: an unreachable bridge dir crashed the caller before
-            # this existed). The local record above already exists either way.
-            print(f"bridge call errored (logged locally only): {e}", file=sys.stderr)
-            return None
-        if result.returncode != 0:
-            print(f"bridge call failed (logged locally only): {result.stderr.strip()}", file=sys.stderr)
-            return None
-        return result.stdout.strip() or None
-    finally:
-        if context_path:
-            Path(context_path).unlink(missing_ok=True)
+        send_message(text)
+    except SystemExit as e:
+        print(f"Telegram alert failed (logged locally only): {e}", file=sys.stderr)
 
 
 def main():
     if len(sys.argv) != 4:
         raise SystemExit('Usage: report_error.py "<source>" "<auto-retry|needs-diagnosis>" "<summary>"')
-    entry_id = log_error(sys.argv[1], sys.argv[2], sys.argv[3])
-    print(entry_id if entry_id else "failed")
-    sys.exit(0 if entry_id else 1)
+    log_error(sys.argv[1], sys.argv[2], sys.argv[3])
 
 
 if __name__ == "__main__":

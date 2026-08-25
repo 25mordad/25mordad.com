@@ -116,7 +116,7 @@ Requires a project-root `.env` (gitignored, not committed) with:
 - `IG_ACCESS_TOKEN` — Instagram Graph API access token
 - `LR_CLIENT_ID` / `LR_CLIENT_SECRET` / `LR_REFRESH_TOKEN` — Adobe Lightroom API (see CLAUDE.md's Personal Photo Series section)
 - `OPENAI_API_KEY` — gpt-image-2 quality-enhance and Story typography generation
-- `TELEGRAM_BRIDGE_DIR` — local path to a sibling private repo whose Telegram bot/chat this pipeline sends through (see CLAUDE.md — deliberately not documented further here, this repo is public)
+- `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` — this project's own dedicated Telegram bot/group for the photo pipeline (see CLAUDE.md's Personal Photo Series > Automated routine section)
 
 This repo is public — never commit `.env` or print secret values.
 

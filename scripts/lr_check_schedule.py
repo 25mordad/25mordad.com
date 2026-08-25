@@ -121,7 +121,11 @@ def main() -> None:
         record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
         try:
             media_id = publish_feed_photo(asset_id, record, record_path)
-        except SystemExit as e:
+        except Exception as e:
+            # Was `except SystemExit` only — see lr_common.py's matching fix
+            # (2026-08-25): a raw exception here can otherwise skip the
+            # publish_attempts write and risk a duplicate feed publish on the
+            # next tick.
             detail = str(e)
             print(f"❌ {asset_id}: publish failed — {detail}")
             left = MAX_ATTEMPTS - (attempts + 1)

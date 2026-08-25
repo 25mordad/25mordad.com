@@ -24,7 +24,9 @@ files/PanorAIma/**/preview-*.jpg
 files/PanorAIma/surviving-or-living/
 
 # Photo pipeline (P1.9): full-2048px source fetches (GPT-enhance input, never
-# the published file) and Telegram reply handoffs from the pipeline bridge — both transient
+# the published file), Telegram reply handoffs, and the sent-message map used
+# to resolve replies back to an asset_id/stage — all transient
 images/ig-queue/_source/
 images/ig-queue/_inbox/
+images/ig-queue/_telegram_sent.json
 logs/

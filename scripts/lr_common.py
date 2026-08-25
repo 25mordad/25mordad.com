@@ -239,7 +239,14 @@ def publish_feed_photo(asset_id: str, record: dict, record_path: Path) -> str:
     # this is caught here rather than left to propagate as a SystemExit.
     try:
         story_media_id = publish_story_for_asset(asset_id)
-    except SystemExit as e:
+    except Exception as e:
+        # Was `except SystemExit` only — a raw network-level exception (e.g.
+        # requests.exceptions.ReadTimeout on media_publish, even though the
+        # publish itself succeeded server-side) escaped uncaught and skipped
+        # the record write below entirely, leaving pipeline_state stuck at
+        # "scheduled" despite the feed post already being live (confirmed
+        # live on «خودمانی» 2026-08-25). Broadened so any exception here still
+        # lets the feed-success record write happen.
         print(f"   (story publish failed: {e})")
         record["story_publish_error"] = str(e)
     else:

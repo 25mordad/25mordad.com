@@ -6,9 +6,9 @@ Telegram schedule confirm → auto-advance to the next photo. Always exactly
 one photo "in flight" (`pipeline_state` outside `{scheduled, posted,
 rejected}`) at a time. Invoked two ways:
 
-- **Automatically**, by the sibling automation repo's `handle_photo_pipeline_trigger.py`
-  (see `scripts/telegram_send.py`'s docstring for how this bridge works — its
-  repo/path is never named here, this repo is public), whenever Bahman
+- **Automatically**, by `scripts/telegram_receive.py` (this project's own
+  Telegram poller, invoked by cron every 5 minutes — see CLAUDE.md's
+  Personal Photo Series > Automated routine section), whenever Bahman
   replies in Telegram to a message this pipeline sent — it writes a handoff
   file to `images/ig-queue/_inbox/<message_id>.json` before launching this
   skill.
@@ -16,12 +16,12 @@ rejected}`) at a time. Invoked two ways:
   bootstrap the very first cycle, or to nudge the pipeline if nothing is in
   flight for some reason.
 
-Sending is always via `scripts/telegram_send.py` (which shells out to that
-sibling repo's own `notify_telegram.py` — never talk to the Telegram API
-directly from this repo, and never run a `getUpdates` consumer here; see
-that script's docstring for why). Receiving is always via the handoff file
-in `images/ig-queue/_inbox/` — this skill never calls Telegram itself to
-check for replies.
+Sending is always via `scripts/telegram_send.py` (talks directly to this
+project's own dedicated Telegram bot via `telegram_common.py`). Receiving is
+always via the handoff file in `images/ig-queue/_inbox/` — this skill
+itself never calls Telegram directly to check for replies; the actual
+`getUpdates` polling is fully isolated in the separate `telegram_receive.py`
+cron script.
 
 ## Steps
 
@@ -316,8 +316,10 @@ Short chat summary: what stage ran, what was sent to Telegram, what's next
   anywhere — the pipeline silently stalled at `awaiting_story` with the
   story/caption already saved but nothing past it. Always run every step of
   this skill synchronously in the foreground, however long it takes.
-- Never run a Telegram `getUpdates` consumer from this repo — always go
-  through `telegram_send.py` (send) and the `_inbox/` handoff (receive).
+- This skill itself never calls Telegram's `getUpdates` directly — always go
+  through `telegram_send.py` (send) and the `_inbox/` handoff (receive). The
+  actual polling lives only in the separate `telegram_receive.py` cron
+  script, invoked outside this skill's own `claude -p` run.
 - Never publish anything directly from this skill — publishing only happens
   via `lr_check_schedule.py` once `scheduled_for` has actually passed, or via
   a manual `lr_publish_photo.py --confirm-publish` Bahman runs himself.

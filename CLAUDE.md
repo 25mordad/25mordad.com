@@ -419,12 +419,15 @@ work required per photo.
 | `gpt_enhance_photo.py <asset_id> --prompt "..."` | Quality-enhances `_source/<asset-id>.jpg` via OpenAI's `gpt-image-2` image-edit endpoint (`images/edits`, same request shape as kavosh/dariche's `reel_stills.py`/`podcast_cover.py`) with a **fresh, photo-specific prompt written per photo**, not a fixed template. Every result — whether GPT-enhanced or the fallback below — is resized to max 1440px and recompressed under ~500KB (`optimize_jpeg()`) before being written to the final, committed, public `images/ig-queue/<asset-id>.jpg`, so nothing heavy lands in the repo. **Moderation fallback** (confirmed live 2026-08-12): OpenAI's output moderation can hard-block edits of photos containing children, even for a plain quality pass — the script retries once, and if still rejected, falls back to an optimize-only copy of the source with no AI enhancement. Never reword the prompt to route around a moderation block. |
 | `gpt_story_typography.py <asset_id> --prompt "..."` | Generates one Instagram Story per published post — the photo itself with the series' fixed tagline (`دنیا بزرگتر از اونه که ما تصور می‌کنیم`) baked in as typography, via the same `gpt-image-2` `images/edits` endpoint. **One per post, not one for the whole series** (corrected 2026-08-12 after an initial mix-up), and the prompt must be **bespoke/story-themed every time**, not the generic default — a flat "photo + bottom gradient box" version was explicitly rejected as not creative enough; atmospheric treatments tying the visual mood to that photo's actual story (dusty golden-hour light + faint footprints for یارو's "same path" story; a worn pilgrimage path for مذهب's "vow kept for 44 years" story) worked much better. Same moderation-retry behavior as `gpt_enhance_photo.py`; if gpt-image-2 keeps rejecting the photo (children in frame), falls back to a Playwright + real Vazirmatn-font overlay — guaranteed-correct Persian text, same method used for every other typography asset in this repo, but not thematic (can't be, it's a fixed template). Output: `images/ig-queue/stories/<asset-id>.jpg`, always resized/recompressed via `image_common.optimize_jpeg()`. |
 | `make_story_video.py <asset_id> [--duration N]` | Turns that photo's Story typography graphic into a ~12s vertical MP4 (`ffmpeg`, 1088x1920, H.264/AAC) with background music — Instagram only holds a static photo Story on screen for ~5s, a video Story can run the full clip length. Music comes from `assets/audio/dunya-bozorgtar-theme.mp3` (Bahman's own track, provided 2026-08-12 specifically for this series); a **random** start offset inside the track is picked on every run (standing rule — never always open on the same few seconds), with a short fade-in/fade-out. Output: `images/ig-queue/stories/<asset-id>.mp4`, alongside the `.jpg` source frame. |
-| `telegram_send.py` | Sends a photo-pipeline message by shelling out to a sibling private automation repo's own `notify_telegram.py` (`cwd=$TELEGRAM_BRIDGE_DIR`, that repo's own bot/chat/`.env` — no Telegram secrets duplicated here; its path is deliberately not hardcoded — see **Automated routine** below), tagging every send `--record-context {"type": "photo_pipeline", ...}` so a later reply resolves back to this pipeline. See **Automated routine** below for why this repo never runs its own `getUpdates` consumer. |
+| `telegram_common.py` | Shared low-level client for this project's own **dedicated** Telegram bot/chat (`TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` in `.env`) — `send_message`/`send_photo`/`send_video`/`get_updates`, plain `requests` against the Bot API directly, mirroring `lr_common.py`'s style. Added 2026-08-25 to replace the earlier cross-repo bridge (see **Automated routine** below). |
+| `telegram_get_chat_id.py` | One-off setup helper: after adding the bot to a Telegram group and sending it a message, prints every `chat.id` seen so the right one can be copied into `.env` as `TELEGRAM_CHAT_ID`. |
+| `telegram_send.py` | Sends a photo-pipeline message directly via `telegram_common.py`. When `asset_id`/`stage` are given, records `{message_id: {asset_id, stage}}` into `images/ig-queue/_telegram_sent.json` (gitignored) so `telegram_receive.py` can resolve an incoming reply back to the right record. |
+| `telegram_receive.py` | Cron-invoked (every 5 min) `getUpdates` poller/dispatcher — the **only** consumer of this bot's updates, safe since the token is dedicated to this project (see **Automated routine** below). Resolves replies via `_telegram_sent.json` into `_inbox/` handoff files, catches the `عکس‌بشنو`/`photobeshno` keyword trigger, scans `logs/error_log.json` for unhandled `"auto-retry"` entries and runs `retry_story_publish.py` for them, then launches `claude -p "/photo-beshno"` if anything Telegram-driven needs handling. |
 | `lr_publish_photo.py [asset_id] [--confirm-publish]` | Manual one-off publish of an `"approved"` photo — dry-run preview by default. Calls the shared `publish_feed_photo()`. |
-| `lr_check_schedule.py [--dry-run]` | Cron script (hourly, `:23`): publishes any record with `pipeline_state: "scheduled"` whose `scheduled_for` has passed, via the same shared `publish_feed_photo()`. Mirrors kavosh/dariche's `scripts/check_schedule.py` pattern (same alert-on-every-failure, `MAX_ATTEMPTS = 3` reasoning). A story-publish-specific failure is reported as `"auto-retry"` severity via `report_error.py` (see below) instead of `MAX_ATTEMPTS`-style self-retry — the sibling repo's hourly watchdog handles it. |
+| `lr_check_schedule.py [--dry-run]` | Cron script (hourly, `:23`): publishes any record with `pipeline_state: "scheduled"` whose `scheduled_for` has passed, via the same shared `publish_feed_photo()`. Mirrors kavosh/dariche's `scripts/check_schedule.py` pattern (same alert-on-every-failure, `MAX_ATTEMPTS = 3` reasoning). A story-publish-specific failure is reported as `"auto-retry"` severity via `report_error.py` (see below) — `telegram_receive.py`'s cron scan picks it up and retries automatically. |
 | `publish_story.py <image_or_video_url>` | Manual/ad-hoc: publish an Instagram Story from an arbitrary public URL. Thin CLI wrapper around `lr_common.py`'s `publish_story_from_url()` (2026-08-12) — kept mainly for connectivity testing. |
-| `retry_story_publish.py <asset_id>` | Retries just one already-`"posted"` record's Story publish (2026-08-12) — used by the sibling repo's hourly `check_pipeline_errors.py` watchdog for a `story_publish_error` auto-retry entry. Not something `lr_check_schedule.py` would ever pick back up itself, since by then `pipeline_state` is already `"posted"`, not `"scheduled"`. |
-| `report_error.py` | Reports an error both locally (`logs/error_log.json`, always, unconditionally) and into the sibling automation repo's shared `inbox/error_log.json` (best-effort, via `$TELEGRAM_BRIDGE_DIR`, same bridge pattern as `telegram_send.py`) — 2026-08-12, so an error is never silently lost even if the cross-repo bridge itself is down. `severity` is `"auto-retry"` (a known-safe mechanical fix exists — that sibling repo's hourly cron handles it directly) or `"needs-diagnosis"` (anything else, gets a real investigation). |
+| `retry_story_publish.py <asset_id>` | Retries just one already-`"posted"` record's Story publish (2026-08-12). Originally invoked by a sibling repo's watchdog; since 2026-08-25 `telegram_receive.py`'s own cron tick calls it directly for any unhandled `"auto-retry"` entry in `logs/error_log.json`. Not something `lr_check_schedule.py` would ever pick back up itself, since by then `pipeline_state` is already `"posted"`, not `"scheduled"`. |
+| `report_error.py` | Reports an error both locally (`logs/error_log.json`, always, unconditionally) and as a direct, best-effort Telegram alert via `telegram_common.py` (2026-08-25 — previously bridged to a sibling repo's shared log). `severity` is `"auto-retry"` (a known-safe mechanical fix exists — `telegram_receive.py`'s cron scan handles it) or `"needs-diagnosis"` (anything else, gets a real investigation). |
 
 ### Privacy constraint
 
@@ -493,41 +496,49 @@ Title and story picks are both live calibration signals — see
 lyrical/mystical, confirmed twice so far («یارو» over 9 poetic title options; a deadpan
 "forgot what he lost" story over a mystical one). Keep updating that memory on every pick.
 
-### Automated routine (Telegram-driven, built 2026-08-12)
+### Automated routine (Telegram-driven, built 2026-08-12, self-contained since 2026-08-25)
 
 The whole per-photo review (title pick → story pick → schedule confirm) now runs as a
 Telegram conversation, driven by the `.claude/commands/photo-beshno.md` skill
 (`claude -p "/photo-beshno"`), with **no manual in-session work** required per photo — see
 that file for the full step-by-step state machine.
 
-**Telegram bridge — reuses a sibling private automation repo's own bot/chat, not a
-dedicated one.** That repo is **not named here and its path is not hardcoded anywhere in
-this repo** — this repo is public. Its location lives only in this repo's own gitignored
-`.env` as `TELEGRAM_BRIDGE_DIR` (never printed/logged); ask Bahman if you need to know it.
-- **Sending**: always via `scripts/telegram_send.py`, which shells out to that repo's own
-  `notify_telegram.py` (`cwd=$TELEGRAM_BRIDGE_DIR`) — reuses its existing, unmodified send/record-context
-  logic. No Telegram secrets are duplicated into this repo's `.env`.
-- **Receiving**: this repo **never** runs its own Telegram `getUpdates` consumer — two
-  independent long-poll consumers on the same bot token steal each other's updates
-  (confirmed real bug in that repo's own remote-trigger handler on 2026-08-11). Instead, that
-  repo has one new file, `handle_photo_pipeline_trigger.py` (mirrors the exact mechanism of
-  its own pre-existing remote-trigger handler — peek `getUpdates` at the shared offset, only
-  ever advance past what it itself handled), wired into its always-on Telegram watcher's
-  chain. When a reply resolves (via that repo's own `inbox/telegram_action_map.json`) to a
-  message tagged `type: "photo_pipeline"`, it writes a handoff file to
-  `images/ig-queue/_inbox/<message_id>.json` in **this** repo and launches
-  `claude -p "/photo-beshno"` with `cwd` set to this repo.
+**This project has its own dedicated Telegram bot and group** — not shared with any other
+project (the earlier design shelled out to a sibling private automation repo's bot/chat via
+`TELEGRAM_BRIDGE_DIR`; that cross-repo bridge was removed 2026-08-25 in favor of this repo
+doing its own sending and receiving). `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` live in this
+repo's own gitignored `.env`.
+- **Sending**: always via `scripts/telegram_send.py` → `telegram_common.py`, straight
+  against the Telegram Bot API. Tagged sends (`asset_id`/`stage`) are recorded in
+  `images/ig-queue/_telegram_sent.json` (gitignored) so a later reply can be resolved back to
+  the right record.
+- **Receiving**: `scripts/telegram_receive.py`, invoked by cron every 5 minutes
+  (`*/5 * * * *`, wrapped in `flock -n logs/telegram_receive.lock` so an overlapping tick is
+  skipped rather than double-firing if a `claude -p` run is still in flight). This is the
+  **only** `getUpdates` consumer for this bot token — safe specifically because the token is
+  dedicated to this project and nothing else polls it (running two independent consumers on
+  one token is a real, confirmed bug elsewhere: they steal each other's updates). Each tick:
+  1. Resolves any reply to a tracked message (via `_telegram_sent.json`) into a handoff file
+     at `images/ig-queue/_inbox/<message_id>.json`.
+  2. Detects the plain-text keyword trigger (see below) with no handoff needed.
+  3. Scans `logs/error_log.json` for unhandled `severity: "auto-retry"` entries and retries
+     them via `retry_story_publish.py`, marking each with `retried_at` once handled.
+  4. If a handoff was written or the keyword fired, launches `claude -p "/photo-beshno"`
+     synchronously (never backgrounded — see that skill's "Never do" section).
 - **Manual trigger**: typing **`عکس‌بشنو`** (or `photobeshno`) as a plain message — not a
-  reply — in that same Telegram chat launches `/photo-beshno` directly, no handoff needed
-  (the skill just reads its own current state: starts the next photo if none is in flight,
-  or reports status if one's already in progress). This is Bahman's manual way to nudge the
-  pipeline without replying to a specific message.
+  reply — in the group launches `/photo-beshno` directly on the next cron tick, no handoff
+  needed (the skill just reads its own current state: starts the next photo if none is in
+  flight, or reports status if one's already in progress). Requires the bot's **Group
+  Privacy** setting to be **off** in @BotFather — otherwise Telegram only forwards commands
+  and replies-to-the-bot to it, never plain group messages (confirmed live 2026-08-25; this
+  is a platform default for group chats, not something specific to this bot).
 - The `/photo-beshno` skill reads any pending `_inbox/` handoff, advances the in-flight
   record's `pipeline_state`, and — once a schedule is confirmed — commits + pushes the final
   image/record (the schedule confirmation *is* the explicit go-ahead; this run is
   unattended) and immediately starts the next photo in the same run.
-- `images/ig-queue/_source/` (full-2048px GPT input) and `images/ig-queue/_inbox/`
-  (Telegram handoffs) are both gitignored — transient working files, never committed.
+- `images/ig-queue/_source/` (full-2048px GPT input), `images/ig-queue/_inbox/` (Telegram
+  handoffs), and `images/ig-queue/_telegram_sent.json` (sent-message map) are all gitignored —
+  transient working files, never committed.
 - `images/ig-queue/_story_universe.md` — running continuity log the skill reads before
   drafting each pair of story options and appends to after a pick, so the series' fictional
   stories loosely share one world instead of being fully independent per photo.
