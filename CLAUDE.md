@@ -422,7 +422,7 @@ work required per photo.
 | `telegram_common.py` | Shared low-level client for this project's own **dedicated** Telegram bot/chat (`TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` in `.env`) — `send_message`/`send_photo`/`send_video`/`get_updates`, plain `requests` against the Bot API directly, mirroring `lr_common.py`'s style. Added 2026-08-25 to replace the earlier cross-repo bridge (see **Automated routine** below). |
 | `telegram_get_chat_id.py` | One-off setup helper: after adding the bot to a Telegram group and sending it a message, prints every `chat.id` seen so the right one can be copied into `.env` as `TELEGRAM_CHAT_ID`. |
 | `telegram_send.py` | Sends a photo-pipeline message directly via `telegram_common.py`. When `asset_id`/`stage` are given, records `{message_id: {asset_id, stage}}` into `images/ig-queue/_telegram_sent.json` (gitignored) so `telegram_receive.py` can resolve an incoming reply back to the right record. |
-| `telegram_receive.py` | Cron-invoked (every 5 min) `getUpdates` poller/dispatcher — the **only** consumer of this bot's updates, safe since the token is dedicated to this project (see **Automated routine** below). Resolves replies via `_telegram_sent.json` into `_inbox/` handoff files, catches the `عکس‌بشنو`/`photobeshno` keyword trigger, scans `logs/error_log.json` for unhandled `"auto-retry"` entries and runs `retry_story_publish.py` for them, then launches `claude -p "/photo-beshno"` if anything Telegram-driven needs handling. |
+| `telegram_receive.py` | Cron-invoked (every 5 min) `getUpdates` poller/dispatcher — the **only** consumer of this bot's updates, safe since the token is dedicated to this project (see **Automated routine** below). Processes **every message in the group**, not just replies/keyword (2026-08-26): resolves tracked replies via `_telegram_sent.json` into `_inbox/` handoff files, has a fast path for the `عکس‌بشنو`/`photobeshno` keyword, and writes a generic (unresolved `asset_id`) handoff for anything else. Also scans `logs/error_log.json` for unhandled `"auto-retry"` entries and runs `retry_story_publish.py` for them. Launches `claude -p "/photo-beshno"` whenever any of the above fired. |
 | `lr_publish_photo.py [asset_id] [--confirm-publish]` | Manual one-off publish of an `"approved"` photo — dry-run preview by default. Calls the shared `publish_feed_photo()`. |
 | `lr_check_schedule.py [--dry-run]` | Cron script (hourly, `:23`): publishes any record with `pipeline_state: "scheduled"` whose `scheduled_for` has passed, via the same shared `publish_feed_photo()`. Mirrors kavosh/dariche's `scripts/check_schedule.py` pattern (same alert-on-every-failure, `MAX_ATTEMPTS = 3` reasoning). A story-publish-specific failure is reported as `"auto-retry"` severity via `report_error.py` (see below) — `telegram_receive.py`'s cron scan picks it up and retries automatically. |
 | `publish_story.py <image_or_video_url>` | Manual/ad-hoc: publish an Instagram Story from an arbitrary public URL. Thin CLI wrapper around `lr_common.py`'s `publish_story_from_url()` (2026-08-12) — kept mainly for connectivity testing. |
@@ -519,19 +519,28 @@ repo's own gitignored `.env`.
   dedicated to this project and nothing else polls it (running two independent consumers on
   one token is a real, confirmed bug elsewhere: they steal each other's updates). Each tick:
   1. Resolves any reply to a tracked message (via `_telegram_sent.json`) into a handoff file
-     at `images/ig-queue/_inbox/<message_id>.json`.
-  2. Detects the plain-text keyword trigger (see below) with no handoff needed.
-  3. Scans `logs/error_log.json` for unhandled `severity: "auto-retry"` entries and retries
+     at `images/ig-queue/_inbox/<message_id>.json` with the resolved `asset_id`/`stage`.
+  2. The plain-text keyword `عکس‌بشنو`/`photobeshno` (see below) is a dedicated fast path —
+     no handoff needed.
+  3. **Every other message in the group also gets processed** (2026-08-26, no keyword
+     required — Bahman's explicit ask): a reply to an untracked message, or any other plain
+     message, still becomes a handoff file, just with `asset_id`/`stage` left `null`. The
+     `/photo-beshno` skill's existing stale-handoff rule already knows what to do with an
+     unresolved handoff — investigate and answer a genuine question/comment via `--reply-to`,
+     or silently drop a no-op.
+  4. Scans `logs/error_log.json` for unhandled `severity: "auto-retry"` entries and retries
      them via `retry_story_publish.py`, marking each with `retried_at` once handled.
-  4. If a handoff was written or the keyword fired, launches `claude -p "/photo-beshno"`
-     synchronously (never backgrounded — see that skill's "Never do" section).
+  5. If a handoff was written or the keyword fired, launches `claude -p "/photo-beshno"`
+     synchronously (never backgrounded — see that skill's "Never do" section) — in practice
+     this means **every message in the group triggers a run**, not just replies/keyword.
 - **Manual trigger**: typing **`عکس‌بشنو`** (or `photobeshno`) as a plain message — not a
-  reply — in the group launches `/photo-beshno` directly on the next cron tick, no handoff
-  needed (the skill just reads its own current state: starts the next photo if none is in
-  flight, or reports status if one's already in progress). Requires the bot's **Group
-  Privacy** setting to be **off** in @BotFather — otherwise Telegram only forwards commands
-  and replies-to-the-bot to it, never plain group messages (confirmed live 2026-08-25; this
-  is a platform default for group chats, not something specific to this bot).
+  reply — in the group launches `/photo-beshno` directly on the next cron tick via the
+  dedicated fast path above (starts the next photo if none is in flight, or reports status if
+  one's already in progress). Any other plain message also reaches the pipeline now (point 3
+  above), just via the generic handoff path instead of this fast path. Either way requires the
+  bot's **Group Privacy** setting to be **off** in @BotFather — otherwise Telegram only
+  forwards commands and replies-to-the-bot to it, never plain group messages (confirmed live
+  2026-08-25; this is a platform default for group chats, not something specific to this bot).
 - The `/photo-beshno` skill reads any pending `_inbox/` handoff, advances the in-flight
   record's `pipeline_state`, and — once a schedule is confirmed — commits + pushes the final
   image/record (the schedule confirmation *is* the explicit go-ahead; this run is

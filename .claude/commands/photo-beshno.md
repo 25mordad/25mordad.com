@@ -44,7 +44,11 @@ Branch:
   handoff file once fully processed (success or handled failure).
 - **A handoff file exists but there's no matching in-flight record** (stale —
   e.g. a reply arrived after the pipeline already moved on, most often
-  because the record it was replying to already reached `scheduled`) →
+  because the record it was replying to already reached `scheduled`; **or**
+  the handoff's `asset_id` was `null` from the start — `telegram_receive.py`
+  writes one of these for any message in the group that isn't a reply to a
+  tracked pipeline message, since 2026-08-26 every message gets processed,
+  not just replies/the keyword — same branch applies either way) →
   delete it, but **do not just silently drop it if `reply_text` reads like a
   real question or comment**, not a redundant confirmation/no-op. Confirmed
   real 2026-08-12: Bahman asked (as a reply on an already-`scheduled` «شادی»

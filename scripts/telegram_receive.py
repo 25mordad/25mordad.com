@@ -8,19 +8,27 @@ twice.
 
 Each run:
 1. Fetches new Telegram updates since the last processed offset.
-2. A reply to a message this pipeline sent (looked up in
-   images/ig-queue/_telegram_sent.json) becomes a handoff file in
-   images/ig-queue/_inbox/<message_id>.json for the /photo-beshno skill.
-3. A plain (non-reply) message reading "عکس‌بشنو"/"photobeshno" is a manual
-   nudge — no handoff file needed, the skill just reads current state.
-4. Regardless of Telegram traffic this tick: scans logs/error_log.json for
+2. Every message in the configured group gets processed — no keyword
+   required (2026-08-26, Bahman's explicit ask):
+   - A reply to a message this pipeline sent (looked up in
+     images/ig-queue/_telegram_sent.json) becomes a handoff file in
+     images/ig-queue/_inbox/<message_id>.json with the resolved
+     asset_id/stage.
+   - A plain message reading "عکس‌بشنو"/"photobeshno" is a dedicated fast
+     path — no handoff file needed, the skill just reads current state.
+   - Anything else (a reply to an untracked message, or any other plain
+     message) still gets a handoff file, just with asset_id/stage left
+     null — the /photo-beshno skill's existing stale-handoff rule already
+     knows how to investigate and answer a genuine question, or silently
+     drop a no-op.
+3. Regardless of Telegram traffic this tick: scans logs/error_log.json for
    unhandled severity="auto-retry" entries and retries them via
    retry_story_publish.py (this replaces what the sibling repo's hourly
    watchdog used to do for the client-timeout-but-actually-published race in
    the Instagram Story publish path).
-5. If a handoff file was written or the keyword trigger fired, launches
+4. If a handoff file was written or the keyword trigger fired, launches
    `claude -p "/photo-beshno"` synchronously (never backgrounded — matches
-   the skill's own "Never do" rule) so the reply/nudge is acted on.
+   the skill's own "Never do" rule) so the reply/message is acted on.
 
 Usage:
     scripts/.venv/bin/python scripts/telegram_receive.py
@@ -63,6 +71,18 @@ def _save_offset(update_id: int) -> None:
     OFFSET_FILE.write_text(json.dumps({"last_update_id": update_id}, indent=2))
 
 
+def _write_handoff(message_id: int, asset_id, stage, text: str) -> None:
+    INBOX_DIR.mkdir(parents=True, exist_ok=True)
+    handoff = {
+        "message_id": message_id,
+        "asset_id": asset_id,
+        "stage": stage,
+        "reply_text": text,
+        "received_at": datetime.now(timezone.utc).isoformat(),
+    }
+    (INBOX_DIR / f"{message_id}.json").write_text(json.dumps(handoff, ensure_ascii=False, indent=2))
+
+
 def _handle_updates() -> bool:
     """Returns True if a handoff file was written or the keyword trigger fired."""
     offset = _load_offset()
@@ -83,23 +103,28 @@ def _handle_updates() -> bool:
 
         text = (message.get("text") or message.get("caption") or "").strip()
         reply_to = message.get("reply_to_message")
+        message_id = message["message_id"]
 
-        if reply_to:
-            tracked = sent_map.get(str(reply_to["message_id"]))
-            if tracked:
-                INBOX_DIR.mkdir(parents=True, exist_ok=True)
-                handoff = {
-                    "message_id": message["message_id"],
-                    "asset_id": tracked.get("asset_id"),
-                    "stage": tracked.get("stage"),
-                    "reply_text": text,
-                    "received_at": datetime.now(timezone.utc).isoformat(),
-                }
-                (INBOX_DIR / f"{message['message_id']}.json").write_text(
-                    json.dumps(handoff, ensure_ascii=False, indent=2)
-                )
-                triggered = True
-        elif text.lower() in KEYWORD_TRIGGERS:
+        tracked = sent_map.get(str(reply_to["message_id"])) if reply_to else None
+        if tracked:
+            # Reply to a message this pipeline sent — resolves precisely to
+            # the asset_id/stage it belongs to.
+            _write_handoff(message_id, tracked.get("asset_id"), tracked.get("stage"), text)
+            triggered = True
+        elif text.lower() in KEYWORD_TRIGGERS and not reply_to:
+            # Dedicated fast path: no handoff needed, the skill just reads
+            # current state (still supported, but no longer required — see
+            # the branch below).
+            triggered = True
+        else:
+            # Anything else in the group — a reply to an untracked message,
+            # or any plain message — still gets processed (2026-08-26,
+            # Bahman's explicit ask: no keyword required, everything in this
+            # group should reach the pipeline). asset_id/stage are left null
+            # since we can't resolve them; the skill's existing stale-handoff
+            # rule already handles this (answers a genuine question/comment
+            # via --reply-to, silently drops a no-op).
+            _write_handoff(message_id, None, None, text)
             triggered = True
 
     _save_offset(max_update_id + 1)
