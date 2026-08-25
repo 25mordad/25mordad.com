@@ -160,11 +160,23 @@ def main() -> None:
     triggered = _handle_updates()
     _retry_pending_errors()
 
+    # Also pick up any handoff left over from a previous tick that wrote it
+    # but then failed to launch claude -p (confirmed real 2026-08-26: a bad
+    # binary path crashed the launch below, leaving a handoff file that no
+    # later tick would have retried otherwise, since triggering was only
+    # ever based on *this* tick's fresh updates).
+    if not triggered:
+        triggered = any(INBOX_DIR.glob("*.json"))
     if not triggered:
         return
 
     print("dispatching /photo-beshno")
-    result = subprocess.run(["claude", "-p", "/photo-beshno"], cwd=REPO_ROOT, text=True)
+    # Full path required — cron's minimal PATH doesn't include wherever
+    # `claude` lives (confirmed live 2026-08-26: bare "claude" raised
+    # FileNotFoundError under cron), same reason every other project's
+    # crontab entry in this system also hardcodes this path.
+    result = subprocess.run(["/home/voidloop/.local/bin/claude", "-p", "/photo-beshno"],
+                             cwd=REPO_ROOT, text=True)
     if result.returncode != 0:
         print(f"claude -p exited {result.returncode}", file=sys.stderr)
 
