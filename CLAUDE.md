@@ -465,11 +465,22 @@ to save if any match.
 new series (current series: **«دنیا بزرگتر از اونه که ما تصور می‌کنیم»**, Ethiopia photos).
 
 `pipeline_state` drives the Telegram conversation (see **Automated routine** below):
-`"enhancing"` → `"awaiting_title"` → `"awaiting_story"` → `"awaiting_schedule"` →
-`"scheduled"` → (once `lr_check_schedule.py` actually publishes it) `"posted"`. Only one
-record may be outside `{"scheduled", "posted", "rejected"}` at a time — that's the
-"queue of one." `publish_attempts`/`publish_error` are added by `lr_check_schedule.py` only
-if a scheduled publish fails.
+`"enhancing"` → `"awaiting_edit"` → `"awaiting_title"` → `"awaiting_story"` →
+`"awaiting_schedule"` → `"scheduled"` → (once `lr_check_schedule.py` actually publishes it)
+`"posted"`. Only one record may be outside `{"scheduled", "posted", "rejected"}` at a time —
+that's the "queue of one." `publish_attempts`/`publish_error` are added by
+`lr_check_schedule.py` only if a scheduled publish fails.
+
+`"awaiting_edit"` (added 2026-09-03) is a review step before the AI quality pass — the
+just-fetched raw photo is sent to Telegram first, and Bahman's reply (specific edit
+instructions, or "همینجوری خوبه" for none) becomes the `gpt_enhance_photo.py` prompt. This
+replaced writing the enhance prompt blind and running it before anyone saw the result — a
+follow-up "fix the lighting" correction after the fact consistently beat the original bundled
+prompt, both because gpt-image-2 commits more fully to one narrow reactive instruction than to
+several requests bundled together, and because `gpt_enhance_photo.py` always re-edits from the
+untouched `_source/` original rather than chaining off a prior edit, so a second call was a
+fresh edit, not a refinement — anything unrepeated from the first prompt was simply lost. The
+AI edit call now happens exactly once per photo, after the instructions are settled.
 
 ### Caption format (locked, one combined bilingual caption, no first comment)
 

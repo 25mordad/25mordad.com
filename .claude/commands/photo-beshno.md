@@ -1,8 +1,9 @@
 # Photo Beshno — Lightroom→Instagram photo pipeline
 
 Drives one photo from the Lightroom `instagram` album through
-fetch → GPT quality-enhance → Telegram title pick → Telegram story pick →
-Telegram schedule confirm → auto-advance to the next photo. Always exactly
+fetch → Telegram edit-instructions review → GPT quality-enhance (once) →
+Telegram title pick → Telegram story pick → Telegram schedule confirm →
+auto-advance to the next photo. Always exactly
 one photo "in flight" (`pipeline_state` outside `{scheduled, posted,
 rejected}`) at a time. Invoked two ways:
 
@@ -137,38 +138,72 @@ Branch:
    - If it reports no unprocessed photos left, tell Bahman via
      `telegram_send.py` that the album queue is empty and stop — don't loop.
 2. **Read** `images/ig-queue/_source/<asset_id>.jpg` (the Read tool) — actually
-   look at the photo before writing a prompt.
-3. Write a **photo-specific** quality-enhance prompt (not a fixed template):
-   describe what "ready to publish on Instagram" means for *this* photo —
-   e.g. sharpening/denoise appropriate to the actual visible softness or
-   grain, exposure/contrast/color balance issues actually present, cleaning
-   up genuine sensor dust/artifacts if visible. Never invent new content,
-   never change composition/cropping, never alter what's actually in the
-   frame (people, objects, setting) — this is a quality pass, not a redraw.
-4. `scripts/.venv/bin/python scripts/gpt_enhance_photo.py <asset_id> --prompt "<prompt>"`
-   — writes the final, already-optimized `images/ig-queue/<asset_id>.jpg`
-   (auto-retries once on an OpenAI `moderation_blocked` response — confirmed
-   2026-08-12 this can happen on photos of children even for a plain quality
-   pass — then falls back to an optimize-only copy of the source with no AI
-   enhancement if it's rejected twice; **never** reword the prompt to try to
-   route around a moderation block). Its stdout says which path was taken —
-   read it.
-5. **Read** the result and sanity-check it actually still looks like the same
-   photo (gpt-image-2 edits can occasionally drift) — if it looks wrong,
-   note that in the Telegram message so Bahman knows to watch for it, rather
-   than silently sending a bad result. If the fallback path was used (GPT
-   rejected it), mention that plainly in the Telegram message too — it's not
-   a failure to hide, just means this one has no AI quality pass.
-6. Write **6-7 title suggestions**. Per `feedback_photo_naming_style.md`
-   (two confirmed calibration points so far: «یارو» over 9 poetic options;
-   deadpan story over mystical one) — lead with a few short, blunt,
-   colloquial/slang options, and include 1-2 more poetic ones for real
-   contrast, not as filler.
-7. `scripts/.venv/bin/python scripts/telegram_send.py "<message with the numbered title options>" --asset-id <asset_id> --stage awaiting_title --file images/ig-queue/<asset_id>.jpg`
-8. `scripts/.venv/bin/python scripts/update_ig_record.py <asset_id> --set pipeline_state=awaiting_title`
-9. Report in chat what was sent, then stop — waiting for Bahman's reply.
+   look at the photo. Form your own read of what a quality pass should fix
+   (sharpening/denoise, exposure/contrast/color balance, sensor dust/
+   artifacts) — you'll use this as a starting point in step 3 below, not send
+   it anywhere yet.
+3. `scripts/.venv/bin/python scripts/telegram_send.py "<short note that this is the raw, unedited photo, plus your own read of what it might need — ask what changes Bahman wants before it goes through the AI quality pass, and that saying nothing specific/'همینجوری خوبه' means proceeding with your own judgment>" --asset-id <asset_id> --stage awaiting_edit --file images/ig-queue/_source/<asset_id>.jpg`
+4. `scripts/.venv/bin/python scripts/update_ig_record.py <asset_id> --set pipeline_state=awaiting_edit`
+5. Report in chat what was sent, then stop — waiting for Bahman's reply.
 
-### 3. `pipeline_state: "awaiting_title"` + handoff → title picked
+**Why this step exists (added 2026-09-03):** previously the AI quality-enhance
+prompt was written blind — before anyone saw the result — bundling several
+requests at once (sharpen + exposure + color + noise), and a follow-up "fix
+the lighting" correction after the fact consistently produced a much better,
+more decisive result than the original bundled prompt. Confirmed with Bahman
+this is because gpt-image-2 commits more fully to a single, narrow,
+reactive instruction than to several requests bundled into one blind
+prediction — and because `gpt_enhance_photo.py` always re-edits from the
+untouched `_source/` original (never chains off a prior edit), a second call
+is a fresh edit, not a refinement, so anything from an unrepeated first
+prompt is simply lost. Moving the conversation *before* the one AI edit call
+(instead of after) fixes both: the prompt going into `gpt_enhance_photo.py`
+is now informed by what Bahman actually wants to see, and it only runs once.
+
+### 3. `pipeline_state: "awaiting_edit"` + handoff → edit instructions given (or none), or still discussing
+
+- **Reply is a genuine follow-up question/discussion** about the raw photo
+  (not yet a final go-ahead) → answer or continue the exchange via
+  `telegram_send.py --reply-to <message_id> --asset-id <asset_id> --stage
+  awaiting_edit`, stay in `pipeline_state: "awaiting_edit"`, delete the
+  handoff file, stop — waiting for the next reply. Same open-ended pattern
+  as `awaiting_story` round 2+.
+- **Reply says no specific changes wanted** (e.g. "نه", "همینجوری خوبه",
+  "خودت تشخیص بده"): proceed with your own quality-only read from step 2
+  above as the prompt.
+- **Reply gives specific edit instructions**: build the final prompt around
+  exactly what Bahman asked for, folded together with your own quality read
+  from step 2 for anything he didn't mention — one consolidated prompt, not
+  a list of separate asks. Never invent new content, never change
+  composition/cropping, never alter what's actually in the frame (people,
+  objects, setting) — this is a quality pass, not a redraw, regardless of
+  how the instructions are phrased.
+- Either way, this is the **one and only** `gpt_enhance_photo.py` call for
+  this photo — no second corrective pass. Run it:
+  `scripts/.venv/bin/python scripts/gpt_enhance_photo.py <asset_id> --prompt "<final prompt>"`
+  — writes the final, already-optimized `images/ig-queue/<asset_id>.jpg`
+  (auto-retries once on an OpenAI `moderation_blocked` response — confirmed
+  2026-08-12 this can happen on photos of children even for a plain quality
+  pass — then falls back to an optimize-only copy of the source with no AI
+  enhancement if it's rejected twice; **never** reword the prompt to try to
+  route around a moderation block). Its stdout says which path was taken —
+  read it.
+- **Read** the result and sanity-check it actually still looks like the same
+  photo (gpt-image-2 edits can occasionally drift) — if it looks wrong, note
+  that in the Telegram message so Bahman knows to watch for it, rather than
+  silently sending a bad result. If the fallback path was used (GPT rejected
+  it), mention that plainly too — it's not a failure to hide, just means this
+  one has no AI quality pass.
+- Write **6-7 title suggestions**. Per `feedback_photo_naming_style.md`
+  (two confirmed calibration points so far: «یارو» over 9 poetic options;
+  deadpan story over mystical one) — lead with a few short, blunt,
+  colloquial/slang options, and include 1-2 more poetic ones for real
+  contrast, not as filler.
+- `scripts/.venv/bin/python scripts/telegram_send.py "<message with the numbered title options>" --asset-id <asset_id> --stage awaiting_title --file images/ig-queue/<asset_id>.jpg`
+- `scripts/.venv/bin/python scripts/update_ig_record.py <asset_id> --set pipeline_state=awaiting_title`
+- Delete the handoff file. Report and stop.
+
+### 4. `pipeline_state: "awaiting_title"` + handoff → title picked
 
 If the reply doesn't actually pick a title — it's a question, feedback, or
 a comment about something else entirely (including about the pipeline
@@ -219,7 +254,7 @@ interactive session).
 7. `scripts/.venv/bin/python scripts/update_ig_record.py <asset_id> --set pipeline_state=awaiting_story`
 8. Delete the handoff file. Report and stop.
 
-### 4. `pipeline_state: "awaiting_story"` + handoff → story picked, or feedback
+### 5. `pipeline_state: "awaiting_story"` + handoff → story picked, or feedback
 
 If the reply doesn't actually pick one of the offered options (rejects both,
 asks for changes, gives new instructions) — do **not** advance
@@ -292,7 +327,7 @@ numbered steps below once a specific story is actually picked.
 7. `scripts/.venv/bin/python scripts/update_ig_record.py <asset_id> --set pipeline_state=awaiting_schedule`
 8. Delete the handoff file. Report and stop.
 
-### 5. `pipeline_state: "awaiting_schedule"` + handoff → schedule confirmed or adjusted
+### 6. `pipeline_state: "awaiting_schedule"` + handoff → schedule confirmed or adjusted
 
 - **Confirmed** (explicit yes, or a restated time that matches what was
   proposed):
@@ -322,7 +357,7 @@ numbered steps below once a specific story is actually picked.
   stay in `pipeline_state: "awaiting_schedule"`, reply in Telegram, delete
   the handoff file, stop (waiting for the next confirmation).
 
-### 6. Report
+### 7. Report
 
 Short chat summary: what stage ran, what was sent to Telegram, what's next
 (waiting for a reply, or a new cycle already started).
