@@ -41,7 +41,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from telegram_common import get_updates, chat_id  # noqa: E402
+from telegram_common import get_updates, chat_id, get_webhook_info  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 QUEUE_DIR = REPO_ROOT / "images" / "ig-queue"
@@ -49,6 +49,7 @@ INBOX_DIR = QUEUE_DIR / "_inbox"
 SENT_MAP_FILE = QUEUE_DIR / "_telegram_sent.json"
 OFFSET_FILE = REPO_ROOT / "logs" / "telegram_offset.json"
 ERROR_LOG_FILE = REPO_ROOT / "logs" / "error_log.json"
+RAW_LOG_FILE = REPO_ROOT / "logs" / "telegram_raw_updates.log"
 
 KEYWORD_TRIGGERS = {"عکس‌بشنو", "عکس بشنو", "photobeshno"}
 TERMINAL_STATES = {"scheduled", "posted", "rejected"}
@@ -99,10 +100,51 @@ def _write_handoff(message_id: int, asset_id, stage, text: str) -> None:
     (INBOX_DIR / f"{message_id}.json").write_text(json.dumps(handoff, ensure_ascii=False, indent=2))
 
 
+def _log_raw(offset_used, updates, webhook_info=None) -> None:
+    """Appends a one-line-per-tick JSON record of exactly what getUpdates
+    returned, regardless of whether anything matched our chat or triggered a
+    handoff. Added 2026-09-03 after two separate incidents (msg ~51, msg ~57
+    replies) where a message Bahman visibly sent in the group never appeared
+    in any subsequent getUpdates call — offset never advanced, and even a
+    fresh no-offset getWebhookInfo/getUpdates check showed the update already
+    gone (pending_update_count: 0) — with no rival getUpdates consumer for
+    this bot's token found anywhere on the system after two full forensic
+    passes. This can't explain what already happened, but the next time it
+    recurs, this log is the difference between "still a mystery" and having
+    the actual raw payload (or its absence) to point at."""
+    entry = {
+        "at": datetime.now(timezone.utc).isoformat(),
+        "offset_used": offset_used,
+        "count": len(updates),
+        "webhook_info": webhook_info,
+        "updates": [
+            {
+                "update_id": u.get("update_id"),
+                "chat_id": (u.get("message") or {}).get("chat", {}).get("id"),
+                "message_id": (u.get("message") or {}).get("message_id"),
+                "from": ((u.get("message") or {}).get("from") or {}).get("username"),
+                "text_preview": ((u.get("message") or {}).get("text") or (u.get("message") or {}).get("caption") or "")[:80],
+                "is_reply": bool((u.get("message") or {}).get("reply_to_message")),
+                "has_message_key": "message" in u,
+            }
+            for u in updates
+        ],
+    }
+    RAW_LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with RAW_LOG_FILE.open("a") as f:
+        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+
 def _handle_updates() -> bool:
     """Returns True if a handoff file was written or the keyword trigger fired."""
     offset = _load_offset()
-    updates = get_updates(offset=offset + 1 if offset else None)
+    offset_used = offset + 1 if offset else None
+    updates = get_updates(offset=offset_used)
+    try:
+        webhook_info = get_webhook_info()
+    except SystemExit as e:
+        webhook_info = {"error": str(e)}
+    _log_raw(offset_used, updates, webhook_info)
     if not updates:
         return False
 

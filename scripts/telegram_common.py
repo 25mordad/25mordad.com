@@ -97,3 +97,18 @@ def get_updates(offset: int = None, timeout: int = 0) -> list:
     if not body.get("ok"):
         raise SystemExit(f"Telegram getUpdates returned ok=false — {str(body)[:500]}")
     return body["result"]
+
+
+def get_webhook_info() -> dict:
+    """Returns Telegram's own view of pending/webhook state for this bot —
+    added 2026-09-03 as a diagnostic for messages that vanish before
+    get_updates() ever sees them (webhook briefly set elsewhere would push
+    updates out-of-band and clear them from the getUpdates backlog)."""
+    _require_config()
+    resp = requests.get(f"{API_BASE}/getWebhookInfo", timeout=15)
+    if not resp.ok:
+        raise SystemExit(f"Telegram getWebhookInfo failed: HTTP {resp.status_code} — {resp.text[:500]}")
+    body = resp.json()
+    if not body.get("ok"):
+        raise SystemExit(f"Telegram getWebhookInfo returned ok=false — {str(body)[:500]}")
+    return body["result"]
