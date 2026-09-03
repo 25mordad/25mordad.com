@@ -233,3 +233,43 @@ resolution): a maintained polite fiction — a fully functional door kept in
 use for outsiders alone, while insiders route around it through an
 unremarked gap. Future entries could reuse "the visible way is for
 guests, the real way is unmarked" as another stand-in for this family.
+
+### 14. «نوش» (photo of an elderly Hamar woman drinking through a straw
+from a gourd against blue water barrels, a younger woman behind her, a
+child on another woman's lap beside her)
+
+**Corrected 2026-09-03** — the entry below (a sickle/three-men version) was
+a *misreconstruction*: the actual option Bahman confirmed on 2026-08-31 was
+the house-rule/three-women version, lost to the same untracked-reply bug
+now fixed (see [[project_photo_beshno_reply_matching_fix]]). Replacing it
+with the real pick rather than leaving both:
+
+In this house there's a rule: everyone's task must be taught to them by
+the eldest of the house, and it isn't taught until their time comes. The
+grandmother says her time still hasn't come. The mother has been telling
+her daughter the same thing for thirty years, because she herself never
+learned it either. Now the daughter tells her own child the same
+sentence. No one has ever asked what was supposed to be taught first.
+
+No 44 motif (retired per entry 11). Third-person flat-fable voice. Same
+"deferred-teaching, our turn/time hasn't come" device as the misreconstructed
+draft below, but matrilineal (grandmother→mother→daughter) rather than
+patrilineal, and framed as an explicit household rule rather than a private
+habit. Routes entirely around the photo's actual drinking/straw/gourd scene
+per the indirection rule, since «نوش» already names that directly. Future
+entries could reuse "a skill or duty everyone defers passing on, generation
+after generation, without anyone ever asking what the first lesson was
+supposed to be" as another stand-in for the unresolved-fact family.
+
+<details>
+<summary>Misreconstructed draft (2026-08-31, superseded 2026-09-03 — kept
+for the record, not part of the shared universe)</summary>
+
+An old man sharpened his sickle once a year and said he'd teach his son
+how, when the boy's turn came. The son grew up, picked up a sickle of his
+own, and said the same sentence about his own son: our turn hasn't come
+yet. Now the grandson is a grown man too, and tells his own children the
+same thing. All three sharpen their sickles. All three cut well. None of
+them has ever taught the other.
+
+</details>

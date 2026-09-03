@@ -14,7 +14,20 @@ rejected}`) at a time. Invoked two ways:
   skill.
 - **Manually**, `claude -p "/photo-beshno"` with no handoff pending — used to
   bootstrap the very first cycle, or to nudge the pipeline if nothing is in
-  flight for some reason.
+  flight for some reason. **Always launch it through the same lock the cron
+  dispatcher uses:**
+  `flock -n logs/telegram_receive.lock -c '/home/voidloop/.local/bin/claude -p "/photo-beshno"'`
+  (run from the repo root) — never call `claude -p "/photo-beshno"` bare.
+  Confirmed real 2026-08-26 («نوش»): a manual run and a cron-dispatched run
+  picked up the same stale handoff simultaneously and both drafted/prepared
+  to send story options; only luck (the cron run happening to finish first,
+  and the manual run re-checking state right before its own send) prevented
+  a double-send. `telegram_receive.py`'s cron ticks already exclude each
+  other via this same `flock -n`, but nothing stopped a manual invocation
+  from racing one — routing manual launches through the identical lock file
+  closes that gap. If the lock is already held, this exits immediately
+  without running — that means a cron-dispatched run is already in flight;
+  don't retry in a loop, just stop and report that.
 
 Sending is always via `scripts/telegram_send.py` (talks directly to this
 project's own dedicated Telegram bot via `telegram_common.py`). Receiving is
@@ -63,7 +76,15 @@ Branch:
   a short `telegram_send.py --reply-to <message_id>` answering it directly
   (using whatever you can determine from the record/files) before deleting
   the handoff — don't leave Bahman's question unanswered just because the
-  pipeline itself has moved on.
+  pipeline itself has moved on. **If there's a record currently in flight**,
+  always also pass `--asset-id <id> --stage <its current pipeline_state>` on
+  this send, even though it's just a side answer, not a stage-progressing
+  one (confirmed real 2026-08-31, «نوش»: an untagged apology/explanation
+  reply became a dead end — Bahman's natural next reply to *that* message
+  came back untracked and had to be treated as stale/ambiguous instead of
+  the actual answer it was. `telegram_receive.py` now has a fallback that
+  resolves an untracked reply to the sole in-flight record too, but tagging
+  every send is the primary fix — don't rely on the fallback alone).
 - **Stale handoff on a `posted` record, asking to redo/regenerate the Story
   graphic** (e.g. "دوباره با مدلی که قرار بود بسازش" after deleting the
   live Story) — confirmed real 2026-08-13, «مذهب». No defined procedure
@@ -251,10 +272,12 @@ numbered steps below once a specific story is actually picked.
    wait for a reply before continuing to the caption/schedule step below.
 5. Propose a `scheduled_for` slot (corrected 2026-08-12 — the original "~7
    days out" default was wrong, Bahman explicitly wants posting to start
-   **tomorrow**, not next week): take the latest `scheduled_for` across all
-   existing records; if none, or if it's already in the past, propose
-   **tomorrow**; otherwise propose the day after the latest one — i.e.
-   roughly one photo per day, sequential, no artificial gap. Pick a specific
+   **tomorrow**, not next week; cadence corrected again 2026-08-25 — Bahman
+   re-confirmed the actual agreed cadence is **every other day**, not daily,
+   after it had already drifted back once): take the latest `scheduled_for`
+   across all existing records; if none, or if it's already in the past,
+   propose **tomorrow**; otherwise propose **two days after** the latest one
+   — i.e. one photo every other day, sequential, no artificial gap. Pick a specific
    time using general Instagram-engagement best-practice info (e.g. evening
    hours) until real post-performance stats exist for this account — once
    there's a real posting history, look at it and refine the time choice

@@ -51,6 +51,7 @@ OFFSET_FILE = REPO_ROOT / "logs" / "telegram_offset.json"
 ERROR_LOG_FILE = REPO_ROOT / "logs" / "error_log.json"
 
 KEYWORD_TRIGGERS = {"عکس‌بشنو", "عکس بشنو", "photobeshno"}
+TERMINAL_STATES = {"scheduled", "posted", "rejected"}
 
 
 def _load_json(path: Path, default):
@@ -69,6 +70,21 @@ def _load_offset() -> int:
 def _save_offset(update_id: int) -> None:
     OFFSET_FILE.parent.mkdir(parents=True, exist_ok=True)
     OFFSET_FILE.write_text(json.dumps({"last_update_id": update_id}, indent=2))
+
+
+def _sole_in_flight_record():
+    """Returns (asset_id, pipeline_state) for the one record currently in
+    flight, or None if there's zero or more than one (ambiguous — don't
+    guess)."""
+    in_flight = []
+    for path in QUEUE_DIR.glob("*.json"):
+        record = _load_json(path, None)
+        if not record:
+            continue
+        state = record.get("pipeline_state")
+        if state and state not in TERMINAL_STATES:
+            in_flight.append((record.get("asset_id", path.stem), state))
+    return in_flight[0] if len(in_flight) == 1 else None
 
 
 def _write_handoff(message_id: int, asset_id, stage, text: str) -> None:
@@ -116,14 +132,31 @@ def _handle_updates() -> bool:
             # current state (still supported, but no longer required — see
             # the branch below).
             triggered = True
+        elif reply_to and _sole_in_flight_record():
+            # A genuine reply (not a plain message) to a message this
+            # pipeline sent but never tagged with --asset-id/--stage — e.g.
+            # an apology/explanation sent via telegram_send.py --reply-to
+            # with no tagging (confirmed real 2026-08-31, «نوش»: Bahman kept
+            # replying to the bot's own clarifying messages, which were
+            # never recorded in _telegram_sent.json, so every one of those
+            # replies fell through to asset_id=None and got treated as
+            # possibly-stale chatter instead of an actual answer). Since a
+            # reply is a deliberate, targeted action (unlike a plain
+            # message), and there's exactly one record actually waiting on
+            # an answer, resolve it to that record's current stage rather
+            # than leaving it unresolved.
+            asset_id, stage = _sole_in_flight_record()
+            _write_handoff(message_id, asset_id, stage, text)
+            triggered = True
         else:
-            # Anything else in the group — a reply to an untracked message,
-            # or any plain message — still gets processed (2026-08-26,
-            # Bahman's explicit ask: no keyword required, everything in this
-            # group should reach the pipeline). asset_id/stage are left null
-            # since we can't resolve them; the skill's existing stale-handoff
-            # rule already handles this (answers a genuine question/comment
-            # via --reply-to, silently drops a no-op).
+            # Anything else in the group — a reply when no single in-flight
+            # record exists (stale or ambiguous), or any plain message —
+            # still gets processed (2026-08-26, Bahman's explicit ask: no
+            # keyword required, everything in this group should reach the
+            # pipeline). asset_id/stage are left null since we can't resolve
+            # them; the skill's existing stale-handoff rule already handles
+            # this (answers a genuine question/comment via --reply-to,
+            # silently drops a no-op).
             _write_handoff(message_id, None, None, text)
             triggered = True
 
