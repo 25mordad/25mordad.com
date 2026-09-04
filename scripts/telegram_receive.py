@@ -120,12 +120,13 @@ def _log_raw(offset_used, updates, webhook_info=None) -> None:
         "updates": [
             {
                 "update_id": u.get("update_id"),
-                "chat_id": (u.get("message") or {}).get("chat", {}).get("id"),
-                "message_id": (u.get("message") or {}).get("message_id"),
-                "from": ((u.get("message") or {}).get("from") or {}).get("username"),
-                "text_preview": ((u.get("message") or {}).get("text") or (u.get("message") or {}).get("caption") or "")[:80],
-                "is_reply": bool((u.get("message") or {}).get("reply_to_message")),
-                "has_message_key": "message" in u,
+                "chat_id": (u.get("message") or u.get("edited_message") or {}).get("chat", {}).get("id"),
+                "message_id": (u.get("message") or u.get("edited_message") or {}).get("message_id"),
+                "from": ((u.get("message") or u.get("edited_message") or {}).get("from") or {}).get("username"),
+                "text_preview": ((u.get("message") or u.get("edited_message") or {}).get("text") or (u.get("message") or u.get("edited_message") or {}).get("caption") or "")[:80],
+                "is_reply": bool((u.get("message") or u.get("edited_message") or {}).get("reply_to_message")),
+                "is_edit": "edited_message" in u,
+                "has_message_key": "message" in u or "edited_message" in u,
             }
             for u in updates
         ],
@@ -155,7 +156,16 @@ def _handle_updates() -> bool:
 
     for update in updates:
         max_update_id = max(max_update_id, update["update_id"])
-        message = update.get("message")
+        # A user editing a message (e.g. re-sending a confirmation by editing
+        # an old one instead of typing fresh) arrives as its own
+        # edited_message update, never a message update — confirmed live
+        # 2026-09-04 as the cause of a lost schedule confirmation: the
+        # update WAS delivered by Telegram (pending_update_count: 1) but
+        # this loop only ever checked update.get("message"), so it silently
+        # `continue`d past it while still advancing the offset, discarding
+        # it for good. Treat an edit as equivalent to a fresh message with
+        # its new text.
+        message = update.get("message") or update.get("edited_message")
         if not message or str(message["chat"]["id"]) != target_chat:
             continue
 
@@ -202,7 +212,19 @@ def _handle_updates() -> bool:
             _write_handoff(message_id, None, None, text)
             triggered = True
 
-    _save_offset(max_update_id + 1)
+    # Store the raw last-seen update_id, not +1 — _handle_updates() already
+    # adds +1 when computing offset_used above. Saving max_update_id + 1
+    # here double-incremented on every batch, permanently skipping exactly
+    # one real update_id after every processed batch (Telegram confirms/
+    # discards anything below the offset you request, whether or not you
+    # ever actually saw it). Confirmed live 2026-09-04: "test 3"
+    # (update_id 756381057) was caught by a live, non-destructive peek but
+    # the very next real cron tick requested offset=756381058, skipping it
+    # forever with zero error or trace — the root cause of every
+    # "message vanished, Telegram itself shows nothing pending" incident
+    # logged in project_telegram_missed_replies memory (1-5), none of which
+    # were ever actually a Telegram-side delivery gap.
+    _save_offset(max_update_id)
     return triggered
 
 
