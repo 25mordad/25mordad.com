@@ -273,3 +273,22 @@ same thing. All three sharpen their sickles. All three cut well. None of
 them has ever taught the other.
 
 </details>
+
+### 15. «خوش‌آمدید» (photo of two children waving at the camera in front of
+a lavender house with a hand-painted "WEL COME" sign over the doorway)
+
+The custom here is that whoever arrives first says hello. Two men live at
+opposite ends of one road, and every morning they meet in the middle of
+it. Each believes himself the owner of the road, and the other the
+newcomer. For years they've passed each other without saying a word about
+it. No one in the village sees anything wrong with it; they just say —
+custom is custom.
+
+No 44 motif (retired per entry 11). Third-person flat-fable voice. Routes
+entirely around the photo's actual WELCOME sign and the children's
+waving/greeting per the indirection rule, since the title already names
+that directly. Extends the unresolved-custom family (entry 3's "no
+slope," entry 12's "visible door vs. real gap"): two people who each
+privately hold a contradictory self-image and never reconcile it, with
+the village treating the standoff as unremarkable tradition rather than
+something to resolve.
