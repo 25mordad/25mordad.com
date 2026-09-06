@@ -292,3 +292,22 @@ slope," entry 12's "visible door vs. real gap"): two people who each
 privately hold a contradictory self-image and never reconcile it, with
 the village treating the standoff as unremarkable tradition rather than
 something to resolve.
+
+### 16. «غرور» (boy in a red garment, one bare foot propped on an old tire,
+stick in hand, chin lifted, looking past the camera; two younger children
+walking past behind him)
+
+Years ago a man bought a pair of shoes in the city. He still hasn't worn
+them. Whenever there's a wedding or a party, he carries them in his hand
+and walks barefoot instead, so they won't wear out. Everyone in the
+village knows his shoes. No one has ever seen him actually wear them, and
+no one has ever asked whether they even fit.
+
+No 44 motif (retired per entry 11). Third-person flat-fable voice. Routes
+entirely around the boy, the tire, and his posture per the indirection
+rule, since the title («غرور»/pride) is itself already an interpretive
+read of his stance rather than anything literal in frame. Pride expressed
+as private preservation of an unused object rather than through use or
+display — a new variant of the unresolved-custom family (entry 15's two
+men, entry 9's open door): everyone accepts the ritual as given, no one
+questions its actual function.
