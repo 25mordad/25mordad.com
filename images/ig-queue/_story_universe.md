@@ -311,3 +311,24 @@ as private preservation of an unused object rather than through use or
 display — a new variant of the unresolved-custom family (entry 15's two
 men, entry 9's open door): everyone accepts the ritual as given, no one
 questions its actual function.
+
+
+### 17. «برزخ» (close-up of a boy with a serious/uncertain expression in
+an empty dry landscape, another child balanced on a distant pole-like
+structure holding a container in the background)
+
+In that village, the name given to a child at birth is a temporary one.
+The real name comes later, after a task that has to be completed. For
+some, that task never comes, and they carry the temporary name to the
+end -- it's even the one carved on their gravestone. In the village
+register, the column for their real name stays blank, and no one has
+ever filled it in. No one has asked, either, how long a temporary name
+stays temporary.
+
+No 44 motif (retired per entry 11). Third-person flat-fable voice. Routes
+entirely around the boy's expression and the background figure per the
+indirection rule, since the title is already an interpretive read of his
+suspended look. Extends the unresolved-custom family with a new variant:
+a designation meant to be provisional that quietly becomes permanent by
+default, through inaction, with an official record left visibly
+incomplete and nobody troubled by it.
