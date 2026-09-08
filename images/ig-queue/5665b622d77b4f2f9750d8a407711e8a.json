@@ -3,18 +3,19 @@
   "image": "5665b622d77b4f2f9750d8a407711e8a.jpg",
   "capture_date": "2026-02-01T14:40:16.000+03:00",
   "fetched_at": "2026-09-03T17:51:24.766668+00:00",
-  "status": "posted",
-  "pipeline_state": "posted",
+  "status": "approved",
+  "pipeline_state": "scheduled",
   "series": "دنیا بزرگتر از اونه که ما تصور می‌کنیم",
   "title": "خوش‌آمدید",
   "story": "رسم اینجا این است که هر که از راه می‌رسد، اول او سلام کند. دو مرد در دو سر یک جاده زندگی می‌کنند و هر صبح وسط همان جاده به هم می‌رسند. هرکدام خودش را صاحب راه می‌داند و آن یکی را تازه‌رسیده. سال‌هاست از کنار هم رد می‌شوند و هیچ‌کدام چیزی نگفته. در آبادی کسی این را اشکال نمی‌داند؛ می‌گویند رسم، رسم است.\n",
   "caption": "«خوش‌آمدید»\n\nرسم اینجا این است که هر که از راه می‌رسد، اول او سلام کند. دو مرد در دو سر یک جاده زندگی می‌کنند و هر صبح وسط همان جاده به هم می‌رسند. هرکدام خودش را صاحب راه می‌داند و آن یکی را تازه‌رسیده. سال‌هاست از کنار هم رد می‌شوند و هیچ‌کدام چیزی نگفته. در آبادی کسی این را اشکال نمی‌داند؛ می‌گویند رسم، رسم است.\n\n\"Welcome\"\n\nThe custom here is that whoever arrives first says hello. Two men live at opposite ends of one road, and every morning they meet in the middle of it. Each believes himself the owner of the road, and the other the newcomer. For years they've passed each other without saying a word about it. No one in the village sees anything wrong with it; they just say — custom is custom.\n\nدنیا بزرگتر از اونه که ما تصور می‌کنیم.\nThe world is bigger than we imagine.\n\n#photography #travelphotography #instatravel #wanderlust #explorepage #streetphotography #documentaryphotography #ethiopia #africa #tribesofethiopia #omovalley #villagelife #childhoodunplugged #travelgram #natgeotravel #cultureofethiopia #africanculture #humanity #storytelling #dailylife #عکاسی #سفر #هنر #اتیوپی #قصه‌گویی #دنیای_بزرگ #سفرنامه #فرهنگ #زندگی_روستایی #هوش‌واره\n",
-  "scheduled_for": "2026-09-07T19:30:00",
-  "publish_attempts": 0,
-  "posted_at": "2026-09-07T19:23:35.651647+00:00",
-  "media_id": "18159249064495670",
-  "story_media_id": "18002850350789659",
-  "story_posted_at": "2026-09-07T19:24:14.839373+00:00",
-  "story_publish_error": "",
-  "publish_error": ""
+  "scheduled_for": "2026-09-09T19:00:00",
+  "previous_publish": {
+    "posted_at": "2026-09-07T19:23:35.651647+00:00",
+    "media_id": "18159249064495670",
+    "story_media_id": "18002850350789659",
+    "story_posted_at": "2026-09-07T19:24:14.839373+00:00",
+    "deleted_from_instagram_by": "bahman",
+    "deleted_note": "Bahman manually deleted this post from Instagram on 2026-09-08 and requested it go back into the queue to republish"
+  }
 }
