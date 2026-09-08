@@ -18,10 +18,12 @@ authorization, given earlier rather than skipped, which is why this may run
 unattended. Condition 4 is checked here rather than left to the publisher
 because a missing asset must be an alert, never a silent skip.
 
-No retries within a tick: a failed publish leaves `pipeline_state: "scheduled"`
-untouched; the next tick tries again. Gives up after MAX_ATTEMPTS and needs a
-human at that point (Instagram publishing is free, so retrying costs nothing
-but time — this is just a safety valve against an infinite failure loop).
+MAX_ATTEMPTS immediate retries happen within the same tick (changed 2026-09-08:
+with the cron now running once daily instead of hourly, spreading retries
+across ticks meant a bad day could wait 24h before trying again). A failed
+attempt retries right away, in-process; only once MAX_ATTEMPTS is exhausted
+does it give up, leave `pipeline_state: "scheduled"` untouched, and send a
+Telegram alert explaining what failed and why a human is needed.
 
 Usage:
     scripts/.venv/bin/python scripts/lr_check_schedule.py
@@ -41,7 +43,7 @@ from report_error import log_error  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 QUEUE_DIR = REPO_ROOT / "images" / "ig-queue"
-MAX_ATTEMPTS = 3
+MAX_ATTEMPTS = 2
 
 
 def due_records():
@@ -117,30 +119,37 @@ def main() -> None:
         if args.dry_run:
             continue
 
-        record["publish_attempts"] = attempts + 1
-        record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
-        try:
-            media_id = publish_feed_photo(asset_id, record, record_path)
-        except Exception as e:
-            # Was `except SystemExit` only — see lr_common.py's matching fix
-            # (2026-08-25): a raw exception here can otherwise skip the
-            # publish_attempts write and risk a duplicate feed publish on the
-            # next tick.
-            detail = str(e)
-            print(f"❌ {asset_id}: publish failed — {detail}")
-            left = MAX_ATTEMPTS - (attempts + 1)
+        # Retry immediately, in-process, up to MAX_ATTEMPTS — the cron now
+        # runs only once a day, so waiting for "the next tick" would mean a
+        # bad day isn't retried until 24h later.
+        media_id = None
+        detail = None
+        while attempts < MAX_ATTEMPTS:
+            attempts += 1
+            record["publish_attempts"] = attempts
+            record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
+            try:
+                media_id = publish_feed_photo(asset_id, record, record_path)
+                detail = None
+                break
+            except Exception as e:
+                # Was `except SystemExit` only — see lr_common.py's matching fix
+                # (2026-08-25): a raw exception here can otherwise skip the
+                # publish_attempts write and risk a duplicate feed publish on
+                # a later attempt.
+                detail = str(e)
+                print(f"❌ {asset_id}: attempt {attempts}/{MAX_ATTEMPTS} failed — {detail}")
+
+        if media_id is None:
             if not record.get("publish_error"):
                 record["publish_error"] = detail
                 record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
-                alert(f"⚠️ عکس {asset_id}\n\nانتشار شکست خورد:\n{detail}\n\n"
-                      f"{'دوباره تلاش می‌شود.' if left > 0 else 'دیگر تلاش نمی‌شود، دستی لازم است.'}")
-            # Only feed the error log once this script's own built-in retries
-            # (MAX_ATTEMPTS) are exhausted — a single transient hiccup that
-            # self-heals next tick shouldn't page the hourly diagnosis cron.
-            if left <= 0:
-                log_error("lr_check_schedule.py:publish_error", "needs-diagnosis",
-                          f"{asset_id}: feed publish failed after {MAX_ATTEMPTS} attempts — {detail}",
-                          context={"asset_id": asset_id})
+            alert(f"⚠️ عکس {asset_id} («{record.get('title')}»)\n\n"
+                  f"بعد از {MAX_ATTEMPTS} تلاش پشت‌سرهم منتشر نشد:\n{detail}\n\n"
+                  f"دیگر تلاش خودکاری نمی‌شود — نیاز به بررسی دستی است.")
+            log_error("lr_check_schedule.py:publish_error", "needs-diagnosis",
+                      f"{asset_id}: feed publish failed after {MAX_ATTEMPTS} immediate attempts — {detail}",
+                      context={"asset_id": asset_id})
             failed += 1
             continue
 
