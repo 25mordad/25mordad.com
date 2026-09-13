@@ -61,4 +61,22 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://25mordad.com/PanorAIma/surviving-or-living-en</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://25mordad.com/PanorAIma/surviving-or-living-en" />
+    <xhtml:link rel="alternate" hreflang="fa" href="https://25mordad.com/PanorAIma/surviving-or-living-fa" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://25mordad.com/PanorAIma/surviving-or-living-en" />
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://25mordad.com/PanorAIma/surviving-or-living-fa</loc>
+    <xhtml:link rel="alternate" hreflang="fa" href="https://25mordad.com/PanorAIma/surviving-or-living-fa" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://25mordad.com/PanorAIma/surviving-or-living-en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://25mordad.com/PanorAIma/surviving-or-living-en" />
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

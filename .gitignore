@@ -20,9 +20,16 @@ files/PanorAIma/**/peoples-of-iran-*.html
 files/PanorAIma/**/preview-*.png
 files/PanorAIma/**/preview-*.jpg
 
-# Article in draft, not yet decided for publication — keep out of the public repo
-files/PanorAIma/surviving-or-living/
-images/PanorAIma/surviving-or-living/
+# surviving-or-living: superseded draft versions and private working notes —
+# only the final fa-v4/en sources, scripts, and illustration caches are tracked
+files/PanorAIma/surviving-or-living/surviving-or-living-fa.md
+files/PanorAIma/surviving-or-living/surviving-or-living-fa-short.md
+files/PanorAIma/surviving-or-living/surviving-or-living-fa-v2.md
+files/PanorAIma/surviving-or-living/surviving-or-living-fa-v3.md
+files/PanorAIma/surviving-or-living/review-notes.md
+files/PanorAIma/surviving-or-living/sources-rejected.md
+files/PanorAIma/surviving-or-living/sections/
+files/PanorAIma/surviving-or-living/make_pdf.py
 
 # Photo pipeline (P1.9): full-2048px source fetches (GPT-enhance input, never
 # the published file), Telegram reply handoffs, and the sent-message map used
