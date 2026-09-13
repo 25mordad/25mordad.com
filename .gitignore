@@ -30,3 +30,6 @@ images/ig-queue/_source/
 images/ig-queue/_inbox/
 images/ig-queue/_telegram_sent.json
 logs/
+
+# Voice-profile raw corpus (tweets, Telegram export, voice notes, transcripts) — personal, never committed
+files/voice/corpus/
