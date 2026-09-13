@@ -258,6 +258,38 @@ The `## -1 — title-card` and `## 0 — dedication` blocks in `card-texts.md` c
   - Briefly explain what the article is about and link to the EN page.
   - **Never use flag emojis** (🇬🇧 etc.) — house rule.
 
+### Per-Section Instagram Carousel (new format, from «زنده‌ماندن یا زیستن؟» onward)
+
+Decided 2026-09-13 for the third article: instead of the 18-card deck above, **each article
+section becomes its own Instagram carousel** (10–15 slides), posted one section at a time.
+Bahman rejected one-line "teaser" slides — each slide carries the section's real prose
+(3–6 sentences, verbatim from the approved draft), so a reader gets the idea without the
+article. Slide count grows to fit the text, never the other way round.
+
+- **Two-stage render:** `gpt-image-2` on `images/generations` (1536×1024, `quality: high`)
+  draws the illustration **only** — the prompt forbids text. Playwright then composes the
+  1088×1360 (4:5) slide: illustration on top (~725px, fading into the panel), cream text
+  panel below with Vazirmatn. Baking Persian body text into the model output was rejected:
+  it garbles longer text. Illustrations are cached as PNG next to the generator so text or
+  layout tweaks never cost another API call.
+- **Visual style (fixed across a deck):** flat editorial illustration, film grain, three
+  colors — cream ground, warm ochre for anything open/alive, cold slate blue for anything
+  closed/stagnant; faceless silhouettes; one metaphor per slide; two recurring motifs
+  ("open road to the horizon" vs "closed loop") carry the section's argument visually.
+- **Slide anatomy:** cover = tag «بخش اول» + section title + «از نوشتار «<article>»» + author
+  «بهمن رشادی»; body slides = short bold title + prose; optional faint source line written
+  as plain Persian, e.g. «بر پایه‌ی پژوهش فرن نوریس درباره‌ی تاب‌آوری اجتماع (۲۰۰۸)» —
+  never a bare academic citation like «نوریس و همکاران، ۲۰۰۸» (rejected); footer
+  `25Mordad.com` + `n / total`.
+- **Generator:** `files/PanorAIma/<slug>/gen_ig_slides.py` (slides defined inline; run one
+  slug at a time, review, then continue). Output
+  `images/PanorAIma/<slug>/instagram/section-NN/<nn>-<slug>.jpg`. While the article is
+  unpublished, that images folder is gitignored like the draft folder — the slides carry
+  unpublished text and this repo is public.
+- **Workflow:** one slide at a time, sent to Bahman for approval before the next.
+  Caption for the carousel: standalone Persian text for someone who never read the piece,
+  closing with a nudge to «فراتر از قاب» + link in bio, hashtags last, always `#هوش‌واره`.
+
 ### Hero Images
 
 Each article ships with **square hero images** — one per section — embedded inside the article HTML body after each `<h2>` heading. Same visual design as story cards (gold-bordered dark panel over full-bleed bg photo) but square and no CTA.
