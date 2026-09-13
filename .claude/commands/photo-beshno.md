@@ -224,10 +224,20 @@ following a defined step — exactly the kind of edit this skill cannot make
 to itself unattended (`.claude/` file changes need direct approval in an
 interactive session).
 
-1. Read `context.text` from the handoff (Bahman's reply) — it may be one of
+1. Read `reply_text` from the handoff (Bahman's reply) — it may be one of
    the numbered options verbatim, a paraphrase, or something else entirely
    (he's picked something not offered before — «یارو» itself was not one of
-   the 9 options offered). Use judgment, not strict matching.
+   the 9 options offered). Use judgment, not strict matching. **If `reply_text`
+   is an ordinal/positional reply** ("گزینه یک", "اولی", "دومی", "شماره ۲",
+   etc.) rather than the actual chosen title text, resolve it against
+   `sent_text` — the exact message this pipeline sent that's being replied to
+   (recorded since 2026-09-13, fixes the recurring lost-pick bug below) —
+   which contains the original numbered list; pick the matching item from
+   there. If `sent_text` is null (reply targets a message sent before this
+   fix, or an untracked message) and the pick can't otherwise be determined,
+   do not guess — this is the exact failure mode documented in
+   `project_photo_beshno_stale_state_lost_content` memory; ask Bahman to
+   restate the option/title he picked before proceeding.
 2. `scripts/.venv/bin/python scripts/update_ig_record.py <asset_id> --set title="<picked title>"`
    — never the Edit/Write tool (see "Never do" below).
 3. **Update `feedback_photo_naming_style.md`** with this new data point
@@ -255,6 +265,19 @@ interactive session).
 8. Delete the handoff file. Report and stop.
 
 ### 5. `pipeline_state: "awaiting_story"` + handoff → story picked, or feedback
+
+Resolve `reply_text` against `sent_text` first — a bare ordinal reply like
+"گزینه یک"/"اولی" only identifies *which* option, not what it said; the full
+text of both options is in the handoff's `sent_text` field (the original
+message this pipeline sent, recorded since 2026-09-13). Pull the actual
+chosen story text from there before doing anything else below. This is the
+exact gap that made five separate picks unrecoverable before this fix (see
+`project_photo_beshno_stale_state_lost_content` memory) — if `sent_text` is
+null here (reply targets a pre-fix or untracked message) and the story text
+genuinely can't be recovered any other way (check `_story_universe.md` and
+`logs/error_log.json` first, as those past incidents did), say so plainly
+and ask Bahman to repaste the chosen option's exact text rather than
+inventing or guessing at it.
 
 If the reply doesn't actually pick one of the offered options (rejects both,
 asks for changes, gives new instructions) — do **not** advance
@@ -328,6 +351,18 @@ numbered steps below once a specific story is actually picked.
 8. Delete the handoff file. Report and stop.
 
 ### 6. `pipeline_state: "awaiting_schedule"` + handoff → schedule confirmed or adjusted
+
+A bare "تایید"/"باشه" confirms *the proposal in the message being replied
+to*, not necessarily the record's very latest one (a back-and-forth can span
+several proposals). Use the handoff's `sent_text` (the exact message this
+pipeline sent, recorded since 2026-09-13) to read off exactly what date/time
+was being confirmed, rather than assuming it matches the most recent
+proposal or re-deriving it from cadence rules — see
+`project_photo_beshno_stale_state_lost_content` memory for two incidents
+where this exact ambiguity nearly caused a wrong scheduled time. If
+`sent_text` is null, fall back to the cadence rule in step 5.5 above as a
+best guess, but say explicitly in the confirmation reply which date/time was
+recorded so a mismatch is caught immediately rather than silently.
 
 - **Confirmed** (explicit yes, or a restated time that matches what was
   proposed):

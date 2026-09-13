@@ -39,6 +39,7 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Optional
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from telegram_common import get_updates, chat_id, get_webhook_info  # noqa: E402
@@ -88,12 +89,19 @@ def _sole_in_flight_record():
     return in_flight[0] if len(in_flight) == 1 else None
 
 
-def _write_handoff(message_id: int, asset_id, stage, text: str) -> None:
+def _write_handoff(message_id: int, asset_id, stage, text: str, sent_text: Optional[str] = None) -> None:
     INBOX_DIR.mkdir(parents=True, exist_ok=True)
     handoff = {
         "message_id": message_id,
         "asset_id": asset_id,
         "stage": stage,
+        # The exact text this pipeline itself sent in the message being
+        # replied to (from _telegram_sent.json, added 2026-09-13) — lets a
+        # fresh /photo-beshno run resolve an ordinal reply like "گزینه یک"
+        # against the actual options offered, instead of guessing or
+        # reporting the content as lost. None when the reply targets an
+        # untracked/older message (sent before this fix, or not from this bot).
+        "sent_text": sent_text,
         "reply_text": text,
         "received_at": datetime.now(timezone.utc).isoformat(),
     }
@@ -174,10 +182,18 @@ def _handle_updates() -> bool:
         message_id = message["message_id"]
 
         tracked = sent_map.get(str(reply_to["message_id"])) if reply_to else None
-        if tracked:
-            # Reply to a message this pipeline sent — resolves precisely to
-            # the asset_id/stage it belongs to.
-            _write_handoff(message_id, tracked.get("asset_id"), tracked.get("stage"), text)
+        # The original text this pipeline sent in the message being replied
+        # to, if we have it (recorded for every send since 2026-09-13,
+        # regardless of tagging) — carried into the handoff below so a fresh
+        # /photo-beshno run can resolve an ordinal reply like "گزینه یک"
+        # against the actual options offered, rather than reporting content
+        # as unrecoverably lost (6 confirmed incidents before this fix, see
+        # project_photo_beshno_stale_state_lost_content memory).
+        sent_text = tracked.get("text") if tracked else None
+        if tracked and (tracked.get("asset_id") or tracked.get("stage")):
+            # Reply to a message this pipeline sent *and tagged* — resolves
+            # precisely to the asset_id/stage it belongs to.
+            _write_handoff(message_id, tracked.get("asset_id"), tracked.get("stage"), text, sent_text=sent_text)
             triggered = True
         elif text.lower() in KEYWORD_TRIGGERS and not reply_to:
             # Dedicated fast path: no handoff needed, the skill just reads
@@ -186,19 +202,20 @@ def _handle_updates() -> bool:
             triggered = True
         elif reply_to and _sole_in_flight_record():
             # A genuine reply (not a plain message) to a message this
-            # pipeline sent but never tagged with --asset-id/--stage — e.g.
+            # pipeline sent but never *tagged* with --asset-id/--stage — e.g.
             # an apology/explanation sent via telegram_send.py --reply-to
             # with no tagging (confirmed real 2026-08-31, «نوش»: Bahman kept
             # replying to the bot's own clarifying messages, which were
-            # never recorded in _telegram_sent.json, so every one of those
+            # never tagged in _telegram_sent.json, so every one of those
             # replies fell through to asset_id=None and got treated as
             # possibly-stale chatter instead of an actual answer). Since a
             # reply is a deliberate, targeted action (unlike a plain
             # message), and there's exactly one record actually waiting on
             # an answer, resolve it to that record's current stage rather
-            # than leaving it unresolved.
+            # than leaving it unresolved. `sent_text` (if `tracked` matched
+            # an untagged send) still comes along for the ride.
             asset_id, stage = _sole_in_flight_record()
-            _write_handoff(message_id, asset_id, stage, text)
+            _write_handoff(message_id, asset_id, stage, text, sent_text=sent_text)
             triggered = True
         else:
             # Anything else in the group — a reply when no single in-flight
@@ -208,8 +225,9 @@ def _handle_updates() -> bool:
             # pipeline). asset_id/stage are left null since we can't resolve
             # them; the skill's existing stale-handoff rule already handles
             # this (answers a genuine question/comment via --reply-to,
-            # silently drops a no-op).
-            _write_handoff(message_id, None, None, text)
+            # silently drops a no-op). `sent_text` still comes along when the
+            # reply targeted a tracked-but-unresolved message.
+            _write_handoff(message_id, None, None, text, sent_text=sent_text)
             triggered = True
 
     # Store the raw last-seen update_id, not +1 — _handle_updates() already

@@ -7,10 +7,15 @@ invoked by cron every few minutes) — safe because this bot token is used by
 nothing else. Sending happens directly against the Telegram Bot API via
 telegram_common.py, no cross-repo shelling out.
 
-Every tagged send (asset_id/stage given) is recorded in
-images/ig-queue/_telegram_sent.json (gitignored, transient) so
-telegram_receive.py can resolve an incoming reply back to the asset_id/stage
-it belongs to.
+Every send is recorded in images/ig-queue/_telegram_sent.json (gitignored,
+transient) — asset_id/stage (if tagged) *and* the full sent text/caption —
+so telegram_receive.py can resolve an incoming reply back to the record it
+belongs to AND hand the /photo-beshno skill the exact original message
+(e.g. numbered options) a later reply like "گزینه یک" refers to. Before
+2026-09-13 only {asset_id, stage} were recorded, which meant multi-round
+picks (story options, schedule proposals) were permanently unrecoverable
+across a run boundary if the reply didn't restate the content — 6 confirmed
+incidents, see project_photo_beshno_stale_state_lost_content memory.
 
 Usage (as a library, from the /photo-beshno skill or other scripts):
     from telegram_send import send
@@ -35,14 +40,14 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 SENT_MAP_FILE = REPO_ROOT / "images" / "ig-queue" / "_telegram_sent.json"
 
 
-def _record_sent(message_id: int, asset_id: str, stage: str) -> None:
+def _record_sent(message_id: int, asset_id: Optional[str], stage: Optional[str], text: str) -> None:
     entries = {}
     if SENT_MAP_FILE.exists():
         try:
             entries = json.loads(SENT_MAP_FILE.read_text())
         except Exception:
             entries = {}
-    entries[str(message_id)] = {"asset_id": asset_id, "stage": stage}
+    entries[str(message_id)] = {"asset_id": asset_id, "stage": stage, "text": text}
     SENT_MAP_FILE.parent.mkdir(parents=True, exist_ok=True)
     SENT_MAP_FILE.write_text(json.dumps(entries, ensure_ascii=False, indent=2))
 
@@ -63,8 +68,10 @@ def send(message: str, asset_id: Optional[str] = None, stage: Optional[str] = No
         print(str(e), file=sys.stderr)
         return None
 
-    if asset_id or stage:
-        _record_sent(message_id, asset_id, stage)
+    # Record every send, tagged or not — the text/caption itself is what a
+    # later reply like "گزینه یک" needs resolved against, not just the
+    # asset_id/stage. See the module docstring.
+    _record_sent(message_id, asset_id, stage, message)
     return message_id
 
 

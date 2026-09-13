@@ -332,3 +332,21 @@ suspended look. Extends the unresolved-custom family with a new variant:
 a designation meant to be provisional that quietly becomes permanent by
 default, through inaction, with an official record left visibly
 incomplete and nobody troubled by it.
+
+
+### 18. «کار» (a donkey pulling a cart heavily loaded with hay/grass, a man
+in a red headscarf balanced atop the load, another man walking alongside
+on foot)
+
+In that village, a day's labor for someone is owed back as a literal day,
+and everyone keeps a tally of it, notching the account onto a piece of
+wood. The marks are never erased. Now, after years, everyone in the
+village is owed more days than they owe. No one has ever asked whose job
+it is to settle the surplus.
+
+No 44 motif (retired per entry 11). Third-person flat-fable voice. Routes
+entirely around the donkey, the cart, and the two men's labor per the
+indirection rule, since the title («کار»/work) already names the activity
+as bluntly as possible. Extends the unresolved-custom family with a new
+variant: a ledger that structurally only ever grows in one direction, with
+the resulting imbalance never audited or resolved by anyone.
