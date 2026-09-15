@@ -161,6 +161,104 @@ def publish_story_for_asset(asset_id: str) -> str | None:
     return publish_story_from_url(token, story_url)
 
 
+def publish_carousel_from_urls(token: str, image_urls: list, caption: str) -> str:
+    """Container -> poll -> publish an Instagram Feed carousel (album) post from
+    a list of public image URLs. Graph API/app limit is currently 20 items per
+    carousel (raised from the older 10-item cap) — enforced here so a bad call
+    fails fast with a clear message instead of an opaque API error.
+
+    One child container per image (is_carousel_item=true, no caption — caption
+    lives only on the parent CAROUSEL container), then the parent container,
+    then media_publish. Raises SystemExit on any failure. Returns the media_id.
+
+    Same caveat as publish_feed_photo: media_publish can time out on the client
+    while the publish itself already succeeded server-side — before retrying a
+    failed call here, check the container's status_code (PUBLISHED = don't
+    retry) rather than assuming the call failed outright."""
+    if not (2 <= len(image_urls) <= 20):
+        raise SystemExit(f"Carousel must have 2-20 items, got {len(image_urls)}")
+
+    me = requests.get(
+        "https://graph.instagram.com/me",
+        params={"fields": "id,username", "access_token": token},
+        timeout=10,
+    )
+    if not me.ok:
+        raise SystemExit(f"Failed to fetch profile: HTTP {me.status_code} — {me.json()}")
+    ig_user_id = me.json()["id"]
+
+    child_ids = []
+    for image_url in image_urls:
+        create = requests.post(
+            f"https://graph.instagram.com/{ig_user_id}/media",
+            data={"image_url": image_url, "is_carousel_item": "true", "access_token": token},
+            timeout=15,
+        )
+        if not create.ok:
+            raise SystemExit(
+                f"Failed to create child container for {image_url}: HTTP {create.status_code} — {create.json()}"
+            )
+        child_ids.append(create.json()["id"])
+
+    for container_id in child_ids:
+        for _ in range(10):
+            status = requests.get(
+                f"https://graph.instagram.com/{container_id}",
+                params={"fields": "status_code", "access_token": token},
+                timeout=10,
+            )
+            if not status.ok:
+                raise SystemExit(f"Failed to poll child container status: HTTP {status.status_code} — {status.json()}")
+            code = status.json().get("status_code")
+            if code == "FINISHED":
+                break
+            if code == "ERROR":
+                raise SystemExit(f"Child container {container_id} processing failed")
+            time.sleep(2)
+        else:
+            raise SystemExit(f"Child container {container_id} did not finish processing in time")
+
+    create_parent = requests.post(
+        f"https://graph.instagram.com/{ig_user_id}/media",
+        data={
+            "media_type": "CAROUSEL",
+            "children": ",".join(child_ids),
+            "caption": caption,
+            "access_token": token,
+        },
+        timeout=15,
+    )
+    if not create_parent.ok:
+        raise SystemExit(f"Failed to create carousel container: HTTP {create_parent.status_code} — {create_parent.json()}")
+    parent_id = create_parent.json()["id"]
+
+    for _ in range(10):
+        status = requests.get(
+            f"https://graph.instagram.com/{parent_id}",
+            params={"fields": "status_code", "access_token": token},
+            timeout=10,
+        )
+        if not status.ok:
+            raise SystemExit(f"Failed to poll carousel container status: HTTP {status.status_code} — {status.json()}")
+        code = status.json().get("status_code")
+        if code == "FINISHED":
+            break
+        if code == "ERROR":
+            raise SystemExit("Carousel container processing failed")
+        time.sleep(2)
+    else:
+        raise SystemExit("Carousel container did not finish processing in time")
+
+    publish = requests.post(
+        f"https://graph.instagram.com/{ig_user_id}/media_publish",
+        data={"creation_id": parent_id, "access_token": token},
+        timeout=15,
+    )
+    if not publish.ok:
+        raise SystemExit(f"Failed to publish carousel: HTTP {publish.status_code} — {publish.json()}")
+    return publish.json().get("id")
+
+
 def publish_feed_photo(asset_id: str, record: dict, record_path: Path) -> str:
     """Publish one photo to the @25mordad Instagram Feed: HEAD-check public
     reachability, then container -> poll status_code -> media_publish. Updates
