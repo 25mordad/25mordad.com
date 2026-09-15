@@ -350,3 +350,29 @@ indirection rule, since the title («کار»/work) already names the activity
 as bluntly as possible. Extends the unresolved-custom family with a new
 variant: a ledger that structurally only ever grows in one direction, with
 the resulting imbalance never audited or resolved by anyone.
+
+### 19. «غریبه» (a Hamar woman seen from behind carrying a black plastic
+bag over her shoulder, a young man just behind her staring hard into the
+camera)
+
+The village dog only barks at people who don't belong. It barks every
+morning at a man who was born right there. People laughed at first, then
+some began to doubt — not the dog. Now they return his greeting a little
+more politely.
+
+No 44 motif (retired per entry 11). Colloquial spoken Persian, a first for
+the series (earlier entries used the written register). Routes around the
+bag, the pair, and the stare per the indirection rule, and picks up the
+title's "who is the stranger" ambiguity instead. Extends the
+unresolved-custom family: an unquestioned authority (the dog) outranks a
+plain fact (birthplace), and the village changes its manners rather than
+the rule.
+
+**Shelved idea (not used, liked, kept for a future photo per Bahman,
+2026-09-15):** a man walks to town to have a letter read; the reader
+isn't there, he spends the day drinking tea and arguing over the price of
+salt, and walks home with the letter still unread. He passes two people
+on the road, and no one greets anyone. What stays with him is that he
+walked the whole way along the edge of the road, not the middle, as if
+the road weren't his. Offer it again when a photo fits (a road, a
+traveler, someone not at home).
