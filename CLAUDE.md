@@ -289,6 +289,25 @@ article. Slide count grows to fit the text, never the other way round.
 - **Workflow:** one slide at a time, sent to Bahman for approval before the next.
   Caption for the carousel: standalone Persian text for someone who never read the piece,
   closing with a nudge to «فراتر از قاب» + link in bio, hashtags last, always `#هوش‌واره`.
+- **Publishing — Graph API caps carousels at 10 items** (confirmed live 2026-09-15 via a
+  400 "too little or too many attachments" error), even though the Instagram app itself
+  allows up to 20 — third-party automation is stuck at the lower number. A ≤10-slide deck
+  can go out via `scripts/publish_ig_carousel.py <image_dir> --caption-file <path>
+  [--confirm-publish]` (dry-run preview by default; container→poll→publish for every
+  child then the parent CAROUSEL, via `lr_common.py`'s `publish_carousel_from_urls()`).
+  For a 16-slide deck like section 1, that script can't be used — instead
+  `scripts/send_ig_carousel_to_telegram.py <image_dir> --caption-file <path>` sends every
+  image plus the caption (as copy-pasteable text) to the project's Telegram group, and
+  Bahman uploads the carousel manually from the app.
+  **Manual posting has its own caption caveat:** typing the caption by hand in the app,
+  only ~5 hashtags reliably survive — put the must-have tags (especially `#هوش‌واره`)
+  first in the list, since later ones may lose their `#` or get dropped.
+- **"New post" Story announcement:** a one-off Story graphic pointing followers at the
+  carousel, generated per `files/PanorAIma/<slug>/gen_announcement_story.py` — reuses the
+  cover slide's already-cached illustration (no new gpt-image-2 call), same cream/ochre
+  panel style, 1080×1920. No link/sticker baked in — added on the Story manually
+  afterward, same as the section-card decks. Keep the CTA line plain spoken Persian
+  (e.g. «پست جدید رو ببین ←») — no loanwords like «کروسل», no lyrical phrasing.
 
 ### Hero Images
 
