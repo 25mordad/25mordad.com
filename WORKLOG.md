@@ -4,6 +4,71 @@ Reverse-chronological log of work sessions on 25mordad.com.
 
 ---
 
+## 2026-09-17 — Drafted section 2 of the «زنده‌ماندن یا زیستن؟» Instagram carousel (text + illustration briefs)
+
+### What this session produced
+
+Bahman asked to start section 2 of the per-section carousel, and specifically asked for the
+**slide text first** so the illustrations can be commissioned against approved copy rather than
+the other way round. Output is a full 16-slide draft (text, per-slide illustration brief,
+caption) appended to `files/PanorAIma/surviving-or-living/instagram-plan.md` under
+«بخش ۲ — زندگی روزمره». **Nothing was generated and nothing was published** — no `gpt-image-2`
+call was made, so this session cost no image-API money.
+
+Source section: `sections/03-zendegi-rouzmareh-jayi-mian-kenaramadan-va-fasele-gereftan.md`.
+
+### Section-number ↔ file-number mapping (easy to get wrong)
+
+The published "بخش اول" carousel is **`sections/02-tabavari-ya-adi-sazi.md`**, not `01-`.
+`00-daramad.md` and `01-zendegi-ke-ba-bohran-tanzim-shode.md` are not posted at all, per the
+plan's own post list. So carousel section N = section file N+1. Section 2 = file `03-`.
+
+### First draft was written on Sonnet, then re-checked on Opus at Bahman's request
+
+The Opus pass caught things worth recording, because they generalize to every future deck:
+
+- **Two illustration briefs were impossible to render.** The generator's `STYLE` prompt forbids
+  text/letters outright, but two briefs leaned on letterforms (speech bubbles, a typed line vs.
+  a handwritten line) to carry their metaphor. Any brief whose meaning depends on *reading*
+  something is dead on arrival — the metaphor has to survive with zero glyphs.
+- **Slide bodies had drifted into paraphrase.** The format's rule is that slide prose is the
+  article's own approved sentences, shortened or reordered — not rewritten. The first pass had
+  quietly paraphrased in several places; the Opus pass put the article's sentences back.
+- **Two load-bearing nuances had been compressed out** and were restored to their own slides:
+  «سکوت، رضایت نیست» (silence is cost calculation, not consent) and «هر شوخی مقاومت نیست»
+  (don't call every joke resistance). These are exactly the qualifications that keep the post
+  from reading as a slogan.
+- **Source lines were in the rejected academic format** and were rewritten to the approved
+  «بر پایه‌ی …» form. Two of the three references (Scott, Barry) had also landed on
+  back-to-back slides; they were separated.
+- **The cover title was too long** — the full section title «زندگی روزمره؛ جایی میان کنارآمدن و
+  فاصله‌گرفتن» wraps to three lines at the cover's 86px weight. Split into title
+  «زندگی روزمره» + subtitle carrying the rest.
+
+### New convention: each section gets its own recurring visual motif
+
+Section 1's deck was built on the fork («راه باز به افق» vs «حلقه‌ی بسته»). Section 2 is built
+on **«نما و پشتِ نما»** — a cold uniform facade with warm life visible through its gaps, under
+its ground line, or behind it. The cover establishes it and the penultimate slide returns to
+the cover image, mirroring how section 1's «معیار» slide returned to its fork. The three-color
+palette stays fixed across all sections; only the motif changes.
+
+### Bahman's decisions this session
+
+- Greek diglossia example (کاتارووسا/دیموتیکی) was cut in the Opus draft for brevity, then
+  **restored on his request** — slide 9 now carries both the Arabic and Greek examples.
+- Still open for his approval: whether to keep «اسلام سیاسی» (the article's own wording) on
+  slide 12 of a public post, and whether to hold at 16 slides (manual upload, as section 1) or
+  trim to 10 for API publishing.
+
+### Terminal can't render Persian
+
+Worth noting for future sessions in this repo: the chat terminal mangles Persian script, so a
+long Persian review block pasted there is unreadable to Bahman — he answered a full slide
+table with a single «چی؟». Persian drafts need to go to a file he opens, or to Telegram.
+
+---
+
 ## 2026-08-13 — Incident: «مذهب» Story republished to the wrong Instagram account (Dornyx, not @25mordad)
 
 ### What happened

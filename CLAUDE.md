@@ -274,8 +274,27 @@ article. Slide count grows to fit the text, never the other way round.
   layout tweaks never cost another API call.
 - **Visual style (fixed across a deck):** flat editorial illustration, film grain, three
   colors — cream ground, warm ochre for anything open/alive, cold slate blue for anything
-  closed/stagnant; faceless silhouettes; one metaphor per slide; two recurring motifs
-  ("open road to the horizon" vs "closed loop") carry the section's argument visually.
+  closed/stagnant; faceless silhouettes; one metaphor per slide.
+- **Each section gets its own recurring motif**, while the palette stays fixed across all
+  sections. Section 1 = the fork ("open road to the horizon" vs "closed loop"). Section 2 =
+  "facade and what's behind it" (a cold uniform surface with warm life showing through its
+  gaps, under its ground line, or behind it). The cover establishes the motif and the
+  penultimate slide returns to the cover image from further away, so the deck closes its own
+  loop.
+- **An illustration brief may not depend on readable text.** The generator's prompt forbids
+  letters outright, so any metaphor that needs the viewer to *read* something — speech
+  bubbles, a typed line vs. a handwritten one, a labelled sign — cannot be rendered. Caught
+  twice on the section-2 draft (2026-09-17). Recast the idea into pure shape, color and
+  posture, or drop it.
+- **Slide prose is the article's own approved sentences**, shortened or reordered — never
+  paraphrased into new wording. A draft that "tightens" a sentence has quietly left the
+  approved text; re-check bodies against the source section file before sending for approval.
+- **Long section titles get split on the cover:** the big title takes the short half, the rest
+  moves to the subtitle. At 86px a full title like «زندگی روزمره؛ جایی میان کنارآمدن و
+  فاصله‌گرفتن» wraps to three lines and breaks the cover's balance.
+- **Carousel section N maps to `sections/` file N+1.** The published "بخش اول" deck is
+  `sections/02-tabavari-ya-adi-sazi.md`; `00-daramad` and `01-…` are not posted at all. Easy
+  to get wrong when picking up the next section.
 - **Slide anatomy:** cover = tag «بخش اول» + section title + «از نوشتار «<article>»» + author
   «بهمن رشادی»; body slides = short bold title + prose; optional faint source line written
   as plain Persian, e.g. «بر پایه‌ی پژوهش فرن نوریس درباره‌ی تاب‌آوری اجتماع (۲۰۰۸)» —

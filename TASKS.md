@@ -290,9 +290,44 @@ CLAUDE.md + memory `project_lightroom_ig_pipeline.md`):
       has real variance is still unclear — two data points, inconsistent (blocked twice on one
       photo, succeeded on retry for another).
 
-## P3 — Finalize third article "زنده‌ماندن یا زیستن؟" (draft, gitignored — not yet public)
+## P1.11 — Per-section Instagram carousel for «زنده‌ماندن یا زیستن؟»
 
-User pre-drafted this article's material via ChatGPT before this session; work here was cleanup, citation integrity, de-duplication, and producing review copies. Working files live in `files/PanorAIma/surviving-or-living/` — this whole directory is in `.gitignore` until publication is decided (see CLAUDE.md note).
+Format and conventions: CLAUDE.md § "Per-Section Instagram Carousel". Full plan, slide text and illustration briefs: `files/PanorAIma/surviving-or-living/instagram-plan.md`. One section per carousel, one slide at a time, Bahman approves before the next.
+
+**Mapping gotcha:** carousel section N = `sections/` file N+1. «بخش اول» = `02-tabavari-ya-adi-sazi.md`. Files `00-daramad` and `01-zendegi-ke-ba-bohran-tanzim-shode` are not posted.
+
+### بخش ۱ — «تاب‌آوری یا عادی‌سازی؟» (`sections/02-`)
+
+- [x] Write 16-slide plan + caption — `instagram-plan.md`
+- [x] Build `gen_ig_slides.py` (two-stage: gpt-image-2 illustration + Playwright text panel)
+- [x] Generate and render all 16 slides — `images/PanorAIma/surviving-or-living/instagram/section-01/`
+- [x] Build `scripts/send_ig_carousel_to_telegram.py` (Graph API caps carousels at 10; 16-slide deck must go out manually)
+- [x] Published manually 2026-09-15 — https://www.instagram.com/p/DdT7QfsAjKA/
+- [x] Announcement Story — `gen_announcement_story.py` → `stories/new-post-announcement.jpg`
+
+### بخش ۲ — «زندگی روزمره» (`sections/03-`)
+
+- [x] Draft all 16 slide texts + per-slide illustration briefs + caption — DONE 2026-09-17, in `instagram-plan.md`
+- [x] Opus review pass over the draft (see WORKLOG 2026-09-17 for what it caught)
+- [x] Restore Greek diglossia example to slide 9 per Bahman's request
+- [ ] Bahman approves the slide text — **blocking; no `gpt-image-2` call until this clears (real API cost)**
+  - [ ] Decide: keep «اسلام سیاسی» (the article's own wording) on slide 12 of a public post?
+  - [ ] Decide: hold at 16 slides (manual upload like section 1) or trim to 10 for API publishing? Drop order to reach 10: slides 3, 5, 10, 12, merge 6+7, fold 2 into the cover
+- [ ] Add section-2 `SLIDES` to `gen_ig_slides.py`, output to `instagram/section-02/`
+- [ ] Generate + render slides one at a time, Bahman approves each
+- [ ] Publish (manual via `send_ig_carousel_to_telegram.py` if the deck stays >10)
+
+### بخش‌های ۳–۸ (not started)
+
+اقتصاد (`04-`) · وقتی سازگاری فرساینده می‌شود (`05-`) · اعتمادهای کوچک (`06-`) · ناسازگاری به‌عنوان نیروی اصلاح (`07-`) · مرز باریک (`08-`) · مؤخره (`09-`)
+
+- [ ] Each: draft slide text → approve → render → publish, same loop as above
+
+## P3 — Finalize third article "زنده‌ماندن یا زیستن؟" (PUBLISHED 2026-09-13)
+
+User pre-drafted this article's material via ChatGPT before this session; work here was cleanup, citation integrity, de-duplication, and producing review copies. Working files live in `files/PanorAIma/surviving-or-living/`.
+
+**Status note (2026-09-17):** the article went live 2026-09-13 (`PanorAIma/surviving-or-living-fa/` + `-en/`), so the "draft, not yet public" framing in the unchecked items below is stale — `.gitignore` now only hides the superseded draft versions and `sections/`, not the whole directory, and the rendered slide images are committed. Individual checkboxes below were left as they were rather than mass-ticked; treat the publish-gated ones as resolved by the publish itself. Instagram work moved to the P1.11 block above (the old "no Instagram work for this article" constraint was lifted when the per-section carousel format was adopted 2026-09-13).
 
 - [x] Move draft material from wrong public path (`PanorAIma/3-materials/`) to `files/PanorAIma/surviving-or-living/sections/`
 - [x] Convert inline links to project's `[n]` + `## منابع` citation convention (25 sources)
