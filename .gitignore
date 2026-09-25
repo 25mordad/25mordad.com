@@ -41,3 +41,8 @@ logs/
 
 # Voice-profile raw corpus (tweets, Telegram export, voice notes, transcripts) — personal, never committed
 files/voice/corpus/
+
+# Podcast pilot — episode drafts not yet reviewed by the author, and the
+# voice-profile experiments (voice notes, transcripts) — local only
+files/PanorAIma/surviving-or-living/podcast/
+podcast-test/

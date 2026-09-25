@@ -4,6 +4,47 @@ Reverse-chronological log of work sessions on 25mordad.com.
 
 ---
 
+## 2026-09-25 — Author voice profile (from voice notes) and podcast pilot for article 3
+
+### What we built
+
+| Feature | Files |
+|---|---|
+| Transcribed ~55 min of voice notes with two OpenAI models, compared them, consolidated one corpus | `podcast-test/bahman-profile/{transcripts/,corpus.md}` (private, gitignored) |
+| Spoken-voice profile in Hezarnava's persona format + calibration-style samples + narrative write-up | `bahman.md`, `bahman.samples.md`, `voice-profile.md` (same private dir) |
+| Podcast voice (spoken, not read-aloud) with tone-conversion rules and a per-voice prompt | `podcast-test/bahman-profile/podcast-voice.md` |
+| Episode 1 draft (intro + first section of «زنده‌ماندن یا زیستن؟») | `files/PanorAIma/surviving-or-living/podcast/ep-01.md` (gitignored with the article draft) |
+
+### Decisions
+
+#### 1. Two voices, built at different times
+**Why:** the podcast needs a spoken, own-words voice now; the article voice needs written-tone evidence (X archive) and is better tuned while drafting the next article.
+**How:** article voice deferred to the next article; podcast voice v0 built now from voice notes only.
+
+#### 2. `gpt-4o-transcribe` as base transcript, `whisper-1` as cross-check
+**Why:** on a full comparison (23 files) `gpt-4o-transcribe` kept colloquial spoken forms and was more consistent on hard words; `whisper-1` "cleaned" speech to written forms and garbled more. But `gpt-4o-transcribe` sometimes dropped part of the audio, so divergent passages are flagged.
+**How:** three low-quality recordings excluded from analysis; the local `faster-whisper` route was tested (accurate but ~3 h for the set on CPU) and not used.
+
+#### 3. Method: Hezarnava persona files + Kavosh Voice Kit, adapted
+**Why:** both already solved "capture a voice and verify fidelity". Hezarnava's personas are fictional, so every field here is filled from measured data (word frequencies stable across both transcripts), not invented.
+**How:** structured profile + approved-sample file + a fidelity checklist; a layer over the site's base rules, never replacing them.
+
+#### 4. Privacy
+**Why:** the repo is public and the voice notes are personal.
+**How:** everything lives in gitignored paths; profiles contain no names or private details; `life_details` is intentionally empty until the author decides what is public.
+
+### Challenges
+
+| Problem | Resolution |
+|---|---|
+| Installed `whisper` CLI broken (`numba` requires NumPy ≤ 2.2, system has 2.4) | Left system packages alone; used the OpenAI API for the full run, a throwaway venv (`podcast-test/.venv-asr`) only for the local test |
+| Mini PC has no Hezarnava checkout (only projects already migrated are there) | Used the laptop copy, brought current with `git pull --ff-only` (137 commits behind) |
+
+### Open
+
+- [ ] Author reviews the profile and episode 1 (see TASKS.md, P1 block for article 3 and P3.1)
+- [ ] X archive requested; pending
+
 ## 2026-09-21 — Drafted section 3 («اقتصاد») of the «زنده‌ماندن یا زیستن؟» carousel
 
 ### What this session produced

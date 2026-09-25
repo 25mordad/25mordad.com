@@ -633,6 +633,25 @@ repo's own gitignored `.env`.
   drafting each pair of story options and appends to after a pick, so the series' fictional
   stories loosely share one world instead of being fully independent per photo.
 
+## Voice Profiles (private) and Podcast
+
+The author's **spoken voice** is profiled from personal voice notes. Everything lives in gitignored paths — **never quote, paste or summarize the voice notes or transcripts into any tracked file** (this repo is public).
+
+| Path | Purpose |
+|------|---------|
+| `podcast-test/bahman-profile/` | Voice notes, transcripts (`transcripts/<model>/`), `corpus.md`, and the profiles below |
+| `…/bahman.md` + `bahman.samples.md` | Structured spoken-voice profile and sample quotes (Hezarnava persona format) |
+| `…/voice-profile.md` | Narrative write-up of the same voice |
+| `…/podcast-voice.md` | Podcast voice: rules for turning a written section into spoken delivery, plus a ready prompt |
+| `files/PanorAIma/<slug>/podcast/ep-NN.md` | Per-episode script draft (talking points + spoken draft + production notes) |
+
+Rules:
+- The podcast is **not a read-aloud**. The author speaks in his own words; scripts are a tone/order reference. Every fact, name and number comes only from the article; any analogy or opinion not in the article is flagged in the episode's production notes for the author to accept or reject.
+- Voice profiles are a **layer over** this file's rules (`هوش‌واره`, «نوشتار» not «مقاله», citation discipline), never a replacement.
+- `life_details` in `bahman.md` stays empty until the author approves specific public details.
+- The **article-writing** voice (written register) is a separate profile, built together while drafting the next article; the X archive is the intended evidence for it.
+- Transcription: OpenAI `gpt-4o-transcribe` as base, `whisper-1` as cross-check. The system `whisper` CLI is broken (NumPy/`numba` conflict); don't fix system packages — use the API or a throwaway venv.
+
 ## Icons
 
 Font Awesome via kit `b4878587d2.js` (loaded from fontawesome.com). All icon usage is `<i class="fa-...">`.

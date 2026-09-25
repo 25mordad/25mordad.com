@@ -350,7 +350,23 @@ User pre-drafted this article's material via ChatGPT before this session; work h
 - [ ] Decide official EN title + produce EN translation (long version only, per convention — no short EN)
   - [ ] Draft 2–3 candidate EN titles for «زنده‌ماندن یا زیستن؟» ahead of time so translation can start immediately once friend review clears ← depends on publish approval
 - [ ] Once approved: move to `PanorAIma/<slug>-fa|en/`, remove the `.gitignore` line, follow full Phase 2–4 checklist in CLAUDE.md (covers, hero images, story/post card decks, sitemap, hreflang)
-- [ ] After this article is fully finalized: build a tone/voice profile for the user using articles 2 (مردمان ایران) and 3 (this one) as reference — explicitly deferred to last
+- [ ] Article-writing voice profile (لحن نوشتار) — **deferred to the next article's drafting** (decided 2026-09-25: iterate it together while writing the next article, using articles 2 and 3 plus the X archive as reference). Not the same as the podcast voice below.
+- [ ] Voice profiles (private, gitignored): spoken voice built from voice notes → `podcast-test/bahman-profile/` (`bahman.md`, `bahman.samples.md`, `voice-profile.md`, `podcast-voice.md`). Pattern borrowed from Hezarnava personas + Kavosh Voice Kit. Never quote the corpus into tracked files.
+  - [x] Transcribe voice notes (OpenAI `whisper-1` + `gpt-4o-transcribe`, compared; `gpt-4o-transcribe` chosen as base) — DONE 2026-09-25
+  - [x] Draft spoken-voice profile v0 (`bahman.md`, `bahman.samples.md`) — DONE 2026-09-25
+  - [x] Draft podcast voice v0 (`podcast-voice.md`) — DONE 2026-09-25
+  - [ ] User reviews `bahman.md` + `bahman.samples.md` (approve/cut samples, decide `life_details`)
+  - [ ] X (Twitter) archive requested 2026-09-25 — when it arrives, fill the empty parts (written tone, humour) from tweets
+  - [ ] Calibration sample: one neutral text rewritten in the voice, user approves → profile becomes v1
+
+## P3.1 — Podcast: article 3 explained in the author's own voice
+
+Not a read-aloud. Each episode explains one section of «زنده‌ماندن یا زیستن؟» in Bahman's own spoken words; he records with his own voice, so the script is a **tone/order reference**, not a text to read. Files live in the already-gitignored `files/PanorAIma/surviving-or-living/podcast/`.
+
+- [x] Draft episode 1 (intro + first section) — `podcast/ep-01.md` — DONE 2026-09-25 (~1,365 words, ~9–10 min; unapproved)
+- [ ] User reviews `ep-01.md`: accept/reject the flagged additions (tree analogy etc.), decide address form (شما / تو / ما), whether the dedication repeats every episode, podcast name, music
+- [ ] Episode 2 onward: one section per episode, following the same recipe (talking points + spoken draft + production notes)
+- [ ] Decide recording/production pipeline and hosting
 - ~~No Instagram/Twitter work of any kind for this article~~ — standing constraint for this article only; that whole system is being redesigned separately
 
 ## P2 — Teaser: announce next article after "Peoples of Iran"
