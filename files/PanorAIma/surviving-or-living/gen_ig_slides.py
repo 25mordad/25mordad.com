@@ -644,6 +644,204 @@ SLIDES_BY_SECTION = {"01": [
             "space where a person could stand upright again. Warm, open, hopeful composition."
         ),
     },
+], "04": [
+    # Motif: a small house kept warm by a fire fed with pieces of the house itself —
+    # getting through today by burning what was meant to make tomorrow possible.
+    {
+        "slug": "cover",
+        "tag": "بخش چهارم",
+        "title": "وقتی سازگاری فرساینده می‌شود",
+        "subtitle": "از نوشتار «زنده‌ماندن یا زیستن؟»",
+        "author": "بهمن رشادی",
+        "body": "",
+        "illustration": (
+            "A side cutaway view of one small simple wooden house on a cold night. In the "
+            "middle of its floor a warm ochre fire burns, and faceless ochre silhouette "
+            "figures sit close around it. One figure is feeding the fire a plank that has "
+            "clearly been pried from the house's own wall: several gaps already show in the "
+            "walls, letting the cold slate blue night in. Wide composition, generous "
+            "negative space around the house."
+        ),
+    },
+    {
+        "slug": "taghdim",
+        "tag": "تقدیم",
+        "body": "این نوشته را به یاد کسانی آغاز می‌کنم که به زنده‌ماندن بسنده نکردند. کسانی که بخشی از زندگی، آرامش، یا حتی جان خود را گذاشتند تا زیستن برای دیگران ممکن‌تر شود: زیستن با کرامت، با انتخاب، با آینده‌ای که بشود برایش برنامه ریخت. آن‌هایی که نامشان را می‌دانیم. آن‌هایی که نامشان در شلوغی روزها گم شده. و آن‌هایی که هنوز در دل زندگی روزمره ما ادامه دارند.",
+        "illustration": (
+            "The same small cutaway house at dusk, intact and empty of any human figure. A "
+            "single small warm ochre flame glows quietly at the centre of its floor; the "
+            "cold slate blue evening surrounds the house. Minimal, solemn, respectful "
+            "composition."
+        ),
+    },
+    {
+        "slug": "hamishe-bad-nist",
+        "title": "سازگاری همیشه بد نیست",
+        "body": "سازگاری همیشه بد نیست. بدون سازگاری، زندگی روزمره زیر فشارهای طولانی از هم می‌پاشد. آدم‌ها باید بتوانند راهی برای ادامه پیدا کنند؛ خانواده باید بتواند خودش را حفظ کند؛ کسب‌وکار باید بتواند با شرایط تازه کنار بیاید؛ جامعه باید بتواند در برابر شوک‌ها کاملاً فلج نشود. مسئله از جایی شروع می‌شود که سازگاری، به‌جای حفظ زندگی، شروع کند به مصرف‌کردن خودِ زندگی.",
+        "illustration": (
+            "The small cutaway house, whole and intact, in a cold slate blue winter night. "
+            "Warm ochre faceless figures huddle around a fire inside it, built from fallen "
+            "branches gathered outside; a little stack of such branches waits by the door. "
+            "The fire is what keeps them going. Warm, protective, quiet composition."
+        ),
+    },
+    {
+        "slug": "asibpaziri-bishtar",
+        "title": "پاسخی که آسیب‌پذیری را بیشتر می‌کند",
+        "body": "در ادبیات بحران و تغییر اقلیم، مفهومی هست برای سازگاری‌ای که در ظاهر پاسخ به بحران است، اما در بلندمدت آسیب‌پذیری را بیشتر می‌کند. این مفهوم فقط برای محیط زیست به کار نمی‌آید. برای فهم جامعه هم مفید است.",
+        "ref": "بر پایه‌ی واژه‌نامه‌ی گزارش ارزیابی ششم هیئت بین‌دولتی تغییر اقلیم (IPCC)",
+        "illustration": (
+            "Close view inside the house: a warm ochre fire burns directly on the wooden "
+            "floorboards. A faceless ochre figure warms its hands over it, while beneath the "
+            "flames the floorboards are visibly charring into cold slate blue ash. Intimate, "
+            "close composition."
+        ),
+    },
+    {
+        "slug": "kharj-az-ayandeh",
+        "title": "خرج‌کردن از جیب آینده",
+        "body": "گاهی راه‌حلی که امروز فشار را کم می‌کند، فردا مسئله را عمیق‌تر می‌کند. جامعه برای اینکه امروز را بگذراند، از منابعی خرج می‌کند که باید آینده را ممکن می‌کردند: اعتماد، سلامت، آموزش، کیفیت رابطه‌ها، محیط زیست، زمان، امید و توان همکاری.",
+        "illustration": (
+            "Beside the fire inside the house, a woodpile waits to be burned — but it is "
+            "made of things meant for the future: a small child's chair, a bookshelf, a "
+            "cradle, a ladder, a garden gate. A faceless ochre figure reaches for the next "
+            "piece. Still-life composition, generous negative space."
+        ),
+    },
+    {
+        "slug": "az-bagha-ta-farsoodegi",
+        "title": "از بقا تا فرسودگی",
+        "body": "در اقتصاد روزمره، این را روشن‌تر می‌بینیم. خانواده‌ای که برای جبران تورم، کار بیشتر، مصرف کمتر، کیفیت پایین‌تر و حذف فراغت را انتخاب می‌کند، دارد راهی برای بقا پیدا می‌کند. اما اگر این وضعیت طولانی شود، دیگر فقط یک تصمیم اقتصادی نیست. بدن فرسوده می‌شود، روان خسته می‌شود، رابطه‌ها پرتنش‌تر می‌شوند، آموزش بچه‌ها طبقاتی‌تر می‌شود، درمان عقب می‌افتد، و آینده به چیزی تبدیل می‌شود که فقط باید از آن جان سالم به در برد.",
+        "illustration": (
+            "A family of faceless ochre silhouettes around the fire inside the house, "
+            "slumped and tired, sitting apart from one another. Many planks are now missing "
+            "from the walls and cold slate blue air pours in through the gaps. The fire "
+            "still burns. Heavy, weary composition."
+        ),
+    },
+    {
+        "slug": "tanzim-farsayesh",
+        "title": "وقتی خودِ تنظیم‌شدن فرسایش می‌شود",
+        "body": "بروس مک‌اوِن در بحث «بار آلوستاتیک» توضیح می‌دهد که بدن برای مواجهه با فشار، خودش را تنظیم می‌کند. این تنظیم در کوتاه‌مدت لازم است، اما اگر فشار مزمن شود، خودِ سازگاری به فرسایش بدن تبدیل می‌شود. ما نباید بدن فردی را مستقیم با جامعه یکی بگیریم، اما تشبیهش برای این بحث دقیق است: جامعه هم می‌تواند آن‌قدر با فشار تنظیم شود که خودِ تنظیم‌شدن، به فرسایش تبدیل شود.",
+        "ref": "بر پایه‌ی پژوهش بروس مک‌اوِن درباره‌ی «بار آلوستاتیک» و استرس مزمن",
+        "illustration": (
+            "A single standing faceless silhouette seen in profile. A small warm ochre fire "
+            "glows inside its chest, keeping it upright, but the outer edges of the "
+            "silhouette are thinning and crumbling away into cold slate blue flakes that "
+            "drift off. Minimal, centred composition."
+        ),
+    },
+    {
+        "slug": "faghat-pool-nist",
+        "title": "فقط در سطح پول نیست",
+        "body": "این فرسایش فقط در سطح پول نیست. ممکن است در خودمان یا اطرافیانمان نشانه‌هایی از آن ببینیم: عادت‌کردن به کیفیت پایین‌تر، پایین‌آوردن تدریجی انتظارمان از زندگی، پذیرفتن خدمات بد، بی‌حسی نسبت به تخریب محیط زیست، مصرف‌گرایی بی‌فکر، دورریختن منابع، یا انتقال فشار به آدم‌های نزدیک‌تر. این‌ها حکم قطعی درباره همه جامعه نیستند؛ بیشتر نشانه‌هایی‌اند که در بعضی موقعیت‌ها دیده می‌شوند و باید با احتیاط درباره‌شان حرف زد.",
+        "illustration": (
+            "Inside the house, quiet small signs of wear: a cracked cup, a withered slate "
+            "blue house plant, a window boarded with mismatched scraps, a dimmed lamp. Ochre "
+            "figures sit among them without looking up, used to it. The fire in the middle "
+            "has become smaller. Calm, observant, detailed composition."
+        ),
+    },
+    {
+        "slug": "ofogh-akhlaghi",
+        "title": "کوتاه‌شدن افق اخلاقی",
+        "body": "یکی از خطرناک‌ترین شکل‌های سازگاری فرساینده، کوتاه‌شدن افق اخلاقی است. وقتی آدم‌ها زیر فشار دائمی‌اند، گاهی فقط به عبور از امروز فکر می‌کنند. ممکن است فروشنده فشار بازار را به مشتری منتقل کند، کارفرما فشار بحران را به کارگر منتقل کند، خانواده فشار اقتصادی را به روابط عاطفی منتقل کند، یا آدم‌ها برای حفظ خودشان، دایره مسئولیت‌شان را کوچک‌تر کنند.",
+        "illustration": (
+            "A line of faceless ochre silhouettes, each one handing a heavy cold slate blue "
+            "stone backwards to the person behind them, none of them turning to look. The "
+            "last figure in the line bends low under the weight. Horizontal, rhythmic "
+            "composition."
+        ),
+    },
+    {
+        "slug": "faghat-jib-nist",
+        "title": "فقط جیب نیست",
+        "body": "این‌جا مسئله فقط «اخلاق فردی» نیست. بحران اقتصادی فقط جیب مردم را خالی نمی‌کند؛ افق همکاری را هم کوتاه می‌کند.",
+        "illustration": (
+            "Seen from above at night: a circle of warm ochre firelight on the ground that "
+            "was once wide enough for many figures has shrunk to a tight small circle around "
+            "one figure. Other faceless figures stand just outside it in the cold slate blue "
+            "dark. Minimal, stark composition."
+        ),
+    },
+    {
+        "slug": "fazilat-yani-che",
+        "title": "فضیلت یعنی چه؟",
+        "body": "از زاویه تکاملی و تمدنی، فضیلت فقط این نیست که فردی بتواند در کوتاه‌مدت خودش را نجات دهد. رفتاری فضیلت‌مند است که ظرفیت بقا، همکاری، یادگیری و آینده‌سازی یک جمع انسانی را بیشتر کند. اگر سازگاری باعث شود جامعه بتواند از هم مراقبت کند، منابعش را حفظ کند، خطاهایش را اصلاح کند و امکان آینده را نگه دارد، یک فضیلت اجتماعی است.",
+        "illustration": (
+            "Ochre faceless figures working together around the house: two carry fresh "
+            "planks in to mend a gap in the wall, one tends the fire with branches gathered "
+            "from outside, another kneels to plant a young sapling beside the door. Busy, "
+            "cooperative, hopeful composition."
+        ),
+    },
+    {
+        "slug": "digar-fazilat-nist",
+        "title": "وقتی دیگر فضیلت نیست",
+        "body": "اما اگر سازگاری فقط به معنای نجات کوتاه‌مدت فرد یا گروه کوچک باشد، در حالی که اعتماد، همکاری، شایستگی، محیط زیست و امکان برنامه‌ریزی را فرسوده می‌کند، دیگر نمی‌شود آن را فضیلت دانست.",
+        "illustration": (
+            "One faceless ochre figure alone beside a large bright fire. Around it stand "
+            "neighbouring houses, stripped bare to their skeleton frames and cold slate "
+            "blue, their planks clearly gone into this one fire. Wide, uneasy composition."
+        ),
+    },
+    {
+        "slug": "tohi-az-daroon",
+        "title": "تاب‌آوری از درون تهی می‌شود",
+        "body": "این همان جایی است که تاب‌آوری از درون تهی می‌شود. ظاهرش هنوز ادامه‌دادن است؛ مردم هنوز کار می‌کنند، خرید می‌کنند، خانواده را می‌چرخانند، شوخی می‌کنند و زندگی را جلو می‌برند. اما زیر این ادامه‌دادن، چیزهایی آرام‌آرام مصرف می‌شوند. آدم‌ها کمتر به آینده فکر می‌کنند، کمتر به غریبه اعتماد می‌کنند، کمتر برای کیفیت عمومی می‌جنگند، و بیشتر به حلقه‌های کوچک خودشان پناه می‌برند.",
+        "illustration": (
+            "The house seen in cutaway: its upper floor looks normal, with warm ochre "
+            "windows and figures going about daily life. But below them the floor beams "
+            "and supports have almost all been burned away, leaving a hollow cold slate "
+            "blue void under their feet. Quietly unsettling composition."
+        ),
+    },
+    {
+        "slug": "halgheh-koochak",
+        "title": "پناه به حلقه‌های کوچک",
+        "body": "البته این پناه‌بردن را هم نباید ساده قضاوت کرد. وقتی نهادها کار نمی‌کنند، وقتی آینده نامطمئن است، وقتی قانون و بازار و سیاست قابل پیش‌بینی نیستند، طبیعی است که آدم‌ها به خانواده، دوست، فامیل، آشنا یا شبکه‌های نزدیک‌تر تکیه کنند. این می‌تواند شکل مهمی از مراقبت باشد. اما اگر تنها شکل اعتماد همین حلقه‌های کوچک بماند، جامعه توان همکاری در مقیاس بزرگ‌تر را از دست می‌دهد. آن‌وقت چیزی که در کوتاه‌مدت امنیت می‌سازد، در بلندمدت جامعه را کوچک‌تر می‌کند.",
+        "illustration": (
+            "Seen from above at night: several small separate clusters of ochre figures, "
+            "each huddled around its own tiny fire, with wide cold slate blue darkness "
+            "between them. In the middle of the scene, a large shared hearth in an open "
+            "square sits cold and unused. Wide, scattered composition."
+        ),
+    },
+    {
+        "slug": "farda-faghirtar",
+        "title": "امروز می‌گذرد، فردا فقیرتر می‌شود",
+        "body": "پس سازگاری فرساینده یعنی جامعه هنوز ادامه می‌دهد، اما با خرج‌کردن چیزهایی که نباید خرج می‌شدند. یعنی زندگی حفظ می‌شود، اما کیفیت زندگی پایین می‌آید. یعنی بحران مدیریت می‌شود، اما حساسیت نسبت به بحران کم می‌شود. یعنی امروز می‌گذرد، اما فردا فقیرتر می‌شود؛ نه فقط از نظر پول، بلکه از نظر اعتماد، توان، اخلاق همکاری، سلامت، محیط زیست و امکان خیال‌کردن آینده.",
+        "illustration": (
+            "The house at pale dawn: the fire is still alive and the ochre figures are "
+            "still sitting around it — they made it through the night — but the house "
+            "around them has been reduced to a few bare cold slate blue beams. Quiet, "
+            "ambivalent composition."
+        ),
+    },
+    {
+        "slug": "porsesh",
+        "title": "پرسش",
+        "body": "در این معنا، پرسش اصلی دیگر این نیست که جامعه ایران چقدر تاب‌آور است. پرسش دقیق‌تر این است: این تاب‌آوری چه چیزی را حفظ کرده و چه چیزی را فرسوده است؟ اگر ادامه‌دادن، بدن و روان و اعتماد و آینده را مصرف کند، دیگر فقط نشانه قدرت نیست. نشانه نوعی سازگاری است که باید درباره‌اش نگران بود.",
+        "illustration": (
+            "A return to the cover's house, same cutaway angle but seen from very far back. "
+            "It is now one of many small houses scattered across a cold slate blue night "
+            "landscape; in every one a warm ochre fire burns, and every one has gaps in its "
+            "walls. Vast, wide, layered composition."
+        ),
+    },
+    {
+        "slug": "payan",
+        "title": "ادامه دارد…",
+        "subtitle": "بخش بعد: اعتمادهای کوچک در جامعه کم‌اعتماد",
+        "author": "بهمن رشادی",
+        "body": "این بخش چهارم از نوشتار «زنده‌ماندن یا زیستن؟» بود. سازگاری وقتی ارزشمند است که امکان زندگی آینده را حفظ کند. اما وقتی برای عبور از امروز، آینده را خرج می‌کند، از تاب‌آوری به فرسایش تبدیل می‌شود. بخش بعد: اعتمادهای کوچک در جامعه کم‌اعتماد.",
+        "illustration": (
+            "Two neighbouring small houses at dusk. A faceless ochre figure from one house "
+            "reaches across the gap between them to hand a fresh log to a figure in the "
+            "other house's doorway. Warm ochre light spills from both doors. Warm, open, "
+            "hopeful composition."
+        ),
+    },
 ]}
 
 HTML = """<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
@@ -730,6 +928,17 @@ def render_slide(idx: int, slide: dict, illus_dir: Path, output_dir: Path, total
             page.goto(f"file://{tmp}", wait_until="networkidle", timeout=60_000)
             page.wait_for_function("document.fonts.ready")
             page.wait_for_timeout(300)
+            # Shrink body text until the panel clears the footer (long slides overflowed it).
+            page.evaluate("""() => {
+                const b = document.querySelector('.body');
+                const last = document.querySelector('.panel').lastElementChild;
+                if (!b || !last) return;
+                let fs = 33;
+                while (last.getBoundingClientRect().bottom > 1270 && fs > 24) {
+                    fs -= 1;
+                    b.style.fontSize = fs + 'px';
+                }
+            }""")
             raw = page.screenshot(type="jpeg", quality=96,
                                   clip={"x": 0, "y": 0, "width": 1088, "height": 1360})
             browser.close()
