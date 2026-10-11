@@ -322,6 +322,8 @@ Format and conventions: CLAUDE.md § "Per-Section Instagram Carousel". Full plan
 اقتصاد (`04-`) · وقتی سازگاری فرساینده می‌شود (`05-`) · اعتمادهای کوچک (`06-`) · ناسازگاری به‌عنوان نیروی اصلاح (`07-`) · مرز باریک (`08-`) · مؤخره (`09-`)
 
 - [ ] Each: draft slide text → approve → render → publish, same loop as above
+- [x] بخش ۴ («وقتی سازگاری فرساینده می‌شود», `05-`) rendered + published 2026-10-03 — https://www.instagram.com/p/DeC_Q88AoHO/
+- [ ] بخش ۵ («اعتمادهای کوچک», `06-`) — text + caption approved and all 19 slides rendered 2026-10-10; slides + caption sent to the Telegram group 2026-10-11 for manual upload from the app (19 > Graph API's 10-item cap). Tick + add the post URL once it's live
 
 ## P3 — Finalize third article "زنده‌ماندن یا زیستن؟" (PUBLISHED 2026-09-13)
 

@@ -842,6 +842,133 @@ SLIDES_BY_SECTION = {"01": [
             "hopeful composition."
         ),
     },
+], "05": [
+    # Motif: small warm circles of people scattered on a vast cold plain with nothing
+    # connecting them — trust that survives by staying close, but never bridges outward.
+    {
+        "slug": "cover",
+        "tag": "بخش پنجم",
+        "title": "اعتمادهای کوچک در جامعه کم‌اعتماد",
+        "subtitle": "از نوشتار «زنده‌ماندن یا زیستن؟»",
+        "author": "بهمن رشادی",
+        "body": "",
+        "illustration": "A wide cold slate blue open plain at dusk. Scattered across it are several small separate circles of faceless ochre silhouette figures, each circle huddled close and glowing warm around a tiny ochre fire. Large empty cold distances lie between the circles; no path, road or bridge connects any two of them. Wide composition, generous negative space.",
+    },
+    {
+        "slug": "taghdim",
+        "tag": "تقدیم",
+        "body": "این نوشته را به یاد کسانی آغاز می‌کنم که به زنده‌ماندن بسنده نکردند. کسانی که بخشی از زندگی، آرامش، یا حتی جان خود را گذاشتند تا زیستن برای دیگران ممکن‌تر شود: زیستن با کرامت، با انتخاب، با آینده‌ای که بشود برایش برنامه ریخت. آن‌هایی که نامشان را می‌دانیم. آن‌هایی که نامشان در شلوغی روزها گم شده. و آن‌هایی که هنوز در دل زندگی روزمره ما ادامه دارند.",
+        "illustration": "A single small empty circle of flat stones on a cold slate blue plain at dusk, with no human figure. In its centre one small warm ochre flame glows quietly. Minimal, solemn, respectful composition.",
+    },
+    {
+        "slug": "shekl-etemad",
+        "title": "شکل اعتماد هم عوض می‌شود",
+        "body": "یکی از چیزهایی که زیر فشار بحران‌های طولانی تغییر می‌کند، شکل اعتماد است. جامعه فقط با قیمت‌ها و کمبودها سازگار نمی‌شود؛ با نااطمینانی هم سازگار می‌شود. وقتی آینده روشن نیست، قانون قابل پیش‌بینی نیست، بازار آرام نیست، و نهادها نمی‌توانند حس امنیت عمومی بسازند، آدم‌ها ناچارند برای ادامه زندگی به جاهای نزدیک‌تر پناه ببرند: خانواده، دوست، فامیل، آشنا، همکار مطمئن، همسایه قابل‌اعتماد.",
+        "illustration": "A cold slate blue open plain under a heavy sky. Lone faceless silhouette figures walk inward from the empty open space, each heading toward one of a few small warm ochre circles of people, where others are making room for them. Wide composition with movement from the cold edges toward the warm clusters.",
+    },
+    {
+        "slug": "sarzanesh",
+        "title": "نباید ساده سرزنشش کرد",
+        "body": "این پناه‌بردن را نباید ساده سرزنش کرد. در بسیاری از موقعیت‌ها، همین اعتمادهای کوچک زندگی را نگه می‌دارند. قرض‌دادن، مراقبت از بچه، معرفی کار، ضمانت‌کردن، خبررسانی، کمک درمانی، خرید گروهی، جا دادن کسی در خانه، یا حمایت عاطفی در لحظه‌های سخت، همه از همین حلقه‌های نزدیک می‌آیند. اگر این شبکه‌ها نبودند، فشار بحران برای بسیاری از مردم سنگین‌تر می‌شد.",
+        "illustration": "Close view inside one warm ochre circle of faceless silhouette figures sitting together. Hands pass things to one another across the circle: a bowl, a small child, a key, a blanket. One figure rests a hand on another's shoulder. The cold slate blue plain is visible only at the edges. Intimate, warm composition.",
+    },
+    {
+        "slug": "habs",
+        "title": "مسئله کجا شروع می‌شود",
+        "body": "پس مسئله این نیست که اعتماد خانوادگی یا دوستانه بد است. مسئله از جایی شروع می‌شود که اعتماد در همین حلقه‌های کوچک حبس شود و نتواند به سطح عمومی‌تر جامعه گسترش پیدا کند.",
+        "illustration": "One warm ochre circle of faceless figures on the cold plain, now enclosed by a low ring-shaped wall of cold slate blue stone that hugs the circle tightly. The warm glow stays inside the wall and does not reach the ground beyond it. Centered, still composition with wide empty space around.",
+    },
+    {
+        "slug": "do-peyvand",
+        "title": "دو نوع پیوند",
+        "body": "رابرت پاتنام در بحث سرمایه اجتماعی میان دو نوع پیوند تفاوت می‌گذارد: پیوندهای درون‌گروهی و پیوندهای پل‌ساز. پیوندهای درون‌گروهی آدم‌های شبیه‌تر و نزدیک‌تر را به هم وصل می‌کنند؛ خانواده، دوستان نزدیک، گروه‌های آشنا. پیوندهای پل‌ساز اما آدم‌ها و گروه‌هایی را به هم وصل می‌کنند که شبیه هم نیستند یا از یک حلقه نمی‌آیند.",
+        "ref": "بر پایه‌ی کتاب «بولینگ به‌تنهایی» نوشته‌ی رابرت پاتنام (۲۰۰۰)",
+        "illustration": "Two scenes side by side on the cold plain. On one side, a closed tight ring of similar faceless ochre figures holding hands facing inward. On the other side, a narrow warm ochre footbridge spans a cold slate blue gap and links two clusters of figures that are visibly different in size and posture. Balanced diptych composition.",
+    },
+    {
+        "slug": "zirsakht",
+        "title": "اعتماد، زیرساخت همکاری",
+        "body": "جامعه‌ای که فقط پیوندهای نزدیکش را نگه می‌دارد، شاید در بقا قوی باشد، اما در همکاری عمومی ضعیف می‌شود. پاتنام سرمایه اجتماعی را به شبکه‌ها، اعتماد و رابطه‌هایی وصل می‌کند که زندگی جمعی را ممکن می‌کنند؛ یعنی اعتماد فقط احساس شخصی نیست، زیرساخت همکاری است.",
+        "illustration": "Many faceless ochre silhouette figures together raise one long heavy roof beam onto two tall posts, a structure far too large for any small group to lift alone. Under the beam the ground is warm; beyond it the plain is cold slate blue. Wide, upward-reaching composition.",
+    },
+    {
+        "slug": "nazdik-va-door",
+        "title": "نزدیک‌ها و دورها",
+        "body": "در ایران، این تفاوت را می‌شود در تجربه روزمره حس کرد. ممکن است آدم به خانواده یا دوست نزدیک اعتماد کند، اما در معامله با غریبه، کار اداری، همکاری کاری، مشارکت جمعی یا رابطه با نهادها محتاط، بدبین یا دفاعی باشد. این فقط ویژگی اخلاقی افراد نیست؛ واکنشی است به محیطی که در آن خطا، سوءاستفاده، بی‌ثباتی و بی‌پاسخ‌ماندن زیاد تجربه شده است.",
+        "illustration": "A single faceless silhouette figure seen in profile, standing between two worlds: the side of its body facing a small warm ochre circle of people is open and relaxed, glowing warm; the side facing the vast cold slate blue plain is hunched, arm raised defensively, in cold shadow. Split, tense composition.",
+    },
+    {
+        "slug": "yekdast-nist",
+        "title": "اعتماد یک‌دست نیست",
+        "body": "مطالعات مربوط به سرمایه اجتماعی در تهران هم اعتماد را در سطوح مختلف سنجیده‌اند؛ از خانواده و خویشاوندان و دوستان تا همسایگان، همکاران، هم‌قوم و هم‌مذهب، و عموم مردم. همین تفکیک نشان می‌دهد که اعتماد یک چیز یک‌دست نیست؛ آدم‌ها ممکن است در حلقه نزدیک اعتماد داشته باشند، اما نسبت به دایره‌های دورتر محتاط باشند.",
+        "ref": "بر پایه‌ی پژوهشی درباره‌ی سرمایه‌ی اجتماعی و سطوح اعتماد در تهران",
+        "illustration": "Seen from above: concentric rings of faceless silhouette figures standing on the plain. The innermost small ring is deep warm ochre; each ring further out fades step by step to cooler tones, and the outermost wide ring is cold slate blue with figures spaced far apart. Graphic, symmetrical composition.",
+    },
+    {
+        "slug": "yek-nafar-dakhel-edareh",
+        "title": "«یک نفر داخل اداره»",
+        "body": "تجربه‌هایی که ممکن است در خودمان یا اطرافیانمان دیده باشیم: کار را به آشنا سپردن، دنبال «یک نفر داخل اداره» گشتن، خرید از کسی که معرفی شده، ترجیح فامیل به غریبه، کمک‌گرفتن از رابطه به‌جای روند رسمی. این‌ها را نمی‌شود یک‌سره فساد یا عقب‌ماندگی نامید. گاهی راه‌هایی‌اند برای کم‌کردن ریسک. اما همین راه‌های بقا، اگر دائمی و فراگیر شوند، به تدریج شایستگی، عدالت و اعتماد عمومی را تضعیف می‌کنند.",
+        "illustration": "A large cold slate blue official building with one closed service window and a long weary queue of faceless figures waiting in front of it. To the side, a small warm ochre side door stands ajar, and one figure slips through it, led by a hand reaching out from inside. Wide composition with the queue stretching away.",
+    },
+    {
+        "slug": "blat",
+        "title": "آینه‌ای از روسیه",
+        "body": "آلنا لدنوا در مطالعه خود درباره شبکه‌های غیررسمی در روسیه شوروی و پساشوروی، از پدیده‌ای به نام «بلات» حرف می‌زند؛ شبکه‌ای از رابطه‌ها، لطف‌ها و آشنایی‌ها که مردم برای دسترسی به کالا، خدمات یا امکان‌هایی استفاده می‌کردند که از مسیر رسمی دشوار یا نامطمئن بود. این نمونه عین ایران نیست، اما برای ما آینه خوبی است.",
+        "ref": "بر پایه‌ی کتاب آلنا لدنوا درباره‌ی «اقتصاد لطف‌ها» در روسیه (۱۹۹۸)",
+        "illustration": "A web of thin warm ochre threads passed hand to hand between many faceless figures, winding around the outside of a large cold slate blue building instead of going through its locked front door. Small parcels travel along the threads. Intricate yet calm composition.",
+    },
+    {
+        "slug": "emrooz-farda",
+        "title": "امروز حل، فردا فرسوده",
+        "body": "وقتی سیستم رسمی ناکارآمد یا غیرقابل‌اعتماد می‌شود، رابطه‌های غیررسمی فقط حاشیه زندگی نیستند؛ به بخشی از روش زندگی تبدیل می‌شوند. آن‌ها در کوتاه‌مدت مشکل را حل می‌کنند، اما در بلندمدت می‌توانند همان سیستمی را که به آن بی‌اعتمادیم، بیشتر غیرقابل‌اعتماد کنند.",
+        "illustration": "The same large cold slate blue building, now with wide cracks running up its walls. Dense warm ochre threads wrap around it like roots around a stone, and where they pull tightest the cracks are widest. Faceless figures keep passing parcels along the threads. Quiet, ominous composition.",
+    },
+    {
+        "slug": "peyvand-zaeef",
+        "title": "قدرت پیوندهای ضعیف",
+        "body": "مارک گرانووتر در نظریه «قدرت پیوندهای ضعیف» نکته مهمی دارد: پیوندهای ضعیف، یعنی رابطه‌هایی که به اندازه خانواده و دوست نزدیک صمیمی نیستند، می‌توانند گروه‌های مختلف جامعه را به هم وصل کنند و اطلاعات، فرصت و همکاری را از یک حلقه به حلقه دیگر ببرند. اگر اعتماد فقط در حلقه‌های کوچک بماند، جامعه از درون چندپاره می‌شود.",
+        "ref": "بر پایه‌ی مقاله‌ی مارک گرانووتر (۱۹۷۳)",
+        "illustration": "Several small warm ochre circles of faceless figures far apart on the cold plain, loosely stitched together by long, very thin warm ochre lines held by single figures standing between circles. Along the lines, small lights travel from one circle to another. Airy, network-like wide composition.",
+    },
+    {
+        "slug": "dayereh-tang",
+        "title": "دایره‌ی اعتماد تنگ می‌شود",
+        "body": "بحران اقتصادی فقط جیب مردم را خالی نمی‌کند؛ دایره اعتماد را هم کوچک می‌کند. وقتی آدم‌ها دائماً نگران فردا هستند، کمتر ریسک اعتماد به غریبه را می‌پذیرند. وقتی منابع کم می‌شود، رقابت خشن‌تر می‌شود. وقتی تجربه بی‌عدالتی تکرار می‌شود، آدم‌ها به‌جای قواعد عمومی، دنبال مسیرهای خصوصی‌تر می‌گردند.",
+        "illustration": "One warm ochre circle of faceless figures pressed tightly shoulder to shoulder, backs turned outward. A faint wider ring traced on the ground shows where the circle used to stand; the cold slate blue plain has crept inward over it. Small in a large empty frame.",
+    },
+    {
+        "slug": "do-chehreh",
+        "title": "دو چهره",
+        "body": "این وضعیت دو چهره دارد. یک چهره‌اش مثبت است: خانواده، دوستی و شبکه‌های نزدیک مثل ضربه‌گیر اجتماعی عمل می‌کنند. اما چهره دیگرش نگران‌کننده است: اگر اعتماد فقط به نزدیکان محدود شود، همکاری عمومی سخت می‌شود. کار جمعی دشوارتر می‌شود. نهادهای مدنی ضعیف‌تر می‌شوند. شایستگی جای خود را به رابطه می‌دهد.",
+        "illustration": "A circle of faceless figures split down the middle: on the left half, warm ochre figures shield one another under a sheltering curve like an umbrella against falling cold rain; on the right half, the same circle's outer edge has hardened into a cold slate blue wall turned toward the empty plain. Symmetric, two-sided composition.",
+    },
+    {
+        "slug": "mahaye-koochak",
+        "title": "«ما»های کوچک",
+        "body": "جامعه به جای اینکه از «ما»ی گسترده‌تر ساخته شود، به مجموعه‌ای از «ما»های کوچک و محتاط تبدیل می‌شود. مردم هنوز از هم مراقبت می‌کنند، اما بیشتر از کسانی که می‌شناسند. هنوز کمک می‌کنند، اما در دایره‌هایی که می‌توانند کنترل کنند. هنوز همکاری می‌کنند، اما بیشتر وقتی طرف مقابل از قبل آزموده شده، معرفی شده، یا به حلقه‌ای آشنا وصل است.",
+        "illustration": "Seen from a high angle: a wide plain filled with many small separate circles of faceless figures, each circle facing inward and glowing faint warm ochre, with cold slate blue ground between them. No circle faces another. Pattern-like, repetitive wide composition.",
+    },
+    {
+        "slug": "ostrom",
+        "title": "با توصیه‌ی اخلاقی ساخته نمی‌شود",
+        "body": "الینور اوستروم در کارهایش درباره حکمرانی منابع مشترک نشان داد که همکاری پایدار فقط با نیت خوب ساخته نمی‌شود. مردم وقتی بهتر همکاری می‌کنند که قواعد روشن، نظارت قابل‌اعتماد، امکان مشارکت در تصمیم‌ها، سازوکار حل اختلاف و برخورد تدریجی با سوءاستفاده وجود داشته باشد. جامعه برای اعتمادکردن به غریبه‌ها، به نهاد، قاعده و تجربه‌های تکرارشونده از انصاف نیاز دارد.",
+        "ref": "بر پایه‌ی پژوهش الینور اوستروم درباره‌ی حکمرانی منابع مشترک (نوبل اقتصاد ۲۰۰۹)",
+        "illustration": "A shared well in the middle of a field, marked out by simple clear stone boundary lines. Faceless ochre figures who came from different small circles take turns drawing water, and the warm field around the well is tended together, contrasting with the cold slate blue plain beyond. Orderly, calm composition.",
+    },
+    {
+        "slug": "dopahloo",
+        "title": "دوباره دوپهلو",
+        "body": "این همان جایی است که سازگاری دوباره دوپهلو می‌شود. اعتمادهای کوچک جامعه را در بحران نگه می‌دارند، اما اگر جای اعتماد عمومی را بگیرند، جامعه را کوچک‌تر می‌کنند. حلقه‌های نزدیک، زندگی را نجات می‌دهند؛ اما اگر تنها پناهگاه باقی بمانند، امکان ساختن آینده مشترک ضعیف می‌شود.",
+        "illustration": "A return to the cover's scene, same dusk light but seen from very far back and high up: hundreds of tiny warm ochre circles scattered like embers across a vast cold slate blue plain that stretches to the horizon, with nothing connecting them. Vast, wide, layered composition.",
+    },
+    {
+        "slug": "payan",
+        "title": "ادامه دارد…",
+        "subtitle": "بخش بعد: ناسازگاری به‌عنوان نیروی اصلاح",
+        "author": "بهمن رشادی",
+        "body": "این بخش پنجم از نوشتار «زنده‌ماندن یا زیستن؟» بود. اعتماد کوچک، شکل مهمی از بقاست؛ اما جامعه برای آینده فقط به خانواده و آشنا نیاز ندارد. به اعتماد میان غریبه‌ها هم نیاز دارد. بخش بعد: ناسازگاری به‌عنوان نیروی اصلاح.",
+        "illustration": "Two small warm ochre circles of faceless figures on the cold plain at dusk. One figure from each circle has stepped out and together they lay the last plank of a short warm ochre footbridge across the cold gap between them. Warm, open, hopeful composition.",
+    },
 ]}
 
 HTML = """<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
