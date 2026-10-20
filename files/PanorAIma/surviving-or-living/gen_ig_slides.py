@@ -969,6 +969,132 @@ SLIDES_BY_SECTION = {"01": [
         "body": "این بخش پنجم از نوشتار «زنده‌ماندن یا زیستن؟» بود. اعتماد کوچک، شکل مهمی از بقاست؛ اما جامعه برای آینده فقط به خانواده و آشنا نیاز ندارد. به اعتماد میان غریبه‌ها هم نیاز دارد. بخش بعد: ناسازگاری به‌عنوان نیروی اصلاح.",
         "illustration": "Two small warm ochre circles of faceless figures on the cold plain at dusk. One figure from each circle has stepped out and together they lay the last plank of a short warm ochre footbridge across the cold gap between them. Warm, open, hopeful composition.",
     },
+], "06": [
+    # Motif: warm sprouts breaking through cracks in a vast cold paved ground; at first
+    # alone, then their roots meet underground into a network — dissent that becomes capacity.
+    {
+        "slug": "cover",
+        "tag": "بخش ششم",
+        "title": "ناسازگاری به‌عنوان نیروی اصلاح",
+        "subtitle": "از نوشتار «زنده‌ماندن یا زیستن؟»",
+        "author": "بهمن رشادی",
+        "body": "",
+        "illustration": "A vast flat expanse of cold slate blue paving stones stretching to the horizon at dusk. In the middle, from a single thin crack, one small warm ochre sprout with two leaves has pushed up through the stone. Wide composition, generous empty space around the sprout.",
+    },
+    {
+        "slug": "taghdim",
+        "tag": "تقدیم",
+        "body": "این نوشته را به یاد کسانی آغاز می‌کنم که به زنده‌ماندن بسنده نکردند. کسانی که بخشی از زندگی، آرامش، یا حتی جان خود را گذاشتند تا زیستن برای دیگران ممکن‌تر شود: زیستن با کرامت، با انتخاب، با آینده‌ای که بشود برایش برنامه ریخت. آن‌هایی که نامشان را می‌دانیم. آن‌هایی که نامشان در شلوغی روزها گم شده. و آن‌هایی که هنوز در دل زندگی روزمره ما ادامه دارند.",
+        "illustration": "A single open hand, drawn as a simple faceless silhouette, held palm up against a cold slate blue background. In the centre of the palm rests one small warm ochre seed. Minimal, solemn, respectful composition.",
+    },
+    {
+        "slug": "do-niroo",
+        "title": "دو نیرو، دو کار",
+        "body": "اگر سازگاری برای ادامه‌دادن لازم است، ناسازگاری برای اصلاح لازم است. جامعه‌ای که هیچ‌وقت سازگار نمی‌شود، زیر فشارهای طولانی از هم می‌پاشد؛ اما جامعه‌ای که همیشه سازگار می‌شود، کم‌کم توان تشخیص خطا را از دست می‌دهد.",
+        "illustration": "Two plants side by side on cold slate blue paving. On the left, a dry brittle plant that has snapped and cracked apart. On the right, a pale faded plant lying perfectly flat, pressed under a heavy slab of stone, its colour drained away. Balanced two-part composition.",
+    },
+    {
+        "slug": "har-nasazegari",
+        "title": "هر ناسازگاری‌ای خوب نیست",
+        "body": "مسئله این نیست که ناسازگاری همیشه خوب است. ناسازگاری کور، پراکنده، عصبی یا صرفاً تخریبی می‌تواند خودش بخشی از فرسایش باشد. اما نوعی از ناسازگاری هست که کارکرد اصلاحی دارد: یادآوری می‌کند که وضعیت موجود، طبیعی و نهایی نیست.",
+        "illustration": "Cold slate blue paving. On one side, a jagged shattered patch of broken stone fragments with nothing growing in it. On the other side, a clean thin crack from which a healthy warm ochre sprout grows upright. Clear contrast, calm composition.",
+    },
+    {
+        "slug": "faghat-khiaban-nist",
+        "title": "فقط خیابان نیست",
+        "body": "در این معنا، ناسازگاری فقط اعتراض خیابانی یا مخالفت سیاسی مستقیم نیست. گاهی در حفظ یک استاندارد دیده می‌شود؛ در نپذیرفتن تحقیر؛ در اصرار بر کیفیت؛ در روایت‌کردن تجربه‌ای که زبان رسمی نمی‌خواهد ببیند؛ در سبک زندگی؛ در بدن؛ در طنز؛ در هنر؛ در نپذیرفتن دروغی که قرار است عادی شود.",
+        "illustration": "A cold slate blue wall meeting a paved sidewalk. From many different small cracks in the wall and the pavement grow different warm ochre plants: a small flower, a tuft of grass, a curling leaf, a tiny vine. Each is different, scattered across the frame. Wide, rhythmic composition.",
+    },
+    {
+        "slug": "moghavemat-roozmareh",
+        "title": "شکل‌های روزمره‌ی مقاومت",
+        "body": "جیمز سی. اسکات از «شکل‌های روزمره مقاومت» حرف می‌زند؛ یعنی رفتارهای کوچک و غیرقهرمانانه‌ای که الزاماً شبیه انقلاب نیستند، اما نشان می‌دهند مردم کاملاً با نظم مسلط یکی نشده‌اند. نباید فقط دنبال لحظه‌های بزرگ ناسازگاری بگردیم؛ بخشی از فاصله جامعه با وضعیت، در رفتارهای خرد و روزمره نگه داشته می‌شود.",
+        "ref": "بر پایه‌ی کتاب «سلاح‌های ضعیفان» نوشته‌ی جیمز سی. اسکات (۱۹۸۵)",
+        "illustration": "Cross-section close view just beneath cold slate blue paving stones: a thin warm ochre root quietly finding its way through the gaps beneath the stones, slowly lifting one stone edge by a hair. Quiet, patient, detailed composition.",
+    },
+    {
+        "slug": "har-raftar",
+        "title": "هر رفتار متفاوتی مقاومت نیست",
+        "body": "هر رفتار متفاوتی مقاومت نیست. هر شوخی‌ای اعتراض نیست. اگر همه چیز را مقاومت بنامیم، مفهوم مقاومت را بی‌معنا می‌کنیم. بهتر است بگوییم این‌ها می‌توانند نشانه‌هایی باشند از این‌که جامعه هنوز تماماً با وضعیت یکی نشده است. هنوز فاصله‌ای هست؛ هنوز زبان دیگری هست.",
+        "illustration": "Several loose dry leaves scattered on cold slate blue paving, lying on the surface without roots. Among them, only one small warm ochre leaf is actually rooted, growing from a crack. Sparse, still composition.",
+    },
+    {
+        "slug": "zendegi-dar-haghighat",
+        "title": "زندگی در حقیقت",
+        "body": "واسلاو هاول در «قدرت بی‌قدرتان» از «زندگی در حقیقت» حرف می‌زند. منظور او این نبود که هر شهروند باید قهرمان سیاسی شود. بحثش ساده‌تر و عمیق‌تر بود: در نظامی که از مردم می‌خواهد در نمایش رسمی شرکت کنند، گاهی خودداری از تکرار آن نمایش، شکلی از قدرت است.",
+        "ref": "بر پایه‌ی متن «قدرت بی‌قدرتان» نوشته‌ی واسلاو هاول (۱۹۷۸)",
+        "illustration": "A long straight row of identical pale cold slate blue plastic pots holding identical stiff artificial plants. In the middle of the row, one pot holds a real living warm ochre plant, slightly irregular and alive. Repetitive, frontal composition.",
+    },
+    {
+        "slug": "noskhe-tekrari",
+        "title": "نسخه‌ی تکراری نیست",
+        "body": "این ایده را نباید مستقیم و ساده به ایران منتقل کرد. اما یک شباهت تحلیلی وجود دارد: نظم‌های ایدئولوژیک فقط با زور کار نمی‌کنند؛ از مردم می‌خواهند در زبان، مناسک، تصویرها و روایت‌های رسمی هم مشارکت کنند. در چنین وضعیتی، ناسازگاری گاهی یعنی آدم‌ها اجازه ندهند زبان رسمی، همه تجربه زیسته‌شان را تصاحب کند.",
+        "illustration": "A tall wall covered edge to edge with identical blank cold slate blue rectangular posters (no text on them). From a torn corner of one poster, a warm ochre vine has pushed out and begun to climb. Flat, frontal composition.",
+    },
+    {
+        "slug": "aine-orupa",
+        "title": "آینه‌ی اروپای شرقی",
+        "body": "تجربه اروپای شرقی برای ما آینه مقایسه‌ای است، نه نسخه آماده. بعضی جامعه‌ها توانستند سریع‌تر خود را بازسازی کنند، بعضی دچار فساد، پوپولیسم، مافیا، بی‌اعتمادی یا اقتدارگرایی تازه شدند. تفاوت در این هم بود که جامعه زیر فشار چه چیزهایی را حفظ کرده بود: نهادهای مستقل، حافظه مقاومت، شبکه‌های اعتماد، زبان انتقادی، تجربه سازمان‌یابی و توان همکاری.",
+        "illustration": "Two plots of ground side by side after snow has melted, with patches of cold slate blue snow still at the edges. The left plot is green-ochre again with new growth, and a cutaway shows living roots kept alive under the soil. The right plot is bare, with no roots beneath. Two-part comparative composition.",
+    },
+    {
+        "slug": "linz-stepan",
+        "title": "فقط تغییر حکومت نیست",
+        "body": "خوان لینتس و آلفرد استپان می‌گویند عبور از رژیم غیردموکراتیک فقط به تغییر حکومت یا برگزاری انتخابات وابسته نیست. چند میدان باید ظرفیت داشته باشند: جامعه مدنی، جامعه سیاسی، حاکمیت قانون، دستگاه اداری مؤثر، و اقتصادی که کاملاً در قدرت سیاسی حل نشده باشد. ناسازگاری وقتی نیروی اصلاح می‌شود که بتواند از واکنش فردی به ظرفیت اجتماعی تبدیل شود.",
+        "ref": "بر پایه‌ی کتاب خوان لینتس و آلفرد استپان درباره‌ی گذار و تثبیت دموکراتیک (۱۹۹۶)",
+        "illustration": "A young warm ochre tree shown with a cutaway of the ground beneath it: five distinct, strong main roots spread out in different directions, each firmly anchored. Cold slate blue stone surrounds the soil. Centered, grounded composition.",
+    },
+    {
+        "slug": "lahestan",
+        "title": "نمونه‌ی لهستان",
+        "body": "در لهستان، اعتراض و سازمان‌یابی اجتماعی، به‌ویژه تجربه جنبش همبستگی، فقط در فروپاشی نظم کمونیستی نقش نداشت؛ پس از آن هم بر تثبیت دموکراتیک اثر گذاشت. خشم اجتماعی اگر به شبکه، حافظه، سازمان، مطالبه و زبان مشترک تبدیل نشود، زود مصرف می‌شود؛ اما اگر این ظرفیت‌ها را بسازد، می‌تواند بعداً بخشی از بازسازی باشد.",
+        "ref": "بر پایه‌ی پژوهش گژگوش اکی‌یرت و یان کوبیک درباره‌ی جامعه‌ی مدنی لهستان (۱۹۸۹–۱۹۹۳)",
+        "illustration": "Two fires on cold slate blue ground at night. On the left, a quick flare of loose straw already collapsing into grey ash. On the right, a fire built from carefully stacked logs, burning steady and warm ochre, with faceless figures sitting around it. Side-by-side comparison.",
+    },
+    {
+        "slug": "iran",
+        "title": "ناسازگاری در ایران",
+        "body": "در ایران، ناسازگاری در سال‌های اخیر فقط در سیاست رسمی دیده نشده؛ در زندگی روزمره، در سبک پوشش، در بدن، در رابطه با اینترنت، در مهاجرت، در طنز، در هنر، در زبان نسل‌ها، در روایت زنان از خودشان، در حساسیت نسبت به تحقیر، در تلاش برای حفظ استانداردهای شخصی و حرفه‌ای هم دیده شده است. این‌ها را نباید بیش از اندازه رمانتیک کرد. اما همه‌شان یک چیز را نشان می‌دهند: جامعه هنوز کاملاً با عادی‌سازی بحران یکی نشده است.",
+        "illustration": "A dense Middle Eastern city like Tehran seen from high above in cold slate blue: low and mid-rise flat-roofed concrete apartment blocks packed close together, narrow streets, and a long snow-capped mountain range rising behind the city. No skyscrapers, no rooftop water towers, no Western landmarks. Here and there, in cracks of streets, flat rooftops, balconies and walls, small warm ochre and green patches of growth appear, scattered across the whole city. Wide aerial composition.",
+    },
+    {
+        "slug": "neshane-ta-zarfiat",
+        "title": "از نشانه تا ظرفیت",
+        "body": "اگر فقط به شکل خشم پراکنده بمانند، فرسوده می‌شوند. اگر فقط به مهاجرت فردی تبدیل شوند، بخشی از انرژی جامعه از کشور خارج می‌شود. اگر فقط در شوخی و کنایه بمانند، ممکن است بحران را قابل‌تحمل‌تر کنند، اما الزاماً آن را تغییر نمی‌دهند. اما اگر به زبان دقیق، شبکه‌های اعتماد، همکاری مدنی، مطالبه روشن، اخلاق حرفه‌ای، حافظه جمعی و نهادهای کوچک تبدیل شوند، می‌توانند نقش اصلاحی پیدا کنند.",
+        "illustration": "A cross-section of the ground. Above, on cold slate blue paving, several separate warm ochre sprouts stand apart from each other. Below the surface, their thin roots reach out sideways and begin to meet and intertwine into a single network. Layered composition, surface above and roots below.",
+    },
+    {
+        "slug": "fazilat",
+        "title": "فضیلت تکاملی",
+        "body": "ناسازگاری‌ای که فقط ویران کند، فقط تحقیر کند، فقط نفی کند، یا فقط فرد را از جمع جدا کند، لزوماً فضیلت نیست. اما ناسازگاری‌ای که خطا را نشان دهد، دروغ را عادی نکند، استاندارد زندگی را پایین‌تر از حد انسانی نپذیرد، امکان همکاری را حفظ کند و جامعه را به اصلاح خود وادار کند، یک نیروی حیاتی است.",
+        "illustration": "A warm ochre plant that has pushed one cold slate blue paving stone aside. In the opened patch of soil next to it, several smaller new sprouts are now growing, sheltered by the first plant. Warm, generous composition.",
+    },
+    {
+        "slug": "har-do-niroo",
+        "title": "هر دو نیرو",
+        "body": "جامعه به هر دو نیرو نیاز دارد: سازگاری برای زنده‌ماندن، ناسازگاری برای سالم‌ماندن. نقطه دشوار، نگه‌داشتن هر دو است: ادامه‌دادن بدون تسلیم کامل؛ فاصله‌گرفتن بدون فروپاشی؛ اعتراض بدون از دست‌دادن توان همکاری؛ و حفظ زندگی بدون عادی‌کردن چیزی که نباید عادی شود.",
+        "illustration": "A single tall warm ochre reed bending in a strong cold slate blue wind, curved but not broken, its roots firmly anchored in the ground and its tip turned upward toward a warm light. Dynamic yet balanced composition.",
+    },
+    {
+        "slug": "tashkhis-khata",
+        "title": "دستگاه تشخیص خطا",
+        "body": "ناسازگاری یعنی جامعه هنوز دستگاه تشخیص خطا دارد. هنوز می‌تواند بگوید این کیفیت زندگی کافی نیست. این زبان رسمی همه حقیقت نیست. این تحقیر طبیعی نیست. این آینده کوچک‌شده نباید سرنوشت قطعی باشد.",
+        "illustration": "A dark cold slate blue space beneath heavy paving stones. A thin beam of warm light falls through a narrow crack above, and a small pale sprout below bends and stretches toward that beam. Dark, focused composition with one line of light.",
+    },
+    {
+        "slug": "faghat-na-nagooyad",
+        "title": "فقط «نه» نگوید",
+        "body": "ناسازگاری وقتی نیروی اصلاح می‌شود که فقط «نه» نگوید؛ بلکه چیزی را حفظ کند که جامعه برای بازسازی آینده به آن نیاز دارد: اعتماد، زبان مستقل، حافظه، سازمان، استاندارد اخلاقی و توان همکاری.",
+        "illustration": "A return to the cover's scene, same dusk light but seen from farther back: dozens of warm ochre sprouts growing from cracks across the vast cold slate blue paving, and a cutaway along the bottom edge shows their roots joined underground into one continuous network. Vast, wide, layered composition.",
+    },
+    {
+        "slug": "payan",
+        "title": "ادامه دارد…",
+        "subtitle": "بخش بعد: مرز باریک؛ از تحمل تا امکان تغییر",
+        "author": "بهمن رشادی",
+        "body": "این بخش ششم از نوشتار «زنده‌ماندن یا زیستن؟» بود. جامعه به هر دو نیرو نیاز دارد: سازگاری برای زنده‌ماندن، ناسازگاری برای سالم‌ماندن. بخش بعد: مرز باریک؛ از تحمل تا امکان تغییر.",
+        "illustration": "The same vast paved ground at sunset. In its middle, the cold slate blue paving has been split open and a small living warm ochre garden grows there, with a few faceless figures tending it together. Warm, open, hopeful composition.",
+    },
 ]}
 
 HTML = """<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
