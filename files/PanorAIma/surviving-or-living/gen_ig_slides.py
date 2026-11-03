@@ -1271,16 +1271,28 @@ def draw_illustration(png_path: Path, description: str) -> None:
         return
     if not API_KEY:
         raise SystemExit("OPENAI_API_KEY not found in .env")
-    print("  drawing illustration with gpt-image-2 ...")
-    resp = requests.post(
-        GEN_URL,
-        headers={"Authorization": f"Bearer {API_KEY}"},
-        json={"model": "gpt-image-2", "prompt": STYLE + " Scene: " + description,
-              "size": "1536x1024", "quality": "high", "n": 1},
-        timeout=240,
-    )
-    if not resp.ok:
-        raise SystemExit(f"generation failed ({resp.status_code}): {resp.text[:500]}")
+    print("  drawing illustration with gpt-image-2 (medium quality) ...")
+    failure = ""
+    for attempt in (1, 2):  # one retry at most, then stop
+        try:
+            resp = requests.post(
+                GEN_URL,
+                headers={"Authorization": f"Bearer {API_KEY}"},
+                json={"model": "gpt-image-2", "prompt": STYLE + " Scene: " + description,
+                      "size": "1536x1024", "quality": "medium", "n": 1},
+                timeout=240,
+            )
+        except requests.RequestException as exc:
+            failure = f"request error: {exc}"
+        else:
+            if resp.ok:
+                break
+            failure = f"HTTP {resp.status_code}: {resp.text[:500]}"
+        if attempt == 1:
+            print(f"  generation failed ({failure}); retrying once ...")
+    else:
+        raise SystemExit(f"generation of {png_path.name} failed twice, stopping. "
+                         f"Last error: {failure}")
     png_path.write_bytes(base64.b64decode(resp.json()["data"][0]["b64_json"]))
     print(f"  saved {png_path.relative_to(REPO_ROOT)}")
 
