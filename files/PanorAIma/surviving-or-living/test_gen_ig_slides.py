@@ -11,8 +11,10 @@ use the section's own sentences, point SURVIVING_SECTIONS_DIR at the live copy's
 """
 import importlib.util
 import os
+import base64
 import re
 import sys
+import tempfile
 import types
 import unittest
 from pathlib import Path
@@ -31,6 +33,7 @@ def _forbidden(name):
 def _load_generator():
     requests = types.ModuleType("requests")
     requests.post = _forbidden("requests.post")
+    requests.RequestException = type("RequestException", (Exception,), {})
     dotenv = types.ModuleType("dotenv")
     dotenv.load_dotenv = lambda *a, **k: None
     playwright = types.ModuleType("playwright")
@@ -153,6 +156,86 @@ class EarlierSectionsDrawNothing(unittest.TestCase):
         finally:
             sys.argv = argv
         self.assertEqual(CALLS, [])
+
+
+class _Resp:
+    def __init__(self, status, payload=None, text=""):
+        self.status_code = status
+        self.ok = 200 <= status < 300
+        self._payload = payload
+        self.text = text
+
+    def json(self):
+        return self._payload
+
+
+PNG = b"\x89PNG fake"
+OK = _Resp(200, {"data": [{"b64_json": base64.b64encode(PNG).decode()}]})
+
+
+class DrawIllustration(unittest.TestCase):
+    """Drives draw_illustration with a fake image service; nothing real is called."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.png = Path(self.tmp.name) / "01-x.png"
+        self.requests = []
+        self.saved = (GEN.API_KEY, GEN.requests.post, GEN.REPO_ROOT)
+        GEN.API_KEY = "test-key"
+        GEN.REPO_ROOT = Path(self.tmp.name)
+
+    def tearDown(self):
+        GEN.API_KEY, GEN.requests.post, GEN.REPO_ROOT = self.saved
+        self.tmp.cleanup()
+
+    def _service(self, *replies):
+        replies = list(replies)
+
+        def post(url, **kwargs):
+            self.requests.append(kwargs["json"])
+            reply = replies.pop(0)
+            if isinstance(reply, Exception):
+                raise reply
+            return reply
+        GEN.requests.post = post
+
+    def test_new_illustration_is_requested_at_medium_quality(self):
+        self._service(OK)
+        GEN.draw_illustration(self.png, "a ridge")
+        self.assertEqual(len(self.requests), 1)
+        self.assertEqual(self.requests[0]["model"], "gpt-image-2")
+        self.assertEqual(self.requests[0]["quality"], "medium")
+        self.assertEqual(self.png.read_bytes(), PNG)
+
+    def test_failed_call_is_retried_once(self):
+        self._service(_Resp(500, text="server error"), OK)
+        GEN.draw_illustration(self.png, "a ridge")
+        self.assertEqual(len(self.requests), 2)
+        self.assertEqual(self.png.read_bytes(), PNG)
+
+    def test_network_error_is_retried_once(self):
+        self._service(GEN.requests.RequestException("timed out"), OK)
+        GEN.draw_illustration(self.png, "a ridge")
+        self.assertEqual(len(self.requests), 2)
+        self.assertEqual(self.png.read_bytes(), PNG)
+
+    def test_second_failure_stops_with_clear_message(self):
+        self._service(_Resp(500, text="first"), _Resp(429, text="rate limited"), OK)
+        with self.assertRaises(SystemExit) as stop:
+            GEN.draw_illustration(self.png, "a ridge")
+        self.assertEqual(len(self.requests), 2)
+        message = str(stop.exception.code)
+        self.assertIn("01-x.png", message)
+        self.assertIn("429", message)
+        self.assertIn("rate limited", message)
+        self.assertFalse(self.png.exists())
+
+    def test_cached_illustration_is_never_requested(self):
+        self.png.write_bytes(b"old")
+        self._service()
+        GEN.draw_illustration(self.png, "a ridge")
+        self.assertEqual(self.requests, [])
+        self.assertEqual(self.png.read_bytes(), b"old")
 
 
 if __name__ == "__main__":
