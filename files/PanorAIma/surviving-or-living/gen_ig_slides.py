@@ -1095,6 +1095,138 @@ SLIDES_BY_SECTION = {"01": [
         "body": "این بخش ششم از نوشتار «زنده‌ماندن یا زیستن؟» بود. جامعه به هر دو نیرو نیاز دارد: سازگاری برای زنده‌ماندن، ناسازگاری برای سالم‌ماندن. بخش بعد: مرز باریک؛ از تحمل تا امکان تغییر.",
         "illustration": "The same vast paved ground at sunset. In its middle, the cold slate blue paving has been split open and a small living warm ochre garden grows there, with a few faceless figures tending it together. Warm, open, hopeful composition.",
     },
+], "07": [
+    # Motif: a long, very narrow ridge path between two slopes — a cold slate blue slope
+    # falling into a fog-filled valley (endurance turning into normalisation) and open warm
+    # ochre land (the possibility of change). A faceless walker carries a small warm lantern:
+    # what is kept alive for tomorrow while getting through today.
+    {
+        "slug": "cover",
+        "tag": "بخش هفتم",
+        "title": "مرز باریک",
+        "subtitle": "از تحمل تا امکان تغییر — از نوشتار «زنده‌ماندن یا زیستن؟»",
+        "author": "بهمن رشادی",
+        "body": "",
+        "illustration": "A long, very narrow ridge path running across a wide landscape at dusk, seen from slightly above and behind. On the left, a steep cold slate blue slope falls away into a low valley filled with still fog. On the right, the land opens in warm ochre toward a distant horizon. One small faceless silhouette walks the ridge, holding a small warm ochre lantern. Wide composition, generous empty sky.",
+    },
+    {
+        "slug": "taghdim",
+        "tag": "تقدیم",
+        "body": "این نوشته را به یاد کسانی آغاز می‌کنم که به زنده‌ماندن بسنده نکردند. کسانی که بخشی از زندگی، آرامش، یا حتی جان خود را گذاشتند تا زیستن برای دیگران ممکن‌تر شود: زیستن با کرامت، با انتخاب، با آینده‌ای که بشود برایش برنامه ریخت. آن‌هایی که نامشان را می‌دانیم. آن‌هایی که نامشان در شلوغی روزها گم شده. و آن‌هایی که هنوز در دل زندگی روزمره ما ادامه دارند.",
+        "illustration": "The same narrow ridge at night, empty of people. Along it, a line of small warm ochre lanterns has been left glowing on the ground at intervals, fading into the distance. Everything else is calm, dim cold slate blue. Minimal, solemn, respectful stillness.",
+    },
+    {
+        "slug": "porsesh-mohemtar",
+        "title": "پرسش مهم‌تر",
+        "body": "در پایان این نوشتار، پرسش اصلی دیگر این نیست که جامعه ایران چقدر تاب‌آور است. پاسخ این پرسش را تا حدی می‌دانیم: بسیار تاب‌آور است. جامعه‌ای که سال‌ها با تورم، نااطمینانی، فشار سیاسی، فیلترینگ، فرسایش طبقه متوسط، مهاجرت، کاهش کیفیت زندگی و بحران‌های پی‌درپی ادامه داده، ظرفیت بالایی برای سازگاری دارد. اما پرسش مهم‌تر این است: این تاب‌آوری تا کجا فضیلت است، و از کجا به عادی‌سازی وضعیتی تبدیل می‌شود که نباید عادی شود؟",
+        "illustration": "The faceless walker standing still on the narrow ridge, seen from the side, lantern in hand, looking down at the exact point where the path's edge blurs: on one side warm ochre ground, on the other a cold slate blue slope sliding softly into fog. The edge between them is soft and hard to see. Quiet, balanced composition.",
+    },
+    {
+        "slug": "marz-roshan-nist",
+        "title": "مرز همیشه روشن نیست",
+        "body": "مرز میان این دو همیشه روشن نیست. آدم‌ها نمی‌توانند هر روز با تمام شدت بحران زندگی کنند. برای ادامه‌دادن، باید بخشی از فشار را قابل‌تحمل کنند. باید بخندند، کار کنند، خرید کنند، بچه بزرگ کنند، و از نو شروع کنند. این بخش از سازگاری، شرط زنده‌ماندن است. اما اگر همین تحمل باعث شود جامعه دیگر کاهش کیفیت زندگی را نبیند، تحقیر را طبیعی بداند، یا آینده کوچک‌شده را تقدیر بداند، آن‌وقت تاب‌آوری از درون تغییر معنا داده است.",
+        "illustration": "On the narrow ridge, a small group of faceless figures, women and men, carrying everyday things — a basket, a child on shoulders, a bundle — keep walking with their warm ochre lanterns. A few of them, without noticing, have drifted a step down onto the cold slate blue slope, where the fog begins to touch their feet. Wide, gently moving composition.",
+    },
+    {
+        "slug": "ghabeliat-ha",
+        "title": "فراتر از زنده‌ماندن",
+        "body": "اینجا می‌شود از آمارتیا سن کمک گرفت. سن در بحث «قابلیت‌ها» می‌گوید مسئله توسعه و زندگی انسانی فقط درآمد، بقا یا دسترسی حداقلی نیست؛ مهم این است که انسان‌ها چه امکان‌هایی برای انتخاب، عمل‌کردن، شکوفایی و ساختن زندگی‌ای دارند که برایشان ارزشمند است. جامعه‌ای ممکن است دوام بیاورد، اما اگر امکان انتخاب، برنامه‌ریزی، رشد، مشارکت و کرامت در آن کوچک شود، نمی‌شود فقط با واژه تاب‌آوری از آن دفاع کرد.",
+        "ref": "بر پایه‌ی رویکرد قابلیت‌ها در اندیشه‌ی آمارتیا سن",
+        "illustration": "From the narrow ridge, many thin warm ochre paths branch out across the open warm side of the landscape toward different horizons, like many possible lives. On the cold slate blue side, a single short path ends in fog. The faceless walker with the lantern stands at the junction. Wide, airy composition.",
+    },
+    {
+        "slug": "jameeye-shayeste",
+        "title": "جامعه‌ی شایسته",
+        "body": "آویشای مارگالیت در کتاب The Decent Society می‌گوید جامعه شایسته، جامعه‌ای است که نهادهایش مردم را تحقیر نکنند. در بحران‌های طولانی، خطر فقط فقر یا نااطمینانی نیست؛ خطر این است که تحقیر هم عادی شود. آدم‌ها به خدمات بد عادت کنند، به بی‌احترامی عادت کنند، به نادیده‌گرفته‌شدن عادت کنند، و کم‌کم تصور کنند همین حد از زندگی، طبیعی است.",
+        "ref": "بر پایه‌ی کتاب «جامعه‌ی شایسته» نوشته‌ی آویشای مارگالیت (۱۹۹۶)",
+        "illustration": "Low on the cold slate blue slope, beneath a heavy low ceiling of fog, faceless figures, women and men, walk bent over with heads lowered, their lanterns turned down to a dim glow. Up on the ridge above them, one upright figure's warm ochre lantern is still bright. Muted, quiet composition.",
+    },
+    {
+        "slug": "koochak-shodan",
+        "title": "کوچک‌شدن آرام زندگی",
+        "body": "از این زاویه، تاب‌آوری وقتی ارزشمند است که کرامت را حفظ کند، نه وقتی که مردم را با تحقیر سازگارتر کند. اگر جامعه فقط یاد بگیرد چطور با کیفیت پایین‌تر، بی‌ثباتی بیشتر، بی‌اعتمادی عمومی‌تر و افق کوتاه‌تر زندگی کند، هنوز زنده است؛ اما زندگی‌اش کوچک‌تر شده است. مسئله اصلی همین کوچک‌شدن آرام زندگی است؛ چیزی که گاهی در عددها دیده نمی‌شود، اما در بدن، زبان، رابطه، خیال و انتظار مردم از آینده رسوب می‌کند.",
+        "illustration": "The same faceless walker drawn several times along the ridge from left to right, each figure a little smaller than the last, the warm ochre circle of lantern light around them shrinking with each step, while the cold slate blue fog on the valley side slowly rises. Calm, rhythmic composition.",
+    },
+    {
+        "slug": "rooz-e-baad",
+        "title": "آنچه روز بعد اهمیت دارد",
+        "body": "تجربه‌هایی مثل اروپای شرقی بعد از کمونیسم، همین نکته را از زاویه‌ای دیگر نشان می‌دهند. پس از فرسایش یا عقب‌نشینی یک نظم ایدئولوژیک، جامعه فقط با خشم، خستگی یا میل به تغییر بازسازی نمی‌شود. آنچه روز بعد اهمیت پیدا می‌کند، چیزهایی است که در دوران فشار حفظ شده‌اند: اعتماد، زبان مستقل، حافظه انتقادی، توان همکاری، و نهادهای کوچک یا بزرگی که هنوز می‌توانند مردم را به هم وصل کنند. این مقایسه نسخه‌ای آماده برای ایران نیست.",
+        "illustration": "Morning after a long night on the ridge: the cold slate blue fog is lifting from the valley. A few faceless figures, women and men, gather around the warm ochre lanterns they kept burning through the night, and from these flames they begin to light new lanterns. Soft dawn light, quiet hope.",
+    },
+    {
+        "slug": "az-farda",
+        "title": "چه چیزی از فردا می‌ماند؟",
+        "body": "پس مسئله فقط این نیست که مردم ایران چطور امروز را می‌گذرانند. مسئله این است که هنگام گذراندن امروز، چه چیزی از فردا باقی می‌ماند. اگر برای زنده‌ماندن، اعتماد عمومی از بین برود؛ اگر برای ادامه، همه چیز به فامیل و آشنا و حلقه کوچک فروکاسته شود؛ اگر برای بقا، استانداردهای اخلاقی و حرفه‌ای پایین بیاید؛ اگر برای فرار از فشار، بهترین نیروهای جامعه بی‌ارتباط با داخل پراکنده شوند، آن‌وقت جامعه شاید هنوز دوام بیاورد، اما امکان بازسازی‌اش ضعیف‌تر می‌شود.",
+        "illustration": "Close view of the warm ochre lantern held in a faceless hand on the ridge. A thin crack in its base lets the warm oil drip away, drop by drop, down the cold slate blue slope. The path ahead still stretches far into the distance. Close, quiet composition.",
+    },
+    {
+        "slug": "etemad-omoomi",
+        "title": "اعتماد عمومی",
+        "body": "از دل این بحث، چند نگرانی بیرون می‌آید. یکی از آن‌ها اعتماد عمومی است. جامعه‌ای که فقط در حلقه‌های نزدیک دوام می‌آورد، هنوز زنده است، اما افق مشترکش کوچک می‌شود. خانواده، دوست و آشنا می‌توانند زندگی را در روزهای سخت نگه دارند، اما آینده مشترک فقط با همین حلقه‌ها ساخته نمی‌شود. جایی باید هنوز امکانی برای اعتمادکردن به غریبه‌ها، همکاری با ناشناخته‌ها، و ساختن چیزی فراتر از دایره نزدیک باقی بماند.",
+        "illustration": "Along the ridge at night, small separate warm ochre circles of lantern light around little groups of faceless figures, with dark cold slate blue gaps between them. In one gap, two strangers from different circles reach their lanterns toward each other, their light just beginning to touch. Wide, sparse composition.",
+    },
+    {
+        "slug": "tamrin-hamkari",
+        "title": "تمرین همکاری",
+        "body": "نگرانی دیگر، فرسایش جاهایی است که جامعه در آن‌ها تمرین همکاری می‌کند. ممکن است این جاها کوچک باشند: یک انجمن، یک صنف، یک جمع محلی، یک رسانه مستقل، یک کلاس، یک کارگاه. اما همین فضاهای کوچک‌اند که به آدم‌ها یادآوری می‌کنند جامعه فقط جمع افراد تنها نیست. اگر این فضاها ضعیف شوند، خشم و امید هر دو پراکنده می‌مانند. جامعه ممکن است احساس مشترک داشته باشد، اما نتواند آن احساس را به کاری جمعی، پایدار و قابل‌ادامه تبدیل کند.",
+        "illustration": "Small warm ochre shelters along the ridge — a tent, a workshop table, a little bench like a classroom — where faceless figures, women and men, work together in groups under shared lantern light. A few shelters further along are worn and empty, their lanterns gone out in cold slate blue. Wide, rhythmic composition.",
+    },
+    {
+        "slug": "zaban-mostaghel",
+        "title": "زبان مستقل",
+        "body": "زبان هم در این میان فقط ابزار بیان نیست. اگر مردم نتوانند تجربه خود را بیرون از زبان رسمی قدرت روایت کنند، حتی دردشان هم ممکن است با واژه‌هایی توضیح داده شود که از آنِ خودشان نیست. جامعه‌ای که زبان مستقلش را از دست بدهد، فقط قدرت گفتن را از دست نمی‌دهد؛ کم‌کم قدرت فهمیدن تجربه خودش را هم از دست می‌دهد. برای همین، طنز، روایت شخصی، ادبیات، هنر، گفت‌وگوی روزمره و حتی شکل‌های ساده نام‌گذاری تجربه‌ها اهمیت پیدا می‌کنند.",
+        "illustration": "A broad cold slate blue beam from above, like an official searchlight, floods the ridge path and flattens it into a blank pale surface. The faceless walker holds the small lantern low, and in its warm ochre circle the path's real stones, cracks and textures become visible again. Contrasting, focused composition.",
+    },
+    {
+        "slug": "hafeze",
+        "title": "حافظه تاریخی",
+        "body": "حافظه تاریخی هم همین نقش را دارد. جامعه‌ای که فراموش کند چه چیزهایی را از سر گذرانده، راحت‌تر همان خطاها را دوباره طبیعی می‌پذیرد. حافظه فقط بازگشت به گذشته نیست؛ نوعی حساسیت نسبت به تکرار است. به جامعه کمک می‌کند بفهمد کدام فشارها تازه نیستند، کدام وعده‌ها تکراری‌اند، کدام شکل‌های تحقیر قبلاً هم تجربه شده‌اند، و کدام سازگاری‌ها پیش‌تر هم آینده را کوچک کرده‌اند.",
+        "illustration": "Behind the walker on the ridge, a long trail of small warm ochre marks left on the stones at the places where earlier travellers slipped toward the cold slate blue slope. Lantern in hand, the walker looks back at them before stepping carefully past a familiar weak spot in the path. Long, receding composition.",
+    },
+    {
+        "slug": "tavan-hamkari",
+        "title": "توان همکاری",
+        "body": "همه این‌ها در نهایت به یک مسئله برمی‌گردد: توان همکاری با کسانی که شبیه ما نیستند. جامعه‌ای که فقط درون حلقه‌های آشنا کار می‌کند، در لحظه بقا شاید قوی به نظر برسد، اما در لحظه ساختن آینده محدود می‌ماند. آینده مشترک وقتی ممکن می‌شود که آدم‌ها بتوانند بیرون از خویشاوندی، دوستی، مذهب، قومیت، طبقه، سبک زندگی یا آشنایی قبلی با هم کار کنند. این توان، شاید یکی از چیزهایی باشد که زیر فشارهای طولانی آرام‌آرام آسیب می‌بیند، بی‌آنکه همیشه متوجهش شویم.",
+        "illustration": "Several clearly different faceless figures — different heights, clothing shapes and burdens, women and men — walk the narrow ridge together, roped to one another like mountain climbers, passing a single warm ochre lantern forward from hand to hand. Cold slate blue slopes on both sides. Balanced, cooperative composition.",
+    },
+    {
+        "slug": "birahmi-narm",
+        "title": "بی‌رحمی نرم",
+        "body": "در همین‌جا می‌شود فهمید چرا ستایش بی‌قیدوشرط تاب‌آوری خطرناک است. وقتی از تاب‌آوری مردم حرف می‌زنیم، ممکن است ناخواسته فشار را زیبا کنیم. ممکن است به جای پرسیدن از ساختارهایی که بحران را تولید کرده‌اند، از مردمی تعریف کنیم که مجبور شده‌اند با بحران زندگی کنند. این تعریف اگر مراقب نباشد، به نوعی بی‌رحمی نرم تبدیل می‌شود: تحسین کسانی که دارند زیر فشار دوام می‌آورند، بدون اینکه بپرسیم چرا باید این‌قدر دوام بیاورند.",
+        "illustration": "On the ridge, a large ornate empty picture frame in cold slate blue has been set up around a faceless figure bent under a huge weight, as if presenting the strain as something beautiful to admire. Above, outside the frame, the real source of the weight — a heavy slab hanging from a chain — goes unnoticed. Quiet, unsettling composition.",
+    },
+    {
+        "slug": "zarfiat-vaghei",
+        "title": "این ظرفیت واقعی است",
+        "body": "اما از آن طرف، نادیده‌گرفتن تاب‌آوری هم خطاست. جامعه ایران فقط قربانی فشار نیست. در دل همین وضعیت، راه ساخته، زبان ساخته، شبکه ساخته، طنز ساخته، مراقبت ساخته، و در بسیاری از لحظه‌ها اجازه نداده زندگی کاملاً به دستور بحران پیش برود. این ظرفیت واقعی است و باید دیده شود. مسئله این است که این ظرفیت نباید فقط صرف تحمل شود. اگر تمام انرژی جامعه خرج سازگاری با وضعیت شود، چیزی برای تغییر وضعیت باقی نمی‌ماند.",
+        "illustration": "On the ridge, faceless figures, women and men, have built a small plank bridge over a gap, strung a rope handrail and hung warm ochre lanterns for others — clear signs of ingenuity. Yet almost all of them are now leaning their full weight against a huge cold slate blue boulder to keep it from rolling onto the path, with no hands left to move forward. Wide composition.",
+    },
+    {
+        "slug": "omid",
+        "title": "امید از کجا می‌آید",
+        "body": "امید دقیقاً از همین نقطه می‌آید؛ نه از خوش‌بینی ساده، نه از این تصور که جامعه خودبه‌خود راه نجات را پیدا می‌کند. امید از جایی می‌آید که جامعه هنوز نسبت به فرسایش حساس است. هنوز از پایین‌آمدن شأن زندگی ناراحت می‌شود. هنوز تحقیر را عادی نمی‌داند. هنوز بی‌اعتمادی عمومی را نشانه عقلانیت کامل نمی‌گیرد. هنوز می‌تواند میان «ادامه‌دادن» و «پذیرفتن» فرق بگذارد.",
+        "illustration": "Night on the ridge. The faceless walker stops and lifts the warm ochre lantern high at the exact spot where the warm ground ends and the cold slate blue slope begins. In its light the line between the two sides is suddenly sharp and clearly visible. Focused, still composition.",
+    },
+    {
+        "slug": "nabayad-sazgar",
+        "title": "با چه چیزهایی نباید سازگار شویم؟",
+        "body": "پس شاید پرسش نهایی این نوشتار این باشد: ما با چه چیزهایی نباید بیش از این سازگار شویم؟ با پایین‌آمدن کیفیت زندگی؟ با بی‌اعتمادی عمومی؟ با حذف آینده از تخیل روزمره؟ با کیفیت پایین آموزش، درمان، کار، محیط زیست و رابطه‌ها؟ با زبانی که می‌خواهد بحران را طبیعی، ضروری یا بی‌جایگزین نشان دهد؟ با این تصور که زندگی معمولی یعنی فقط زنده‌ماندن؟",
+        "illustration": "The faceless walker stands on the ridge facing the cold slate blue valley, where the fog has gathered into a slow tide climbing toward the path. The walker has planted the warm ochre lantern firmly on the very edge, like a boundary marker, and does not step down. Calm, resolute composition.",
+    },
+    {
+        "slug": "farda-ra-kharj-nakonad",
+        "title": "فردا را خرج امروز نکند",
+        "body": "تاب‌آوری جامعه ایران واقعی است، اما آینده فقط از دل تاب‌آوری بیرون نمی‌آید. آینده از جایی شروع می‌شود که جامعه بتواند تشخیص دهد کدام سازگاری زندگی را حفظ می‌کند، و کدام سازگاری زندگی را کوچک‌تر می‌کند. جامعه باید آن‌قدر سازگار باشد که از هم نپاشد، اما آن‌قدر ناسازگار بماند که بحران را عادی نکند. باید بتواند با امروز کنار بیاید، اما فردا را خرج امروز نکند.",
+        "illustration": "A return to the cover's scene, same dusk light but seen from much farther back and higher up: the long narrow ridge is now a single thin line drawn across a vast landscape, the fog-filled cold slate blue valley on one side and open warm ochre land on the other. Many tiny warm lantern lights move along the line, and a few have already stepped off on the warm side toward the horizon. Vast, wide composition.",
+    },
+    {
+        "slug": "payan",
+        "title": "ادامه دارد…",
+        "subtitle": "بخش بعد: آنچه ماند، آنچه خرج شد",
+        "author": "بهمن رشادی",
+        "body": "این بخش هفتم از نوشتار «زنده‌ماندن یا زیستن؟» بود. امید، نه در خودِ تاب‌آوری، بلکه در توان تشخیص لحظه‌ای است که دیگر نباید تاب آورد. بخش بعد: آنچه ماند، آنچه خرج شد.",
+        "illustration": "Dawn just past the end of the ridge, where the narrow path widens into open warm ochre ground. The walker sets the lantern down beside several others, where faceless figures, women and men, have begun to build something together. The cold slate blue valley lies far behind. Warm, open, hopeful composition.",
+    },
 ]}
 
 HTML = """<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
